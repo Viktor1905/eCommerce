@@ -60,3 +60,28 @@ export default tseslint.config({
   },
 });
 ```
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `npm run dev`
+Starts the Vite development server with hot-reload at http://localhost:5173.
+
+### `npm run build`
+Checks types (`tsc -b`) and builds the production bundle into `dist/`.
+
+### `npm run preview`
+Serves the production build from `dist/` locally.
+
+### `npm run lint`
+Runs ESLint on `src/**/*.ts` and `src/**/*.tsx`, failing on any warnings.
+
+### `npm run format`
+Formats all code, JSON, and Markdown files with Prettier.
+
+### `npm run test`
+Executes all unit tests once via Vitest, returning an exit code.
+
+### `npm run prepare`
+Installs Git hooks via Husky (runs automatically after `npm install`).
