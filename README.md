@@ -110,7 +110,7 @@ Serves the production build from dist/ locally.
 `npm run lint`  
 Runs ESLint on src/**/*.ts and src/**/*.tsx, failing on any warnings.
 
-`npm run lint --fix`  
+`npm run lint:fix`  
 Runs ESLint on src/**/*.ts and src/**/*.tsx, fixing warnings.
 
 `npm run format`  
