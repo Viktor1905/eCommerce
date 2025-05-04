@@ -1,25 +1,25 @@
-## Описание
-Краткое описание изменений, внесенных в этом PR.  
-**Задача**: [ссылка на задачу в Jira]
+## Description  
+Brief description of changes introduced in this PR.  
+**Task**: [Jira task link]
 
-## Тип изменений
-Какие изменения были сделаны? (отметить нужное "[ x ]")
-- [ ] Исправление бага 
-- [ ] Новая функциональность
-- [ ] Рефакторинг (изменение, которое не исправляет баг и не добавляет функциональность)
-- [ ] Документация
+## Type of Changes  
+What kind of changes does this PR introduce? (check appropriate "[ x ]")  
+- [ ] Bugfix  
+- [ ] New feature  
+- [ ] Refactoring (change that doesn't fix a bug or add a feature)  
+- [ ] Documentation update  
 
-## Изменения
-Подробное описание изменений:
+## Changes  
+Detailed description of changes:  
 
-## Чек-лист
-- [ ] Мой код соответствует стилю проекта
-- [ ] Я проверил(а) свой код
-- [ ] Я написал(а) соответствующие тесты (если необходимо)
-- [ ] Документация обновлена (если необходимо)
+## Checklist  
+- [ ] My code follows the project's code style  
+- [ ] I have self-reviewed my code  
+- [ ] I have added corresponding tests (if required)  
+- [ ] Documentation has been updated (if required)  
 
-## Скриншоты (если применимо)
-Добавьте скриншоты, если изменения касаются UI.
+## Screenshots (if applicable)  
+Add screenshots if the changes affect UI.  
 
-## Дополнительные комментарии
-Любая дополнительная информация, которую стоит учитывать при ревью.
+## Additional Comments  
+Any additional information that should be considered during review.  
