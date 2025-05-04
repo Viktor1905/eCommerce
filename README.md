@@ -1,87 +1,123 @@
-# thank you vite for the below info about Eslint!
+# 🛍️ E-Commerce Platform | Modern Online Shopping Experience
 
-#### ( I have not installed any of those)
+**🚀 Interactive e-commerce platform** that replicates real-world shopping in a digital format. Built with **CommerceTools** for scalability and flexibility.
 
-## anyways just mpn install... should work hopefully
+---
 
-#### what else should i write here?
+## ✨ Project Goals
+1. **User Experience**
+    - Intuitive interface for product search, checkout, and profile management
+    - Responsive design for devices with **390px+ resolution**
 
-# React + TypeScript + Vite
+2. **Functionality**
+    - Complete shopping cycle: from catalog to cart to payment
+    - Personalization through registration and wishlists
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3. **Technical Reliability**
+    - **CommerceTools** integration for product, order, and customer management
+    - Performance optimization for B2C/B2B scenarios
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Key Pages
+| Page                      | Description                                  |  
+|---------------------------|------------------------------------------|  
+| **🏠 Home**               | Landing page with promotions and categories |  
+| **📋 Catalog**            | Product filtering and sorting          |  
+| **🔎 Product Details**    | Photos, descriptions, reviews, add-to-cart |  
+| **🛒 Cart**               | Order management and checkout    |  
+| **👤 Profile**           | Order history and account settings     |  
+| **🙋 About Us**         | Brand and team information            |  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 👥 Team Development
+Built by **three team members** with roles:
+1. **Vitali Kozhar** – Backend/Frontend
+2. **Anastasiia Blagoveshchenskaia** – Design/Frontend
+3. **Viktor Vonyarkha** – Team Lead/Frontend
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> **📌 Project Philosophy**: *"Making online shopping as easy as a walk in the store!"*
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+## 🛠 Technology Stack
 
-## Available Scripts
+### **Core**
+- **React** ([docs](https://react.dev/)) - Application core
+- **Vite** ([docs](https://vitejs.dev/)) - Build tool & dev server
+- **TypeScript** - Static typing
 
-In the project directory, you can run:
+### **Routing**
+- **React Router v6** ([docs](https://reactrouter.com/)) - Page navigation
 
-### `npm run dev`
+### **Styling**
+- **Tailwind CSS** ([docs](https://tailwindcss.com/)) - Utility-first CSS framework
+
+### **Forms & Validation**
+- **React Hook Form** ([docs](https://react-hook-form.com/)) - Form management
+- **Zod**/**Yup** - Schema validation
+
+### **State Management**
+- **Redux Toolkit** ([docs](https://redux-toolkit.js.org/)) - Global state
+- **RTK Query** · **TanStack Query** ([docs](https://tanstack.com/query/latest/)) - API handling
+
+### **HTTP Clients**
+- **Axios** - REST requests
+- **Mock Service Worker (MSW)** ([docs](https://mswjs.io/)) - API mocking
+
+### **UI Components**
+- **Swiper.js** ([docs](https://swiperjs.com/)) - Sliders/carousels
+- **React DayPicker** ([docs](https://react-day-picker.js.org/)) - Calendar
+- **React Toastify** ([npm](https://www.npmjs.com/package/react-toastify)) - Notifications
+
+### **Animations**
+- **Framer Motion** ([docs](https://www.framer.com/motion/))
+- **React Spring** ([docs](https://react-spring.dev/))
+- **GSAP** + React Plugin ([docs](https://gsap.com/resources/React/))
+
+### **Testing**
+- **Vitest** ([docs](https://vitest.dev/)) - Unit testing
+
+### **Development Tools**
+- **ESLint** + **Prettier** - Linting & formatting
+- **Husky** - Git hooks
+- **Jira** - Task management
+
+### **Localization**
+- **react-i18next** ([docs](https://react.i18next.com/)) - Multi-language support
+
+### **Date/Time**
+- **date-fns** ([docs](https://date-fns.org/)) - Date handling
+
+
+## 🚀 Start Project
+`npm install` - install all dependencies
+
+## ⚙️ Available Scripts
+
+`npm run dev`  
 Starts the Vite development server with hot-reload at http://localhost:5173.
 
-### `npm run build`
-Checks types (`tsc -b`) and builds the production bundle into `dist/`.
+`npm run build`  
+Checks types (tsc -b) and builds the production bundle into dist/.
 
-### `npm run preview`
-Serves the production build from `dist/` locally.
+`npm run preview`  
+Serves the production build from dist/ locally.
 
-### `npm run lint`
-Runs ESLint on `src/**/*.ts` and `src/**/*.tsx`, failing on any warnings.
+`npm run lint`  
+Runs ESLint on src/**/*.ts and src/**/*.tsx, failing on any warnings.
 
-### `npm run format`
+`npm run lint --fix`  
+Runs ESLint on src/**/*.ts and src/**/*.tsx, fixing warnings.
+
+`npm run format`  
 Formats all code, JSON, and Markdown files with Prettier.
 
-### `npm run test`
+`npm run test`  
 Executes all unit tests once via Vitest, returning an exit code.
 
-### `npm run prepare`
-Installs Git hooks via Husky (runs automatically after `npm install`).
+`npm run prepare`  
+Installs Git hooks via Husky (runs automatically after npm install).
