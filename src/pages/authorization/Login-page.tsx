@@ -3,8 +3,8 @@ import * as React from 'react';
 export function LoginPage(): React.ReactElement {
   return (
     <section className="w-screen flex justify-center items-center">
-      <form className="bg-goldenrod  flex flex-col items-center p-[40px] w-[40%] font-main rounded-[20px] h-fit gap-6 ">
-        <h1 className="font-additional text-xl"> Login </h1>
+      <form className="bg-olive/20 flex flex-col items-center p-[40px] w-[40%] font-main rounded-[20px] h-fit gap-6 text-jungle">
+        <h1 className="font-additional text-2xl font-bold"> Login </h1>
         <div className="flex flex-col  w-full">
           <label htmlFor="email">Email</label>
           <input
