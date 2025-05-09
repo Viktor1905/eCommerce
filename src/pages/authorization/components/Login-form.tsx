@@ -52,7 +52,17 @@ export interface LoginInputs {
 const schema = z.object({
   email: z
     .string()
-    .email({ message: 'E-mail must be in format mail@mail.com, without whitespaces' }),
+    .min(1, 'Email is required')
+    .refine((val: string): boolean => val.includes('@'), {
+      message: "Email address must contain an '@' symbol separating local part and domain name.",
+    })
+    .refine((val: string): boolean => val.trim() === val, {
+      message: 'Email address must not contain leading or trailing whitespace.',
+    })
+    .refine(
+      (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email),
+      'Email must contain a domain name (e.g., example.com)'
+    ),
   password: z
     .string()
     .regex(/\d+/gi, { message: 'Password must contain at least one digit' })
