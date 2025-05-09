@@ -1,5 +1,8 @@
-export const registrationPageData = {
-  userInfo: {
+import { FieldKey } from './registrationSchema';
+
+export const registrationPageData = [
+  // user Info
+  {
     title: 'user information',
     content: [
       {
@@ -20,10 +23,16 @@ export const registrationPageData = {
         id: 'user-date-of-birth',
         type: 'date',
       },
-    ],
+    ] satisfies {
+      id: FieldKey;
+      title: string;
+      placeholder: string;
+      type: string;
+    }[],
   },
-  userLogin: {
-    title: 'user information',
+  // user Login
+  {
+    title: 'login information',
     content: [
       {
         title: 'email',
@@ -37,10 +46,17 @@ export const registrationPageData = {
         id: 'user-password',
         type: 'password',
       },
-    ],
+    ] satisfies {
+      id: FieldKey;
+      title: string;
+      placeholder: string;
+      type: string;
+    }[],
   },
-  petInfo: {
+  // pet Info
+  {
     title: 'pet information',
+    hint: "Fill the pet info to get a special discount for your pet's birthday!",
     content: [
       {
         title: 'Pet name',
@@ -51,12 +67,18 @@ export const registrationPageData = {
       {
         title: "pet's date of birth",
         placeholder: '',
-        id: 'pets-date-of-birth',
+        id: 'pet-date-of-birth',
         type: 'date',
       },
-    ],
+    ] satisfies {
+      id: FieldKey;
+      title: string;
+      placeholder: string;
+      type: string;
+    }[],
   },
-  userAddress: {
+  // user Address
+  {
     title: 'user address',
     content: [
       {
@@ -76,8 +98,18 @@ export const registrationPageData = {
         placeholder: 'enter postal code',
         id: 'user-postal-code',
         type: 'text',
-        pattern: '[0-9]*',
       },
-    ],
+      {
+        title: 'country',
+        placeholder: '',
+        id: 'country',
+        type: 'select',
+      },
+    ] satisfies {
+      id: FieldKey;
+      title: string;
+      placeholder: string;
+      type: string;
+    }[],
   },
-};
+];
