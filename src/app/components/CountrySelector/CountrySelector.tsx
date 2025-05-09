@@ -3,7 +3,7 @@ import { COUNTRIES_DATA } from './countries-data/countries-data';
 export default function CountrySelector({ ...props }) {
   return (
     <select
-      className="capitalize p-1 bg-[var(--color-khaki)] h-full rounded-lg text-[var(--color-olive)] min-w-[300px]"
+      className="capitalize p-1 bg-khaki h-full rounded-lg text-olive min-w-[300px]"
       id="country"
       defaultValue=""
       {...props}
