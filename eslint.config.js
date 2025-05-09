@@ -71,6 +71,7 @@ export default defineConfig([
       'prettier/prettier': 'warn',
 
       'i18next/no-literal-string': 'off',
+      'linebreak-style': ['off', 'unix'],
     },
   },
 
