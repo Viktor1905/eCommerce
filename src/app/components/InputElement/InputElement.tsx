@@ -1,8 +1,11 @@
+import CountrySelector from '../CountrySelector/CountrySelector';
+
 type InputElementProps = {
   title: string;
   id: string;
   type: string;
   placeholder: string;
+  error?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function InputElement({
@@ -10,12 +13,31 @@ export default function InputElement({
   id,
   type,
   placeholder,
+  error,
+  ...props
 }: InputElementProps) {
+  const isSelect = type === 'select';
   return (
-    <label htmlFor={id} className="flex flex-col capitalize">
+    <label
+      htmlFor={id}
+      className="flex flex-col capitalize text-[var(--color-goldenrod)] font-medium w-[300px]"
+    >
       {title}
-      <input type={type} id={id} placeholder={placeholder} className="p-1" />
-      <p className="text-sm text-red-500 h-5 mt-1 p-1">{'\u00A0'}</p>
+      {isSelect ? (
+        <CountrySelector {...props} />
+      ) : (
+        <input
+          type={type}
+          id={id}
+          placeholder={placeholder}
+          className="p-1 bg-[var(--color-khaki)] rounded-lg text-[var(--color-olive)] ps-2"
+          {...props}
+        />
+      )}
+
+      <p className="text-sm text-[var(--color-coral)] h-5 p-1 w-[300px] break-words whitespace-normal">
+        {error ?? '\u00A0'}
+      </p>
     </label>
   );
 }
