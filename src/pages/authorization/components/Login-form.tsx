@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EmailInput } from './Email-input.tsx';
-import { PasswordInput } from './Password-input.tsx';
+import { PasswordInput } from './password-input/Password-input.tsx';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

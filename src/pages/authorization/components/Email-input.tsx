@@ -11,6 +11,7 @@ export function EmailInput({ register, errorMessage }: EmailInputProps): ReactEl
       </label>
       <input
         {...register}
+        id="email"
         className="w-full bg-olive/90 p-3 rounded focus: outline-none focus:border-jungle border-[2px] border-transparent box-border"
         placeholder="Enter your e-mail"
       />
