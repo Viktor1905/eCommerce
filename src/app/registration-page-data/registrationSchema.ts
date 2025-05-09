@@ -37,9 +37,11 @@ const petInfoSchema = z.object({
     .string()
     .min(2, 'First name must be at least 2 characters')
     .max(20),
-  'pet-date-of-birth': z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), 'Please enter a valid date'),
+  'pet-date-of-birth': z.string().refine((val) => {
+    const today = new Date();
+    const date = new Date(val);
+    return !isNaN(date.getTime()) && date <= today;
+  }, 'Your pet cannot be younger than today years old :)'),
 });
 
 const postalCodeRegex =

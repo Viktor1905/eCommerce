@@ -24,11 +24,9 @@ export default function FieldsetBlock({
 }: FieldsetBlockProps) {
   return (
     <fieldset className="flex flex-row gap-4 p-2 flex-wrap justify-center">
-      <legend className="text-2xl capitalize text-[var(--color-jungle)] p-2 font-medium text-center">
+      <legend className="text-2xl capitalize text-jungle p-2 font-medium text-center font-main">
         {title}
-        {hint ? (
-          <p className="text-base text-[var(--color-goldenrod)]">{hint}</p>
-        ) : null}
+        {hint ? <p className="text-base text-goldenrod">{hint}</p> : null}
       </legend>
 
       {content.map((property) => (

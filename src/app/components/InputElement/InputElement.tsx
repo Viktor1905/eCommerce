@@ -20,7 +20,7 @@ export default function InputElement({
   return (
     <label
       htmlFor={id}
-      className="flex flex-col capitalize text-[var(--color-goldenrod)] font-medium w-[300px]"
+      className="flex flex-col capitalize text-goldenrod font-medium w-[300px]"
     >
       {title}
       {isSelect ? (
@@ -30,12 +30,12 @@ export default function InputElement({
           type={type}
           id={id}
           placeholder={placeholder}
-          className="p-1 bg-[var(--color-khaki)] rounded-lg text-[var(--color-olive)] ps-2"
+          className="p-1 bg-khaki rounded-lg text-olive ps-2"
           {...props}
         />
       )}
 
-      <p className="text-sm text-[var(--color-coral)] h-5 p-1 w-[300px] break-words whitespace-normal">
+      <p className="text-sm text-coral h-5 p-1 w-[300px] break-words whitespace-normal">
         {error ?? '\u00A0'}
       </p>
     </label>
