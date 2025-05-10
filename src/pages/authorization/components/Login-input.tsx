@@ -11,6 +11,7 @@ export function LoginInput({
   placeholder,
 }: LoginInputProps): ReactElement {
   const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const isPassword = type === 'password';
   const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
@@ -24,12 +25,18 @@ export function LoginInput({
       <div className="relative">
         <input
           {...register}
+          onFocus={(): void => {
+            setIsFocused(true);
+          }}
+          onBlur={(): void => {
+            setIsFocused(false);
+          }}
           id={id}
           className="w-full bg-olive/90 p-3 rounded focus:outline-none focus:border-jungle border-[2px] border-transparent box-border font-bold text-xl"
           placeholder={placeholder}
           type={inputType}
         />
-        {isPassword && (
+        {isPassword && isFocused && (
           <div
             className="absolute right-[1%] top-1/2 -translate-y-1/2 cursor-pointer opacity-50"
             onClick={(): void => {
