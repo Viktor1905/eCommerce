@@ -4,7 +4,7 @@ import logo from '../../assets/images/pawpaw.png';
 export function Header() {
   return (
     <header className={styles.header}>
-      <div className={styles.headerCase}>
+      <div className={styles['header-case']}>
         <Logo />
         <CatalogList />
         <SearchPanel />
