@@ -14,11 +14,9 @@ export function LoginForm(): React.ReactElement {
     mode: 'onChange',
     resolver: zodResolver(schema),
   });
-
   const onSubmit = (data: FormData) => {
     console.log(data);
   };
-
   return (
     <section className="w-[35%] p-[40px] font-main rounded-[20px] text-xl  !text-goldenrod border">
       <form
