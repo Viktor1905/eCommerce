@@ -36,7 +36,11 @@ function SearchPanel() {
       <button type="button" className={styles['menu-search']}>
         Search in ▾
       </button>
-      <input className={styles['input-search']} placeholder="Search products… 🔍"></input>
+      <input
+        type="search"
+        className={styles['input-search']}
+        placeholder="Search products… 🔍"
+      ></input>
     </div>
   );
 }
@@ -51,7 +55,7 @@ function MenuHeader() {
               pets
             </span>
           </div>
-          <div>Login</div>
+          <div className={styles['text-list']}>Login</div>
         </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>

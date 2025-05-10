@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
-
 .header {
   position: relative;
   display: flex;
@@ -90,6 +88,11 @@
   font-size: 0.8rem;
   cursor: pointer;
   transition: color 0.2s ease-in;
+}
+
+.img-list,
+.text-list {
+  display: flex;
 }
 
 .material-symbols-outlined {
