@@ -77,7 +77,8 @@
   align-items: center;
 }
 
-.list {
+.list,
+.home-link {
   display: flex;
   height: 45px;
   flex-direction: column;
@@ -88,6 +89,10 @@
   font-size: 0.8rem;
   cursor: pointer;
   transition: color 0.2s ease-in;
+}
+
+.home-link {
+  margin-left: 0;
 }
 
 .img-list,

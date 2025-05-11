@@ -4,11 +4,22 @@ export function Header() {
   return (
     <header className={styles.header}>
       <div className={styles['header-case']}>
+        <HomeLink />
         <CatalogList />
         <SearchPanel />
         <MenuHeader />
       </div>
     </header>
+  );
+}
+
+function HomeLink() {
+  return (
+    <div className={styles['home-link']}>
+      <span className="material-symbols-outlined" style={{ fontSize: '3.8rem' }}>
+        home_app_logo
+      </span>
+    </div>
   );
 }
 
@@ -33,6 +44,14 @@ function MenuHeader() {
   return (
     <nav className={styles.menu}>
       <ul className={styles['menu-list']}>
+        <li className={styles.list}>
+          <div className={styles['img-list']}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
+              person
+            </span>
+          </div>
+          <div className={styles['text-list']}>Sign Up</div>
+        </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>
             <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
