@@ -14,33 +14,17 @@ export function Footer() {
 }
 
 function AboutUsFooter() {
-  return (
-    <button className={`${styles.about} ${styles['about-link']}`} type="button">
-      ABOUT US
-    </button>
-  );
+  return <div className={`${styles.about} ${styles['about-link']}`}>ABOUT US</div>;
 }
 
 function OurShopsFooter() {
-  return (
-    <button className={`${styles.shop} ${styles['shop-link']}`} type="button">
-      OUR SHOPS
-    </button>
-  );
+  return <div className={`${styles.shop} ${styles['shop-link']}`}>OUR SHOPS</div>;
 }
 
 function OurTelegramStickersFooter() {
-  return (
-    <button className={`${styles.sticker} ${styles['sticker-link']}`} type="button">
-      Our Telegram Stickers
-    </button>
-  );
+  return <div className={`${styles.sticker} ${styles['sticker-link']}`}>Our Telegram Stickers</div>;
 }
 
 function HelpHomelessAnimals() {
-  return (
-    <button className={`${styles.help} ${styles['help-link']}`} type="button">
-      Help Homeless Animals
-    </button>
-  );
+  return <div className={`${styles.help} ${styles['help-link']}`}>Help Homeless Animals</div>;
 }

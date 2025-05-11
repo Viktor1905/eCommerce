@@ -1,6 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 @import "tailwindcss";
 
+@theme {
+  --color-olive: #3E3D38;
+  --color-jungle: #2AA989;
+  --color-goldenrod: #DAA629;
+  --color-coral: #E17978;
+  --color-khaki: #C0B79C;
+  --font-main: "Rubik", "sans-serif";
+  --font-additional: "Marmelad", "sans-serif";
+  --font-main-bd: "Rubik-bold", "sans-serif";
+}
+
 :root {
   --color-olive: #3E3D38;
   --color-jungle: #2AA989;
@@ -9,21 +20,53 @@
   --color-khaki: #C0B79C;
   --font-main: "Rubik", "sans-serif";
   --font-additional: "Marmelad", "sans-serif";
+  --font-main-bd: "Rubik-bold", "sans-serif";
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @font-face {
   font-family: 'Marmelad';
   src: url('./assets/fonts/Marmelad-Regular.ttf');
-  font-weight: normal;
 }
 
-*{
-  margin: 0;
-  padding: 0;
+@font-face {
+  font-family: 'Rubik';
+  src: url('./assets/fonts/Rubik-VariableFont_wght.ttf') format('truetype');
 }
 
-body {
-  width: 100%;
-  height: 100vh;
-  background-color: #e3e3e3;
+@font-face {
+  font-family: 'Rubik-bold';
+  src: url('./assets/fonts/Rubik-ExtraBold.ttf');
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #216e58;
+    font-family: var(--font-main), sans-serif;
+}
+
+main{
+    max-width: 1420px;
+    margin: 0 auto;
+}
+
+.p{
+    font-size: 42px;
+    color: #0000FF;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
 }

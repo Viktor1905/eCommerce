@@ -1,11 +1,9 @@
 import styles from './Header.module.css';
-import logo from '../../assets/images/LOGO.png';
 
 export function Header() {
   return (
     <header className={styles.header}>
       <div className={styles['header-case']}>
-        <Logo />
         <CatalogList />
         <SearchPanel />
         <MenuHeader />
@@ -14,28 +12,14 @@ export function Header() {
   );
 }
 
-function Logo() {
-  return (
-    <div className={styles['image-case']}>
-      <img className={styles['logo-image']} src={logo} alt="logo image"></img>
-    </div>
-  );
-}
-
 function CatalogList() {
-  return (
-    <button type="button" className={styles.catalog}>
-      Catalog ▾
-    </button>
-  );
+  return <div className={styles.catalog}>Catalog ▾</div>;
 }
 
 function SearchPanel() {
   return (
     <div className={styles.search}>
-      <button type="button" className={styles['menu-search']}>
-        Search in ▾
-      </button>
+      <div className={styles['menu-search']}>Search in ▾</div>
       <input
         type="search"
         className={styles['input-search']}

@@ -1,20 +1,32 @@
 .main {
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-items: center;
-  font: var(--font-main);
+  background-color: #e3e3e3;
 }
+
 .title-main {
+  display: flex;
   width: 95%;
   margin: 20px 0;
   font-size: 2rem;
 }
 
+.image-case {
+  display: flex;
+  width: 45px;
+  height: 45px;
+  margin-right: 20px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
 .info-blocks {
   display: flex;
   width: 95%;
-  height: 700px;
+  height: 600px;
   justify-content: space-between;
 }
 
@@ -56,7 +68,7 @@
 
 .aside-down-block {
   background-color: var(--color-coral);
-  background-image: url('../../assets/images/products/test/humster.png');
+  background-image: url('../../assets/images/products/test/offerHumsters.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -76,10 +88,14 @@
   right: 0;
 }
 
-:is(.left-arrow, .right-arrow, .small-left-arrow,
+:is(.left-arrow, .right-arrow):hover {
+  color: var(--color-coral);
+}
+
+:is(.small-left-arrow,
 .small-right-arrow, .brand-left-arrow,
 .brand-right-arrow):hover {
-  color: var(--color-coral);
+  color: var(--color-olive);
 }
 
 .recommend,
@@ -93,7 +109,7 @@
   position: relative;
   display: flex;
   width: 95%;
-  height: 300px;
+  height: 200px;
   gap: 15px;
   overflow: hidden;
 }
@@ -103,12 +119,12 @@
 .brand-left-arrow,
 .brand-right-arrow {
   position: absolute;
-  color: var(--color-olive);
+  color: var(--color-coral);
+  background-color: #ffffff;
   top: calc(50% - 1rem);
   left: 0;
   transition: color 0.3s ease-in;
   border-radius: 50%;
-  background-color: #ffffff;
   cursor: pointer;
 }
 
@@ -123,17 +139,19 @@
   display: flex;
   width: 95%;
   height: 200px;
+  margin-bottom: 40px;
   gap: 10px;
 }
 
 :is(.img0, .img1, .img2, .img3, .img4, .img5) {
   display: flex;
   width: 450px;
-  height: 100%;
+  height: 95%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+  box-shadow: 0 0 5px var(--color-olive);
 }
 
 .img0 {
@@ -168,6 +186,7 @@
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+  box-shadow: 0 0 3px var(--color-olive);
 }
 
 .img6 {
