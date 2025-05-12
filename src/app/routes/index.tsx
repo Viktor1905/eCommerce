@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../../components/layout/Layout';
 import { HomePage } from '../../pages/home/HomePage';
+import { NotFoundPage } from '../../pages/PageNotFound/Page404';
 
 export function AppRoutes() {
   return (
@@ -14,7 +15,7 @@ export function AppRoutes() {
         {/* <Route path="/cart" element={<CartPage />} /> */}
         {/* <Route path="/profile" element={<ProfilePage />} /> */}
         {/* <Route path="/about" element={<AboutPage />} /> */}
-        {/* <Route path="*" element={<NotFoundPage />} />  */}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

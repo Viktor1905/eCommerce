@@ -93,6 +93,11 @@
 
 .home-link {
   margin-left: 0;
+  color: var(--color-olive);
+}
+
+.home-link:hover {
+  color: #e3e3e3;
 }
 
 .img-list,

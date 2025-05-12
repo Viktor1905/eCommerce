@@ -1,4 +1,5 @@
 import styles from './Header.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export function Header() {
   return (
@@ -14,10 +15,18 @@ export function Header() {
 }
 
 function HomeLink() {
+  const navigate = useNavigate();
+  function handleClick(): void {
+    void navigate('/');
+  }
   return (
     <div className={styles['home-link']}>
-      <span className="material-symbols-outlined" style={{ fontSize: '3.8rem' }}>
-        home_app_logo
+      <span
+        onClick={handleClick}
+        className="material-symbols-outlined"
+        style={{ fontSize: '3rem' }}
+      >
+        pets
       </span>
     </div>
   );
