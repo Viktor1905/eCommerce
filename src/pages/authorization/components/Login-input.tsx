@@ -47,7 +47,7 @@ export function LoginInput({
           </div>
         )}
       </div>
-      <p className="text-sm font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
+      <p className="text-sm h-fit font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
     </div>
   );
 }

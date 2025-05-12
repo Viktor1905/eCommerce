@@ -18,7 +18,7 @@ export function LoginForm(): React.ReactElement {
     console.log(data);
   };
   return (
-    <section className="w-[35%] p-[40px] font-main rounded-[20px] text-xl  !text-goldenrod">
+    <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
       <form
         className="flex flex-col gap-6"
         onSubmit={(event) => void handleSubmit(onSubmit)(event)}
