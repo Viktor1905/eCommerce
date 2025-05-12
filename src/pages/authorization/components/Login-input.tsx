@@ -9,6 +9,7 @@ export function LoginInput({
   type,
   label,
   placeholder,
+  required,
 }: LoginInputProps): ReactElement {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,6 +29,8 @@ export function LoginInput({
           className="w-full bg-olive/90 p-3 rounded focus:outline-none focus:border-jungle border-[2px] border-transparent box-border font-bold text-xl"
           placeholder={placeholder}
           type={inputType}
+          required={required ?? undefined}
+          autoComplete={type}
         />
         {isPassword && (
           <div
@@ -55,4 +58,5 @@ interface LoginInputProps {
   type: 'email' | 'password';
   label: string;
   placeholder: string;
+  required?: boolean;
 }

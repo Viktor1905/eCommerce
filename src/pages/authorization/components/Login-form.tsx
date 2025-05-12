@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './login-scheme.tsx';
+import { Link } from 'react-router-dom';
 
 export function LoginForm(): React.ReactElement {
   const {
@@ -30,6 +31,7 @@ export function LoginForm(): React.ReactElement {
           type="email"
           label="Email"
           placeholder="Enter you email"
+          required={true}
         />
         <LoginInput
           register={register('password')}
@@ -37,6 +39,7 @@ export function LoginForm(): React.ReactElement {
           type="password"
           label="Password"
           placeholder="Enter you password"
+          required={true}
         />
         <button
           type="submit"
@@ -47,10 +50,10 @@ export function LoginForm(): React.ReactElement {
         </button>
       </form>
       <div>
-        <p>Don`t have an account?</p>
-        <a href="/registration" className="!text-olive hover:!text-jungle ">
+        <p>Don&#39;t have an account?</p>
+        <Link to="/registration" className="!text-olive hover:!text-jungle ">
           Sign Up!
-        </a>
+        </Link>
       </div>
     </section>
   );
