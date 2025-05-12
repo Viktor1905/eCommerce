@@ -20,9 +20,10 @@
   height: 100px;
   justify-content: center;
   align-items: center;
-  top: 200px;
+  top: 150px;
   left: 50%;
   transform: translateX(-50px);
+  color: #e3e3e3;
   background-color: #e92222;
   border-radius: 50%;
   cursor: pointer;
@@ -30,5 +31,6 @@
 }
 
 .back-home-button:hover {
+  color: var( --color-olive);
   background-color: #ffffff;
 }

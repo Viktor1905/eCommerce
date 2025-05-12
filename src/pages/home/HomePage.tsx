@@ -1,5 +1,4 @@
 import styles from './HomePage.module.css';
-import logo from '../../assets/images/LOGO.png';
 
 export function HomePage() {
   return (
@@ -20,21 +19,12 @@ export function HomePage() {
 function TitleMain() {
   return (
     <h1 className={styles['title-main']}>
-      <Logo />
       PET{' '}
       <span className="material-symbols-outlined" style={{ fontSize: '1.6rem' }}>
         pets
       </span>{' '}
       SUPPLIES
     </h1>
-  );
-}
-
-function Logo() {
-  return (
-    <div className={styles['image-case']}>
-      <img className={styles['logo-image']} src={logo} alt="logo image"></img>
-    </div>
   );
 }
 

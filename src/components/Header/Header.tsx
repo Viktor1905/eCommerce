@@ -6,8 +6,10 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles['header-case']}>
         <HomeLink />
-        <CatalogList />
-        <SearchPanel />
+        <div className={styles['header-wrapper']}>
+          <CatalogList />
+          <SearchPanel />
+        </div>
         <MenuHeader />
       </div>
     </header>

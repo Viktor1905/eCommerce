@@ -21,6 +21,12 @@
   height: 60px;
 }
 
+.header-wrapper {
+  display: flex;
+  width: 60%;
+  justify-content: space-around;
+}
+
 .catalog {
   display: flex;
   width: 80px;
@@ -42,7 +48,7 @@
 
 .search {
   display: flex;
-  width: 50%;
+  width: 70%;
   height: 45px;
   color: #e3e3e3;
   background-color: #225649;

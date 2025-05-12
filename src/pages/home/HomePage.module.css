@@ -8,8 +8,9 @@
 .title-main {
   display: flex;
   width: 95%;
-  margin: 20px 0;
+  margin: clamp(5px, 2vw, 20px) 0;
   font-size: 2rem;
+  align-items: center;
 }
 
 .image-case {
@@ -18,7 +19,7 @@
   height: 45px;
   margin-right: 20px;
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
 }
@@ -101,7 +102,7 @@
 .recommend,
 .brands {
   width: 95%;
-  margin: 40px 0 20px 0;
+  margin: clamp(10px, 2vw, 40px) 0 clamp(5px, 2vw, 20px) 0;
   font-size: 1.5rem;
 }
 
@@ -139,14 +140,16 @@
   display: flex;
   width: 95%;
   height: 200px;
-  margin-bottom: 40px;
+  margin-bottom: clamp(5px, 2vw, 20px);
   gap: 10px;
+  overflow: hidden;
 }
 
 :is(.img0, .img1, .img2, .img3, .img4, .img5) {
   display: flex;
   width: 450px;
-  height: 95%;
+  height: 100%;
+  aspect-ratio: 4.3 / 3;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -182,6 +185,7 @@
   display: flex;
   width: 300px;
   height: 100%;
+  aspect-ratio: 3 / 4;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -219,4 +223,64 @@
 
 .img13 {
   background-image: url('../../assets/images/products/test2/F775F33C-2B66-4953-97DC-1B6DD7166948.png');
+}
+
+@media (max-width: 1300px) {
+  .title-main,
+  .list-recommend,
+  .list-brands,
+  .recommend,
+  .brands {
+    width: 95%;
+  }
+
+  .title-main,
+  .recommend,
+  .brands {
+    font-size: clamp(1rem, 3vw, 2rem);
+  }
+
+  .info-blocks {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .main-info-block {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .aside-info-block {
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .aside-up-block,
+  .aside-down-block {
+    flex: 1;
+    aspect-ratio: 4.3 / 3;
+  }
+
+  .img12,
+  .img13,
+  .img5 {
+    display: none;
+  }
+
+  .list-recommend {
+    height: auto;
+  }
+
+  .list-brands {
+    height: auto;
+  }
+
+  .recommend,
+  .brands {
+    font-size: clamp(1rem, 2.5vw, 1.8rem)
+}
+
 }
