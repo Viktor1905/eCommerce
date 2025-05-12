@@ -1,5 +1,28 @@
 @import "tailwindcss";
+@theme {
+  --color-olive: #3e3d38;
+  --color-jungle: #2aa989;
+  --color-goldenrod: #daa629;
+  --color-coral: #e17978;
+  --color-khaki: #c0b79c;
+  --font-main: 'Rubik', 'sans-serif';
+  --font-additional: 'Marmelad', 'sans-serif';
+  --font-main-bd: 'Rubik-bold', 'sans-serif';
+}
+@font-face {
+  font-family: 'Marmelad';
+  src: url('./assets/fonts/Marmelad-Regular.ttf');
+}
 
+@font-face {
+  font-family: 'Rubik';
+  src: url('./assets/fonts/Rubik-VariableFont_wght.ttf');
+}
+
+@font-face {
+  font-family: 'Rubik-bold';
+  src: url('./assets/fonts/Rubik-ExtraBold.ttf');
+}
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -69,19 +92,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
-
-@theme {
-  --color-olive: #3E3D38;
-  --color-jungle: #2AA989;
-  --color-goldenrod: #DAA629;
-  --color-coral: #E17978;
-  --color-khaki: #C0B79C;
-  --font-main: "Rubik", "sans-serif";
-  --font-additional: "Marmelad", "sans-serif";
-}
-@font-face {
-  font-family: 'Marmelad';
-  src: url('./assets/fonts/Marmelad-Regular.ttf');
-  font-weight: normal;
 }

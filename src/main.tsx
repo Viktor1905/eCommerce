@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './lib/react-query.ts';
-import { format, parseISO } from 'date-fns';
 import './i18n.ts';
 import { LoginPage } from './pages/authorization/Login-page.tsx';
 
@@ -37,11 +36,3 @@ const rootElement = document.getElementById('root');
 if (rootElement) {
   renderApp(rootElement);
 }
-
-// checking date
-
-const date = '2025-05-03T14:00:00Z';
-const parsedDate = parseISO(date);
-const formattedDate = format(parsedDate, 'MMMM dd, yyyy MMMM, dd');
-
-console.log(formattedDate);

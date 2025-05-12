@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './login-scheme.tsx';
-import { Link } from 'react-router-dom';
 
 export function LoginForm(): React.ReactElement {
   const {
@@ -19,7 +18,7 @@ export function LoginForm(): React.ReactElement {
     console.log(data);
   };
   return (
-    <section className="w-[35%] p-[40px] font-main rounded-[20px] text-xl  !text-goldenrod border">
+    <section className="w-[35%] p-[40px] font-main rounded-[20px] text-xl  !text-goldenrod">
       <form
         className="flex flex-col gap-6"
         onSubmit={(event) => void handleSubmit(onSubmit)(event)}
@@ -43,7 +42,7 @@ export function LoginForm(): React.ReactElement {
         />
         <button
           type="submit"
-          className="w-[100%] !border-[2px] !bg-goldenrod text-white hover:!bg-jungle hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-jungle focus:!outline-0"
+          className="w-[100%] !border-[2px] !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
           disabled={!isValid}
         >
           Login
@@ -51,9 +50,7 @@ export function LoginForm(): React.ReactElement {
       </form>
       <div>
         <p>Don&#39;t have an account?</p>
-        <Link to="/registration" className="!text-olive hover:!text-jungle ">
-          Sign Up!
-        </Link>
+        <a className="!text-olive hover:!text-goldenrod cursor-pointer">Sign Up!</a>
       </div>
     </section>
   );

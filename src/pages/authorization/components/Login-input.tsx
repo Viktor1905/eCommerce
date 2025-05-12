@@ -26,7 +26,7 @@ export function LoginInput({
         <input
           {...register}
           id={id}
-          className="w-full bg-olive/90 p-3 rounded focus:outline-none focus:border-jungle border-[2px] border-transparent box-border font-bold text-xl"
+          className="w-full bg-khaki p-3 rounded focus:outline-none text-olive focus:border-goldenrod border-[2px] border-transparent box-border font-bold text-xl"
           placeholder={placeholder}
           type={inputType}
           required={required ?? undefined}
@@ -47,7 +47,7 @@ export function LoginInput({
           </div>
         )}
       </div>
-      <p className="text-sm text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
+      <p className="text-sm font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
     </div>
   );
 }
