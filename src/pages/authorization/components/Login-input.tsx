@@ -52,10 +52,10 @@ export function LoginInput({
   );
 }
 
-interface LoginInputProps {
+export interface LoginInputProps {
   register: UseFormRegisterReturn;
   errorMessage?: string;
-  type: 'email' | 'password';
+  type: 'email' | 'password' | 'text';
   label: string;
   placeholder: string;
   required?: boolean;

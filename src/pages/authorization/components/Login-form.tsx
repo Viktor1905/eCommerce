@@ -27,7 +27,7 @@ export function LoginForm(): React.ReactElement {
         <LoginInput
           register={register('email')}
           errorMessage={errors.email?.message}
-          type="email"
+          type="text"
           label="Email"
           placeholder="Enter you email"
           required={true}

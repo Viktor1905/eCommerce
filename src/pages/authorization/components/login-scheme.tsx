@@ -4,16 +4,30 @@ export const schema = z.object({
   email: z
     .string()
     .min(1, 'Email is required')
-    .refine((val: string): boolean => val.includes('@'), {
-      message: "Email address must contain an '@' symbol separating local part and domain name.",
-    })
-    .refine((val: string): boolean => val.trim() === val, {
-      message: 'Email address must not contain leading or trailing whitespace.',
-    })
-    .refine(
-      (email: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email),
-      'Email must contain a domain name (e.g., example.com)'
-    ),
+    .superRefine((val, ctx) => {
+      console.log('RAW EMAIL INPUT:', JSON.stringify(val)); // отладка
+
+      if (val !== val.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Email must not have leading or trailing spaces',
+        });
+      }
+
+      if (!val.includes('@')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Email must contain an '@' symbol",
+        });
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Email must contain a domain name (e.g., example.com)',
+        });
+      }
+    }),
   password: z
     .string()
     .regex(/\d+/gi, { message: 'Password must contain at least one digit' })
