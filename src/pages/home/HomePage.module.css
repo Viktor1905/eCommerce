@@ -80,7 +80,7 @@
   position: absolute;
   color: #ffffff;
   top: calc(50%);
-  left: 0;
+  left: 1rem;
   font-size: clamp(15px, 3vw, 40px);
   transform: rotate(-90deg);
   transition: color 0.3s ease-in;
@@ -88,7 +88,7 @@
 
 .right-arrow {
   left: inherit;
-  right: 0;
+  right: 1rem;
   transform: rotate(90deg);
 }
 
@@ -104,6 +104,7 @@
 
 .recommend,
 .brands {
+  display: flex;
   width: 95%;
   margin: clamp(10px, 2vw, 40px) 0 clamp(5px, 2vw, 20px) 0;
   font-size: 1.5rem;
@@ -142,7 +143,6 @@
 .small-left-arrow,
 .brand-left-arrow {
   transform: rotate(-180deg);
-
 }
 
 .small-right-arrow,
@@ -260,10 +260,8 @@
     width: 95%;
   }
 
-  .title-main,
-  .recommend,
-  .brands {
-    font-size: clamp(1rem, 3vw, 2rem);
+  .title-main {
+    font-size: clamp(0.5rem, 3vw, 2rem);
   }
 
   .info-blocks {
@@ -306,6 +304,35 @@
 
   .recommend,
   .brands {
-    font-size: clamp(1rem, 2.5vw, 1.8rem)
+    font-size: clamp(0.5rem, 2.5vw, 1.8rem)
+  }
 }
+
+@media (max-width: 600px) {
+  .main {
+    min-width: 320px;
+  }
+
+  .info-blocks {
+    width: 100%;
+  }
+
+  .title-main,
+  .recommend,
+  .brands {
+    width: 99%;
+    justify-content: center;
+  }
+
+  .list-recommend,
+   .list-brands {
+    width: 100%;
+   }
+
+  .small-left-arrow,
+  .small-right-arrow,
+  .brand-left-arrow,
+  .brand-right-arrow {
+    display: none;
+  }
 }

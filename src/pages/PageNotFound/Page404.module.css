@@ -1,4 +1,4 @@
-.main {
+.main-wrapper-404 {
   display: flex;
   width: 100%;
   height: 100%;
@@ -14,7 +14,7 @@
 }
 
 .back-home-button {
-  position: absolute;
+  position: fixed;
   display: flex;
   width: 100px;
   height: 100px;
@@ -33,4 +33,14 @@
 .back-home-button:hover {
   color: var( --color-olive);
   background-color: #ffffff;
+}
+
+@media (max-width: 800px) {
+  .back-home-button {
+    top: 240px;
+  }
+
+  .main-wrapper-404 {
+    min-width: 320px;
+  }
 }

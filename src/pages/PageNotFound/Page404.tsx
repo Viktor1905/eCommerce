@@ -9,7 +9,7 @@ export function NotFoundPage() {
   }
   return (
     <main className={styles.main}>
-      <div>
+      <div className={styles['main-wrapper-404']}>
         <button onClick={handleClick} className={styles['back-home-button']}>
           Back Home
         </button>

@@ -29,3 +29,12 @@
 :is(.about-link, .shop-link, .sticker-link, .help-link):hover {
   color: #ffffff;
 }
+
+@media (max-width: 600px) {
+  .footer-case {
+    height: auto;
+    flex-direction: column;
+    margin: 20px 0;
+    gap: 20px;
+  }
+}

@@ -6,8 +6,9 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles['header-case']}>
         <div className={styles['header-wrapper']}>
-          <HomeLink />
-          <CatalogList />
+          <div className={styles['home-link-wrapper']}>
+            <HomeLink />
+          </div>
           <SearchPanel />
         </div>
         <MenuHeader />
@@ -33,10 +34,6 @@ function HomeLink() {
   );
 }
 
-function CatalogList() {
-  return <div className={styles.catalog}>Catalog ▾</div>;
-}
-
 function SearchPanel() {
   return (
     <div className={styles.search}>
@@ -53,32 +50,36 @@ function SearchPanel() {
 function MenuHeader() {
   return (
     <nav className={styles.menu}>
+      <div className={styles['nav-home-link-wrapper']}>
+        <HomeLink />
+      </div>
       <ul className={styles['menu-list']}>
-        <li className={styles.list}>
+        <li className={`${styles.list} ${styles['list-sing-up']}`}>
+          <div className={styles['sing-up-menu']}>
+            <div className={styles['button-login']}>LOG IN</div>
+            <span>Don&apos;t have an account?</span>{' '}
+            <div className={styles['button-sing-up']}>Sing Up</div>
+          </div>
           <div className={styles['img-list']}>
             <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
           </div>
           <div className={styles['text-list']}>Sign Up</div>
         </li>
-        <li className={styles.list}>
-          <div className={styles['img-list']}>
-            <span className={`material-symbols-outlined ${styles['pets-icon']}`}>pets</span>
-          </div>
-          <div className={styles['text-list']}>Login</div>
-        </li>
-        <li className={styles.list}>
+        <li className={`${styles.list} ${styles['list-order']}`}>
           <div className={styles['img-list']}>
             <span className={`material-symbols-outlined ${styles['order-icon']}`}>package_2</span>
           </div>
           <div className={styles['text-list']}>Orders</div>
         </li>
-        <li className={styles.list}>
+        <li className={`${styles.list} ${styles['list-favorite']}`}>
+          {' '}
           <div className={styles['img-list']}>
             <span className={`material-symbols-outlined ${styles['favorite-icon']}`}>favorite</span>
           </div>
           <div className={styles['text-list']}>Favorites</div>
         </li>
-        <li className={styles.list}>
+        <li className={`${styles.list} ${styles['list-counter']}`}>
+          <div className={styles['counter-cart']}>0</div>
           <div className={styles['img-list']}>
             <span className={`material-symbols-outlined ${styles['cart-icon']}`}>
               shopping_cart
