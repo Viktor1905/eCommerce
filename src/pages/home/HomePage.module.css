@@ -79,9 +79,9 @@
 .right-arrow {
   position: absolute;
   color: #ffffff;
-  top: calc(50% - 1.5rem);
+  top: calc(50%);
   left: 0;
-  font-size: 3rem;
+  font-size: clamp(15px, 3vw, 40px);
   transform: rotate(-90deg);
   transition: color 0.3s ease-in;
 }
@@ -115,7 +115,12 @@
   width: 95%;
   height: 200px;
   gap: 15px;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.list-recommend:hover :is(.small-left-arrow,
+.small-right-arrow) {
+    opacity: 1;
 }
 
 .small-left-arrow,
@@ -128,9 +133,10 @@
   background-color: #ffffff;
   top: calc(50% - 1rem);
   left: 0;
-  transition: color 0.3s ease-in;
+  transition: color 0.3s ease-in, opacity 0.3s ease-in;
   border-radius: 50%;
   cursor: pointer;
+  opacity: 0;
 }
 
 .small-left-arrow,
@@ -152,7 +158,12 @@
   height: 200px;
   margin-bottom: clamp(5px, 2vw, 20px);
   gap: 10px;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+.list-brands:hover :is(.brand-left-arrow,
+.brand-right-arrow) {
+    opacity: 1;
 }
 
 :is(.img0, .img1, .img2, .img3, .img4, .img5) {
@@ -164,7 +175,7 @@
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
-  box-shadow: 0 0 5px var(--color-olive);
+  box-shadow: 0 0 3px var(--color-olive);
 }
 
 .img0 {

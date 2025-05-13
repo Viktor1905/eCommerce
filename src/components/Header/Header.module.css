@@ -44,7 +44,7 @@
 }
 
 
-:is(.catalog, .menu-search, .list):hover {
+:is(.catalog, .menu-search, .list, .main-home-icon):hover {
    color: var(--color-khaki);
 }
 
@@ -100,12 +100,18 @@
 }
 
 .home-link {
+  font-size: 3rem;
   margin-left: 0;
-  color: var(--color-olive);
+}
+
+.main-home-icon {
+  color: #e3e3e3;
+  font-size: 2.5rem;
+  transition: color 0.2s ease-in;
 }
 
 .home-link:hover {
-  color: #e3e3e3;
+  color: var(--color-olive);
 }
 
 .img-list,
@@ -154,8 +160,8 @@
     font-size: clamp(0.4rem, 1.8vw, 0.8rem);
   }
 
-  .home-link {
-    font-size: clamp(0.5rem, 1vw, 3rem);
+  .main-home-icon {
+    font-size: clamp(1rem, 2vw, 2.5rem);
   }
 
   .search {

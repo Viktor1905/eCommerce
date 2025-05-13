@@ -25,9 +25,9 @@ function HomeLink() {
     <div className={styles['home-link']}>
       <span
         onClick={handleClick}
-        className={`material-symbols-outlined ${styles['main-pets-icon']}`}
+        className={`material-symbols-outlined ${styles['main-home-icon']}`}
       >
-        pets
+        home
       </span>
     </div>
   );
