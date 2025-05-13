@@ -1,0 +1,75 @@
+import { useState } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
+import { FieldKey } from '../../pages/register/registration-page-data/registrationSchema';
+
+type InputElementProps = {
+  title: string;
+  id: string;
+  type: string;
+  error?: string;
+  register?: UseFormRegisterReturn<FieldKey>;
+} & React.InputHTMLAttributes<HTMLInputElement>;
+
+export default function InputElement({
+  title,
+  id,
+  type,
+  error,
+  register,
+  ...rest
+}: InputElementProps) {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = type === 'password';
+  const isCheckbox = type === 'checkbox';
+  const isEmail = type === 'email';
+  const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
+  return (
+    <div
+      className={`relative ${isCheckbox ? 'flex flex-wrap w-[300px] ' : ''}`}
+    >
+      <label
+        htmlFor={id}
+        className={`font-medium text-goldenrod capitalize p-1 ${
+          isCheckbox ? '' : 'flex flex-col'
+        }`}
+      >
+        {title}
+      </label>
+      <input
+        type={inputType}
+        id={id}
+        placeholder="Start typing..."
+        className={
+          `bg-khaki rounded-lg text-olive ` +
+          `focus:outline-none focus:ring-2 focus:ring-goldenrod ` +
+          (isCheckbox ? 'w-fit m-1 p-2 cursor-pointer' : 'p-1 w-[300px]')
+        }
+        {...register}
+        name={id}
+        autoComplete={isEmail ? 'on' : 'off'}
+        onChange={rest.onChange}
+        checked={rest.checked}
+      />
+
+      {isPassword && (
+        <button
+          type="button"
+          className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer pt-3"
+          onClick={() => {
+            setShowPassword((prev) => !prev);
+          }}
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+        >
+          {showPassword ? '🙉' : '🙈'}
+        </button>
+      )}
+
+      <p
+        className={`text-sm text-coral h-5 p-1 break-words whitespace-normal w-[300px]`}
+      >
+        {error ?? '\u00A0'}
+      </p>
+    </div>
+  );
+}
