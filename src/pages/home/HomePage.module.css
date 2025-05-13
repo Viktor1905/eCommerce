@@ -81,12 +81,15 @@
   color: #ffffff;
   top: calc(50% - 1.5rem);
   left: 0;
+  font-size: 3rem;
+  transform: rotate(-90deg);
   transition: color 0.3s ease-in;
 }
 
 .right-arrow {
   left: inherit;
   right: 0;
+  transform: rotate(90deg);
 }
 
 :is(.left-arrow, .right-arrow):hover {
@@ -121,12 +124,19 @@
 .brand-right-arrow {
   position: absolute;
   color: var(--color-coral);
+  font-size: 2rem;
   background-color: #ffffff;
   top: calc(50% - 1rem);
   left: 0;
   transition: color 0.3s ease-in;
   border-radius: 50%;
   cursor: pointer;
+}
+
+.small-left-arrow,
+.brand-left-arrow {
+  transform: rotate(-180deg);
+
 }
 
 .small-right-arrow,
@@ -225,6 +235,11 @@
   background-image: url('../../assets/images/products/test2/F775F33C-2B66-4953-97DC-1B6DD7166948.png');
 }
 
+.pets-logo-icon {
+  font-size: 1.6rem;
+}
+
+
 @media (max-width: 1300px) {
   .title-main,
   .list-recommend,
@@ -282,5 +297,4 @@
   .brands {
     font-size: clamp(1rem, 2.5vw, 1.8rem)
 }
-
 }

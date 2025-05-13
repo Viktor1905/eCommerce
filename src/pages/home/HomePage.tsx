@@ -19,10 +19,7 @@ export function HomePage() {
 function TitleMain() {
   return (
     <h1 className={styles['title-main']}>
-      PET{' '}
-      <span className="material-symbols-outlined" style={{ fontSize: '1.6rem' }}>
-        pets
-      </span>{' '}
+      PET <span className={`material-symbols-outlined ${styles['pets-logo-icon']}`}>pets</span>{' '}
       SUPPLIES
     </h1>
   );
@@ -31,18 +28,8 @@ function TitleMain() {
 function MainBlock() {
   return (
     <div className={styles['main-info-block']}>
-      <span
-        className={`material-symbols-outlined ${styles['left-arrow']}`}
-        style={{ fontSize: '3rem', transform: 'rotate(-90deg)' }}
-      >
-        pets
-      </span>
-      <span
-        className={`material-symbols-outlined ${styles['right-arrow']}`}
-        style={{ fontSize: '3rem', transform: 'rotate(90deg)' }}
-      >
-        pets
-      </span>
+      <span className={`material-symbols-outlined ${styles['left-arrow']}`}>pets</span>
+      <span className={`material-symbols-outlined ${styles['right-arrow']}`}>pets</span>
     </div>
   );
 }
@@ -64,16 +51,8 @@ function ListRecommend() {
   return (
     <div className={styles['list-recommend']}>
       <ListPagesRecommend />
-      <span
-        className={`material-symbols-outlined ${styles['small-left-arrow']}`}
-        style={{ fontSize: '2rem', transform: 'rotate(-180deg)' }}
-      >
-        play_circle
-      </span>
-      <span
-        className={`material-symbols-outlined ${styles['small-right-arrow']}`}
-        style={{ fontSize: '2rem' }}
-      >
+      <span className={`material-symbols-outlined ${styles['small-left-arrow']}`}>play_circle</span>
+      <span className={`material-symbols-outlined ${styles['small-right-arrow']}`}>
         play_circle
       </span>
     </div>
@@ -101,16 +80,8 @@ function ListBrands() {
   return (
     <div className={styles['list-brands']}>
       <ListPagesBrands />
-      <span
-        className={`material-symbols-outlined ${styles['brand-left-arrow']}`}
-        style={{ fontSize: '2rem', transform: 'rotate(-180deg)' }}
-      >
-        play_circle
-      </span>
-      <span
-        className={`material-symbols-outlined ${styles['brand-right-arrow']}`}
-        style={{ fontSize: '2rem' }}
-      >
+      <span className={`material-symbols-outlined ${styles['brand-left-arrow']}`}>play_circle</span>
+      <span className={`material-symbols-outlined ${styles['brand-right-arrow']}`}>
         play_circle
       </span>
     </div>

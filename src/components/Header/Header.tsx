@@ -5,8 +5,8 @@ export function Header() {
   return (
     <header className={styles.header}>
       <div className={styles['header-case']}>
-        <HomeLink />
         <div className={styles['header-wrapper']}>
+          <HomeLink />
           <CatalogList />
           <SearchPanel />
         </div>
@@ -25,8 +25,7 @@ function HomeLink() {
     <div className={styles['home-link']}>
       <span
         onClick={handleClick}
-        className="material-symbols-outlined"
-        style={{ fontSize: '3rem' }}
+        className={`material-symbols-outlined ${styles['main-pets-icon']}`}
       >
         pets
       </span>
@@ -57,39 +56,31 @@ function MenuHeader() {
       <ul className={styles['menu-list']}>
         <li className={styles.list}>
           <div className={styles['img-list']}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
-              person
-            </span>
+            <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
           </div>
           <div className={styles['text-list']}>Sign Up</div>
         </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
-              pets
-            </span>
+            <span className={`material-symbols-outlined ${styles['pets-icon']}`}>pets</span>
           </div>
           <div className={styles['text-list']}>Login</div>
         </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
-              package_2
-            </span>
+            <span className={`material-symbols-outlined ${styles['order-icon']}`}>package_2</span>
           </div>
           <div className={styles['text-list']}>Orders</div>
         </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
-              favorite
-            </span>
+            <span className={`material-symbols-outlined ${styles['favorite-icon']}`}>favorite</span>
           </div>
           <div className={styles['text-list']}>Favorites</div>
         </li>
         <li className={styles.list}>
           <div className={styles['img-list']}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>
+            <span className={`material-symbols-outlined ${styles['cart-icon']}`}>
               shopping_cart
             </span>
           </div>

@@ -23,14 +23,16 @@
 
 .header-wrapper {
   display: flex;
-  width: 60%;
-  justify-content: space-around;
+  width: 65%;
+  height: 45px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .catalog {
   display: flex;
   width: 80px;
-  height: 45px;
+  height: 100%;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
@@ -49,7 +51,7 @@
 .search {
   display: flex;
   width: 70%;
-  height: 45px;
+  height: 100%;
   color: #e3e3e3;
   background-color: #225649;
   justify-content: space-around;
@@ -62,14 +64,14 @@
 .menu-search {
   display: flex;
   align-items: center;
-  height: 45px;
+  height: 100%;
   cursor: pointer;
   transition: color 0.2s ease-in;
 }
 
 .input-search {
   width: 80%;
-  height: 40px;
+  height: 80%;
   font-size: 1rem;
   padding-left: 20%;
   color: var(--color-olive);
@@ -111,6 +113,52 @@
   display: flex;
 }
 
-.material-symbols-outlined {
-  font-size: 2rem;
+.home-link {
+  font-size: 3rem;
+}
+
+.person-icon,
+.pets-icon,
+.order-icon,
+.favorite-icon,
+.cart-icon {
+  font-size: 1rem;
+}
+
+@media (max-width: 1000px) {
+  .header {
+    height: 160px;
+    align-items: start;
+  }
+
+  .header-case {
+    flex-direction: column-reverse;
+    justify-content: start;
+    margin: 20px;
+    font-size: clamp(0.5rem, 0.5vw, 1rem);
+    gap: 10px;
+  }
+
+  .header-wrapper {
+    width: 100%;
+    height: clamp(1rem, 5vw, 3rem);
+  }
+
+  nav {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .list {
+    font-size: clamp(0.4rem, 1.8vw, 0.8rem);
+  }
+
+  .home-link {
+    font-size: clamp(0.5rem, 1vw, 3rem);
+  }
+
+  .search {
+    width: 75%;
+  }
 }
