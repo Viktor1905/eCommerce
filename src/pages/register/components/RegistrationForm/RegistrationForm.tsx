@@ -1,4 +1,4 @@
-import { Path, useForm } from 'react-hook-form';
+import { Path, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   optionalSchema,
@@ -6,32 +6,54 @@ import {
 } from '../../registration-page-data/registrationSchema';
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import InputElement from '../../../../components/InputElement/InputElement';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 export default function RegistrationForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    control,
+    trigger,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<FormFields>({
-    mode: 'onChange',
+    mode: 'all',
     resolver: zodResolver(optionalSchema),
   });
 
-  const [isCheckedSameAsShipping, setIsCheckedSameAsShipping] = useState(false);
-  const handleSameAsShippingCheckboxChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsCheckedSameAsShipping(event.target.checked);
-    setIsCheckedDefaultAddress(false);
-  };
+  const sameAsShipping = useWatch({ name: 'sameAsShipping', control });
 
-  const [isCheckedDefaultAddress, setIsCheckedDefaultAddress] = useState(false);
-  const handleDefaultAddressCheckboxChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsCheckedDefaultAddress(event.target.checked);
-  };
+  useEffect(() => {
+    if (sameAsShipping) {
+      setValue('defaultAddress', false, {
+        shouldValidate: true,
+      });
+      setValue('billingStreet', undefined, {
+        shouldValidate: false,
+      });
+      setValue('billingCity', undefined, {
+        shouldValidate: false,
+      });
+      setValue('billingZip', undefined, {
+        shouldValidate: false,
+      });
+      setValue('billingCountry', undefined, {
+        shouldValidate: false,
+      });
+      void trigger([
+        'sameAsShipping',
+        'billingStreet',
+        'billingCity',
+        'billingZip',
+        'billingCountry',
+      ]);
+    } else {
+      setValue('defaultAddress', false, {
+        shouldValidate: true,
+      });
+    }
+    void trigger(['sameAsShipping', 'defaultAddress']);
+  }, [sameAsShipping, setValue, trigger]);
 
   const handleValidSubmit = (data: FormFields) => {
     console.log(data);
@@ -84,6 +106,7 @@ export default function RegistrationForm() {
           content={userInfo}
           register={register}
           errors={errors}
+          control={control}
         />
 
         <FieldsetBlock
@@ -99,6 +122,7 @@ export default function RegistrationForm() {
           hint={"Fill the pet info to get a discount for your pet's birthday!"}
           register={register}
           errors={errors}
+          control={control}
         />
 
         <FieldsetBlock
@@ -114,22 +138,18 @@ export default function RegistrationForm() {
           id="sameAsShipping"
           register={register('sameAsShipping')}
           error={errors.sameAsShipping?.message}
-          checked={isCheckedSameAsShipping}
-          onChange={handleSameAsShippingCheckboxChange}
         />
 
-        {isCheckedSameAsShipping && (
+        {sameAsShipping && (
           <InputElement
             type="checkbox"
             title="Set as default address"
             id="defaultAddress"
             register={register('defaultAddress')}
-            checked={isCheckedDefaultAddress}
-            onChange={handleDefaultAddressCheckboxChange}
           />
         )}
 
-        {!isCheckedSameAsShipping && (
+        {!sameAsShipping && (
           <FieldsetBlock
             title="billing address"
             content={billingAddressInfo}
@@ -139,7 +159,7 @@ export default function RegistrationForm() {
         )}
 
         <button
-          disabled={isSubmitting}
+          disabled={!isValid || isSubmitting}
           type="submit"
           className={
             'w-fit p-1 pl-3 pr-3 text-white bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium ' +

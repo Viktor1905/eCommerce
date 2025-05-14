@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const today = new Date();
+
 const userSchema = z.object({
   userFirstName: z
     .string()
@@ -11,10 +13,9 @@ const userSchema = z.object({
     .max(20, 'Last name must be no longer than characters'),
   userBirthDate: z.string().refine((val) => {
     const dateOfBirth = new Date(val);
-    const currentDate = new Date();
-    let age = currentDate.getFullYear() - dateOfBirth.getFullYear();
-    const monthDiff = currentDate.getMonth() - dateOfBirth.getMonth();
-    const dayDiff = currentDate.getDate() - dateOfBirth.getDate();
+    let age = today.getFullYear() - dateOfBirth.getFullYear();
+    const monthDiff = today.getMonth() - dateOfBirth.getMonth();
+    const dayDiff = today.getDate() - dateOfBirth.getDate();
     if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
       age--;
     }
@@ -38,10 +39,15 @@ const petSchema = z.object({
     .min(2, 'First name must be at least 2 characters')
     .max(20),
   petBirthDate: z.string().refine((val) => {
-    const today = new Date();
-    const date = new Date(val);
-    return !isNaN(date.getTime()) && date <= today;
-  }, 'Your pet cannot be younger than today years old :)'),
+    const dateOfBirth = new Date(val);
+    let age = today.getFullYear() - dateOfBirth.getFullYear();
+    const monthDiff = today.getMonth() - dateOfBirth.getMonth();
+    const dayDiff = today.getDate() - dateOfBirth.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+      age--;
+    }
+    return age <= 35;
+  }, 'Your pet must be very old... Try applying for Guinness World Records'),
 });
 
 const postalCodeRegex =
@@ -105,25 +111,30 @@ export const flatSchema = userSchema
 
 export const optionalSchema = flatSchema
   .extend({
-    sameAsShipping: z.boolean(),
+    sameAsShipping: z.boolean().optional(),
   })
   .refine(
     (data) => {
-      const allBillingFields = [
-        data.billingStreet,
-        data.billingCity,
-        data.billingZip,
-        data.billingCountry,
-      ];
-      if (data.sameAsShipping) {
-        // All billing fields should be undefined
-        return allBillingFields.every((field) => field === undefined);
-      } else {
-        // All billing fields must be defined and non-empty strings
-        return allBillingFields.every(
-          (field) => typeof field === 'string' && field.trim() !== ''
-        );
-      }
+      if (data.sameAsShipping) return true;
+
+      // Parse billing fields only
+      const { billingStreet, billingCity, billingZip, billingCountry } = data;
+
+      const billingSchema = z.object({
+        billingStreet: flatSchema.shape.billingStreet,
+        billingCity: flatSchema.shape.billingCity,
+        billingZip: flatSchema.shape.billingZip,
+        billingCountry: flatSchema.shape.billingCountry,
+      });
+
+      const result = billingSchema.safeParse({
+        billingStreet,
+        billingCity,
+        billingZip,
+        billingCountry,
+      });
+
+      return result.success;
     },
     {
       message: 'Please fill billing address',

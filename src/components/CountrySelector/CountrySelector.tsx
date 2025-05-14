@@ -15,7 +15,10 @@ export default function CountrySelector({
 }: CountrySelectorProps) {
   return (
     <div className={`relative flex flex-wrap w-[300px]`}>
-      <label className="p-1 capitalize text-goldenrod font-medium w-[300px] ">
+      <label
+        className="p-1 capitalize text-goldenrod font-medium w-[300px] "
+        htmlFor={id}
+      >
         Country
       </label>
       <select

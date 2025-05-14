@@ -16,10 +16,8 @@ export default function InputElement({
   type,
   error,
   register,
-  ...rest
 }: InputElementProps) {
   const [showPassword, setShowPassword] = useState(false);
-
   const isPassword = type === 'password';
   const isCheckbox = type === 'checkbox';
   const isEmail = type === 'email';
@@ -30,7 +28,7 @@ export default function InputElement({
     >
       <label
         htmlFor={id}
-        className={`font-medium text-goldenrod capitalize p-1 ${
+        className={`font-medium text-goldenrod capitalize p-1 font-main ${
           isCheckbox ? '' : 'flex flex-col'
         }`}
       >
@@ -41,15 +39,15 @@ export default function InputElement({
         id={id}
         placeholder="Start typing..."
         className={
-          `bg-khaki rounded-lg text-olive ` +
-          `focus:outline-none focus:ring-2 focus:ring-goldenrod ` +
-          (isCheckbox ? 'w-fit m-1 p-2 cursor-pointer' : 'p-1 w-[300px]')
+          `rounded-lg text-olive font-main ` +
+          `` +
+          (isCheckbox
+            ? 'w-fit m-1 p-2 cursor-pointer accent-goldenrod mx-1 hover:accent-goldenrod'
+            : 'p-1 w-[300px] focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki')
         }
         {...register}
         name={id}
         autoComplete={isEmail ? 'on' : 'off'}
-        onChange={rest.onChange}
-        checked={rest.checked}
       />
 
       {isPassword && (
