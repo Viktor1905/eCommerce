@@ -1,5 +1,6 @@
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
+import logo from './logo.png';
 
 export function Header() {
   return (
@@ -7,6 +8,7 @@ export function Header() {
       <div className={styles['header-case']}>
         <div className={styles['header-wrapper']}>
           <div className={styles['home-link-wrapper']}>
+            <Logo />
             <HomeLink />
           </div>
           <SearchPanel />
@@ -34,6 +36,14 @@ function HomeLink() {
   );
 }
 
+function Logo() {
+  return (
+    <div className={styles['logo-header']}>
+      <img className={styles.logo} src={logo} alt="logo"></img>
+    </div>
+  );
+}
+
 function SearchPanel() {
   return (
     <div className={styles.search}>
@@ -51,6 +61,7 @@ function MenuHeader() {
   return (
     <nav className={styles.menu}>
       <div className={styles['nav-home-link-wrapper']}>
+        <Logo />
         <HomeLink />
       </div>
       <ul className={styles['menu-list']}>
