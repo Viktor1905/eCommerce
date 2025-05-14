@@ -1,27 +1,48 @@
 import * as React from 'react';
 import { LoginInput } from './Login-input.tsx';
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './login-scheme.tsx';
+import { loginUser } from '../../../api/auth/login.ts';
+import { LoginResponse } from '../../../api/auth/login.types.ts';
+import { FormEvent } from 'react';
 
 export function LoginForm(): React.ReactElement {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
+    setError,
   } = useForm<LoginInputs>({
     mode: 'onChange',
     resolver: zodResolver(schema),
   });
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit: (data: LoginInputs) => Promise<void> = async (
+    data: LoginInputs
+  ): Promise<void> => {
+    try {
+      const response: LoginResponse = await loginUser(data);
+      if ('customer' in response) {
+        console.log('User logged in:', response.customer);
+      } else {
+        setError('root', {
+          type: 'manual',
+          message: 'Invalid email or password',
+        });
+      }
+    } catch (error) {
+      const errorMessage: string = error instanceof Error ? error.message : 'Something went wrong';
+      setError('root', {
+        type: 'manual',
+        message: errorMessage,
+      });
+    }
   };
   return (
     <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
       <form
         className="flex flex-col gap-6"
-        onSubmit={(event) => void handleSubmit(onSubmit)(event)}
+        onSubmit={(event: FormEvent<HTMLFormElement>): void => void handleSubmit(onSubmit)(event)}
       >
         <h1 className="font-additional self-center text-3xl font-bold"> Login </h1>
         <LoginInput
@@ -47,6 +68,7 @@ export function LoginForm(): React.ReactElement {
         >
           Login
         </button>
+        {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
       </form>
       <div>
         <p>Don&#39;t have an account?</p>
@@ -60,5 +82,3 @@ export interface LoginInputs {
   email: string;
   password: string;
 }
-
-type FormData = z.infer<typeof schema>;

@@ -5,8 +5,6 @@ export const schema = z.object({
     .string()
     .min(1, 'Email is required')
     .superRefine((val, ctx) => {
-      console.log('RAW EMAIL INPUT:', JSON.stringify(val)); // отладка
-
       if (val !== val.trim()) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
