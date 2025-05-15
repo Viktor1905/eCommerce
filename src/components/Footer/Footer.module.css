@@ -1,0 +1,40 @@
+.footer {
+  position: relative;
+  display: flex;
+  margin-top: 100px;
+  justify-content: center;
+  color: var(--color-khaki);
+  background-color: #225649;
+  box-shadow: 0 0 30px #000000;
+}
+
+.footer-case {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center; 
+  font-size: 0.8rem;
+  width: 95%;
+  height: 60px;
+}
+
+:is(.about-link, .shop-link, .sticker-link, .help-link) {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.2s ease-in;
+}
+
+:is(.about-link, .shop-link, .sticker-link, .help-link):hover {
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .footer-case {
+    height: auto;
+    flex-direction: column;
+    margin: 20px 0;
+    gap: 20px;
+  }
+}
