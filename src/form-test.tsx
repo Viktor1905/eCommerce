@@ -34,17 +34,19 @@ export default function Form() {
     /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
     /* void to prevent Eslint error: Promise-returning function provided to attribute where a void return was expected */
     <form
-      className="flex flex-col gap-1 m-4"
+      className="flex flex-col gap-1 w-full"
       onSubmit={(event) => void handleSubmit(onSubmit)(event)}
     >
       {/* register your input into the hook by invoking the "register" function */}
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
         <input
           defaultValue="input-test"
           {...register('example')}
           className="border rounded px-2 py-1"
         />
-        <p className="text-sm text-red-500 h-5 mt-1">{errors.example?.message ?? '\u00A0'}</p>
+        <p className="text-sm text-red-500 h-5 mt-1">
+          {errors.example?.message ?? '\u00A0'}
+        </p>
       </div>
 
       {/* include validation with required or other standard HTML validation rules */}
