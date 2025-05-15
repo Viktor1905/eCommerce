@@ -1,71 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
 @import "tailwindcss";
-
+@theme {
+  --color-olive: #3e3d38;
+  --color-jungle: #2aa989;
+  --color-goldenrod: #daa629;
+  --color-coral: #e17978;
+  --color-khaki: #c0b79c;
+  --font-main: 'Rubik', 'sans-serif';
+  --font-additional: 'Marmelad', 'sans-serif';
+  --font-main-bd: 'Rubik-bold', 'sans-serif';
+}
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
+  --color-olive: #3e3d38;
+  --color-jungle: #2aa989;
+  --color-goldenrod: #daa629;
+  --color-coral: #e17978;
+  --color-khaki: #c0b79c;
+  --font-main: 'Rubik', 'sans-serif';
+  --font-additional: 'Marmelad', 'sans-serif';
+  --font-main-bd: 'Rubik-bold', 'sans-serif';
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: #ffffffde;
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* TODO: remove tags styles*/
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+
+@font-face {
+  font-family: 'Marmelad';
+  src: url('./assets/fonts/Marmelad-Regular.ttf');
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+@font-face {
+  font-family: 'Rubik';
+  src: url('./assets/fonts/Rubik-VariableFont_wght.ttf') format('truetype');
 }
 
-.header-text {
-  font-size: 3.2em;
-  line-height: 1.1;
+@font-face {
+  font-family: 'Rubik-bold';
+  src: url('./assets/fonts/Rubik-ExtraBold.ttf');
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+body{
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    background-color: #216e58;
+    font-family: var(--font-main), sans-serif;
+    overflow-x: hidden;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }

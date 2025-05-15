@@ -1,0 +1,339 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e3e3e3;
+}
+
+.title-main {
+  position: relative;
+  display: flex;
+  width: 95%;
+  margin: clamp(5px, 2vw, 20px) 0;
+  font-size: 2rem;
+  align-items: center;
+}
+
+.image-case {
+  display: flex;
+  width: 45px;
+  height: 45px;
+  margin-right: 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.info-blocks {
+  display: flex;
+  width: 95%;
+  height: 600px;
+  justify-content: space-between;
+}
+
+.main-info-block {
+  position: relative;
+  width: 66%;
+  height: 100%;
+  background-color: var(--color-jungle);
+  cursor: pointer;
+  background-image: url('../../assets/images/products/test/dogCleaner.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.aside-info-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 33%;
+  height: 100%;
+}
+
+.aside-up-block,
+.aside-down-block {
+  display: flex;
+  width: 100%;
+  height: 49%;
+  background-color: var(--color-goldenrod);
+  cursor: pointer;
+}
+
+.aside-up-block {
+  background-image: url('../../assets/images/products/test/dogCar.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.aside-down-block {
+  background-color: var(--color-coral);
+  background-image: url('../../assets/images/products/test/offerHumsters.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.left-arrow, 
+.right-arrow {
+  position: absolute;
+  color: #ffffff;
+  top: calc(50%);
+  left: 1rem;
+  font-size: clamp(15px, 3vw, 40px);
+  transform: rotate(-90deg);
+  transition: color 0.3s ease-in;
+}
+
+.right-arrow {
+  left: inherit;
+  right: 1rem;
+  transform: rotate(90deg);
+}
+
+:is(.left-arrow, .right-arrow):hover {
+  color: var(--color-coral);
+}
+
+:is(.small-left-arrow,
+.small-right-arrow, .brand-left-arrow,
+.brand-right-arrow):hover {
+  color: var(--color-olive);
+}
+
+.recommend,
+.brands {
+  display: flex;
+  width: 95%;
+  margin: clamp(10px, 2vw, 40px) 0 clamp(5px, 2vw, 20px) 0;
+  font-size: 1.5rem;
+}
+
+.list-recommend{
+  position: relative;
+  display: flex;
+  width: 95%;
+  height: 200px;
+  gap: 15px;
+  overflow-x: hidden;
+}
+
+.list-recommend:hover :is(.small-left-arrow,
+.small-right-arrow) {
+    opacity: 1;
+}
+
+.small-left-arrow,
+.small-right-arrow,
+.brand-left-arrow,
+.brand-right-arrow {
+  position: absolute;
+  color: var(--color-coral);
+  font-size: 2rem;
+  background-color: #ffffff;
+  top: calc(50% - 1rem);
+  left: 0;
+  transition: color 0.3s ease-in, opacity 0.3s ease-in;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.small-left-arrow,
+.brand-left-arrow {
+  transform: rotate(-180deg);
+}
+
+.small-right-arrow,
+.brand-right-arrow {
+  left: inherit;
+  right: 0;
+}
+
+.list-brands {
+  position: relative;
+  display: flex;
+  width: 95%;
+  height: 200px;
+  margin-bottom: clamp(5px, 2vw, 20px);
+  gap: 10px;
+  overflow-x: hidden;
+}
+
+.list-brands:hover :is(.brand-left-arrow,
+.brand-right-arrow) {
+    opacity: 1;
+}
+
+:is(.img0, .img1, .img2, .img3, .img4, .img5) {
+  display: flex;
+  width: 450px;
+  height: 100%;
+  aspect-ratio: 4.3 / 3;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  box-shadow: 0 0 3px var(--color-olive);
+}
+
+.img0 {
+  background-image: url('../../assets/images/products/test/humster.png');
+}
+
+.img1 {
+  background-image: url('../../assets/images/products/test/kitten.png');
+}
+
+.img2 {
+  background-image: url('../../assets/images/products/test/dogCar.png');
+}
+
+.img3 {
+  background-image: url('../../assets/images/products/test/dogCleaner.png');
+}
+
+.img4 {
+  background-image: url('../../assets/images/products/test/dogFootPacket.png');
+}
+
+.img5 {
+  background-image: url('../../assets/images/products/test/dogToys.png');
+}
+
+:is(.img6, .img7, .img8, .img9, .img10, .img11, .img12, .img13) {
+  display: flex;
+  width: 300px;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  box-shadow: 0 0 3px var(--color-olive);
+}
+
+.img6 {
+  background-image: url('../../assets/images/products/test2/pedi.png');
+}
+
+.img7 {
+  background-image: url('../../assets/images/products/test2/royal.png');
+}
+
+.img8 {
+  background-image: url('../../assets/images/products/test2/humster.png');
+}
+
+.img9 {
+  background-image: url('../../assets/images/products/test2/A616FF82-19EA-4848-AFE1-BE659E686786.png');
+}
+
+.img10 {
+  background-image: url('../../assets/images/products/test2/0594EB9F-90C4-40AB-95DB-BAD542CE0DCC.png');
+}
+
+.img11 {
+  background-image: url('../../assets/images/products/test2/FF07EA7F-476C-480B-8B18-DA328DB887BE.png');
+}
+
+.img12 {
+  background-image: url('../../assets/images/products/test2/06A93360-F7FA-4DB7-A334-24564711DC3C.png');
+}
+
+.img13 {
+  background-image: url('../../assets/images/products/test2/F775F33C-2B66-4953-97DC-1B6DD7166948.png');
+}
+
+.pets-logo-icon {
+  font-size: 1.6rem;
+}
+
+
+@media (max-width: 1300px) {
+  .title-main,
+  .list-recommend,
+  .list-brands,
+  .recommend,
+  .brands {
+    width: 95%;
+  }
+
+  .title-main {
+    font-size: clamp(0.5rem, 3vw, 2rem);
+  }
+
+  .info-blocks {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .main-info-block {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .aside-info-block {
+    width: 100%;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .aside-up-block,
+  .aside-down-block {
+    flex: 1;
+    aspect-ratio: 4.3 / 3;
+  }
+
+  .img12,
+  .img13,
+  .img5 {
+    display: none;
+  }
+
+  .list-recommend {
+    height: auto;
+  }
+
+  .list-brands {
+    height: auto;
+  }
+
+  .recommend,
+  .brands {
+    font-size: clamp(0.5rem, 2.5vw, 1.8rem)
+  }
+}
+
+@media (max-width: 600px) {
+  .main {
+    min-width: 320px;
+  }
+
+  .info-blocks {
+    width: 100%;
+  }
+
+  .title-main,
+  .recommend,
+  .brands {
+    width: 99%;
+    justify-content: center;
+  }
+
+  .list-recommend,
+   .list-brands {
+    width: 100%;
+   }
+
+  .small-left-arrow,
+  .small-right-arrow,
+  .brand-left-arrow,
+  .brand-right-arrow {
+    display: none;
+  }
+}
