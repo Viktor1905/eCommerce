@@ -10,7 +10,7 @@ type CountrySelectorProps = {
 export default function CountrySelector({ error, id, register }: CountrySelectorProps) {
   return (
     <div className={`relative flex flex-wrap w-[300px]`}>
-      <label className="p-1 capitalize text-goldenrod font-medium w-[300px] " htmlFor={id}>
+      <label className="p-1 capitalize text-goldenrod font-medium w-[300px] font-main" htmlFor={id}>
         Country
       </label>
       <select
@@ -23,8 +23,10 @@ export default function CountrySelector({ error, id, register }: CountrySelector
         <option value="" disabled hidden>
           Select a country
         </option>
-        {COUNTRIES_DATA.map((country) => (
-          <option value={country.code} label={country.name} key={country.code}></option>
+        {COUNTRIES_DATA.map(({ code, name }) => (
+          <option value={code} key={code} className="text-olive">
+            {name}
+          </option>
         ))}
       </select>
       <p className="text-sm text-coral h-5 p-1 w-[300px] break-words whitespace-normal">

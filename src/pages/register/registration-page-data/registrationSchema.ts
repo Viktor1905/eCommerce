@@ -1,6 +1,11 @@
 import { z } from 'zod';
+import { COUNTRIES_DATA } from '../../../components/CountrySelector/countries-data/countries-data';
 
 const today = new Date();
+
+export const CountryCodeSchema = z
+  .enum([...COUNTRIES_DATA.map((c) => c.code)] as [string, ...string[]])
+  .refine((val) => val !== '', { message: 'Please select a country' });
 
 const userSchema = z.object({
   firstName: z
@@ -34,10 +39,7 @@ const loginSchema = z.object({
 });
 
 const petSchema = z.object({
-  petName: z
-    .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(20),
+  petName: z.string().min(2, 'First name must be at least 2 characters').max(20),
   petBirthDate: z.string().refine((val) => {
     const dateOfBirth = new Date(val);
     let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -50,36 +52,23 @@ const petSchema = z.object({
   }, 'Your pet must be very old... Try applying for Guinness World Records'),
 });
 
-const postalCodeRegex =
-  /^(\d{5}(-\d{4})?|[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d)$/;
+const postalCodeRegex = /^(\d{5}(-\d{4})?|[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d)$/;
 
 const shippingAddressSchema = z.object({
   shippingStreetName: z.string().min(5, 'Please enter a valid street name'),
-  shippingCity: z
-    .string()
-    .min(2, 'City name must be at least 2 characters')
-    .max(50),
-  shippingPostalCode: z
-    .string()
-    .regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)'),
-  shippingCountry: z.string().min(1, 'Please select a country'),
+  shippingCity: z.string().min(2, 'City name must be at least 2 characters').max(50),
+  shippingPostalCode: z.string().regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)'),
+  shippingCountry: CountryCodeSchema,
 });
 
 const billingAddressSchema = z.object({
-  billingStreetName: z
-    .string()
-    .min(5, 'Please enter a valid street name')
-    .optional(),
-  billingCity: z
-    .string()
-    .min(2, 'City name must be at least 2 characters')
-    .max(50)
-    .optional(),
+  billingStreetName: z.string().min(5, 'Please enter a valid street name').optional(),
+  billingCity: z.string().min(2, 'City name must be at least 2 characters').max(50).optional(),
   billingPostalCode: z
     .string()
     .regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)')
     .optional(),
-  billingCountry: z.string().min(1, 'Please select a country').optional(),
+  billingCountry: CountryCodeSchema.optional(),
 });
 
 export const flatSchema = userSchema
@@ -100,12 +89,7 @@ export const optionalSchema = flatSchema
       if (data.sameAsShipping) return true;
 
       // Parse billing fields only
-      const {
-        billingStreetName,
-        billingCity,
-        billingPostalCode,
-        billingCountry,
-      } = data;
+      const { billingStreetName, billingCity, billingPostalCode, billingCountry } = data;
 
       const billingSchema = z.object({
         billingStreetName: flatSchema.shape.billingStreetName,

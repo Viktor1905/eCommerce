@@ -1,30 +1,26 @@
-import { Control, UseFormRegisterReturn } from 'react-hook-form';
-import {
-  FieldKey,
-  FormFields,
-} from '../../pages/register/registration-page-data/registrationSchema';
+import { Control, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { format } from 'date-fns';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { useEffect, useRef, useState } from 'react';
 
-type DateInputElementProps = {
+type DateInputElementProps<TFieldValues extends Record<string, unknown>> = {
   title: string;
-  id: FieldKey;
+  id: Path<TFieldValues>;
   type: string;
   error?: string;
-  register?: UseFormRegisterReturn<FieldKey>;
-  control?: Control<FormFields>;
+  register?: UseFormRegisterReturn;
+  control?: Control<TFieldValues>;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function DateInputElement({
+export default function DateInputElement<TFieldValues extends Record<string, unknown>>({
   title,
   id,
   error,
   type,
   register,
   control,
-}: DateInputElementProps) {
+}: DateInputElementProps<TFieldValues>) {
   const [selected, setSelected] = useState<Date | undefined>(undefined);
   const defaultClassNames = getDefaultClassNames();
   const [open, setOpen] = useState(false);
@@ -88,7 +84,6 @@ export default function DateInputElement({
                     setSelected(day);
                     if (day) {
                       field.onChange(format(day, 'yyyy-MM-dd'));
-                      console.log(format(day, 'yyyy-MM-dd'));
                     }
                     setOpen(false);
                   }}
@@ -120,9 +115,7 @@ export default function DateInputElement({
           </>
         )}
       />
-      <p
-        className={`text-sm text-coral h-5 p-1 break-words whitespace-normal w-[300px]`}
-      >
+      <p className={`text-sm text-coral h-5 p-1 break-words whitespace-normal w-[300px]`}>
         {error ?? '\u00A0'}
       </p>
     </div>
