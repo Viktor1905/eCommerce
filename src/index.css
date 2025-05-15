@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @theme {
   --color-olive: #3e3d38;
   --color-jungle: #2aa989;
@@ -17,6 +17,9 @@
 @font-face {
   font-family: 'Rubik';
   src: url('./assets/fonts/Rubik-VariableFont_wght.ttf') format('truetype');
+=======
+  src: url('./assets/fonts/Rubik-VariableFont_wght.ttf');
+}
 }
 
 @font-face {
