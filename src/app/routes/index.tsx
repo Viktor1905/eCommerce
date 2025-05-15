@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../../components/layout/Layout';
 import { HomePage } from '../../pages/home/HomePage';
-import { NotFoundPage } from '../../pages/pageNotFound/Page404';
 import { CartPage } from '../../pages/cart/Cart';
 import { FavoritesPage } from '../../pages/favorites/Favorites';
 import { OrdersPage } from '../../pages/orders/OrdersPage';
 import { CatalogPage } from '../../pages/catalog/CatalogPage';
-import { LoginPage } from '../../pages/login/LoginPage';
-import { Registration } from '../../pages/registration/RegistrationPage';
+import { LoginPage } from '../../pages/authorization/Login-page.tsx';
+import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
+import { NotFoundPage } from '../../pages/PageNotFound/Page404.tsx';
 
 export function AppRoutes() {
   return (
@@ -15,7 +15,7 @@ export function AppRoutes() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="/registration" element={<Registration />} />
+        <Route path="/registration" element={<RegistrationPage />} />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
         <Route path="cart" element={<CartPage />} />

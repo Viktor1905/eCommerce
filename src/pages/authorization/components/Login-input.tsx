@@ -47,15 +47,15 @@ export function LoginInput({
           </div>
         )}
       </div>
-      <p className="text-sm font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
+      <p className="text-sm h-fit font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>
     </div>
   );
 }
 
-interface LoginInputProps {
+export interface LoginInputProps {
   register: UseFormRegisterReturn;
   errorMessage?: string;
-  type: 'email' | 'password';
+  type: 'email' | 'password' | 'text';
   label: string;
   placeholder: string;
   required?: boolean;
