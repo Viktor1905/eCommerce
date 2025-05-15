@@ -36,13 +36,10 @@ export function Header() {
 
 function HomeLink() {
   const navigate = useNavigate();
-  function handleClick(): void {
-    void navigate('/');
-  }
   return (
     <div className={styles['home-link']}>
       <span
-        onClick={handleClick}
+        onClick={() => void navigate('/')}
         className={`material-symbols-outlined ${styles['main-home-icon']}`}
       >
         home
@@ -80,45 +77,89 @@ function MenuHeader() {
         <HomeLink />
       </div>
       <ul className={styles['menu-list']}>
-        <li className={`${styles.list} ${styles['list-sing-up']}`}>
-          <div className={styles['sing-up-menu']}>
-            <div className={styles['button-login']}>LOG IN</div>
-            <span>Don&apos;t have an account?</span>{' '}
-            <div className={styles['button-sing-up']}>Sing Up</div>
-          </div>
-          <div className={styles['img-list']}>
-            <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
-          </div>
-          <div className={styles['text-list']}>Sign Up</div>
-        </li>
-        <li className={`${styles.list} ${styles['list-order']}`}>
-          <div className={styles['img-list']}>
-            <span className={`material-symbols-outlined ${styles['order-icon']}`}>package_2</span>
-          </div>
-          <div className={styles['text-list']}>Orders</div>
-        </li>
-        <li className={`${styles.list} ${styles['list-favorite']}`}>
-          {' '}
-          <div className={styles['img-list']}>
-            <span className={`material-symbols-outlined ${styles['favorite-icon']}`}>favorite</span>
-          </div>
-          <div className={styles['text-list']}>Favorites</div>
-        </li>
-        <li className={`${styles.list} ${styles['list-counter']}`}>
-          <div className={styles['counter-cart']}>0</div>
-          <div className={styles['img-list']}>
-            <span className={`material-symbols-outlined ${styles['cart-icon']}`}>
-              shopping_cart
-            </span>
-          </div>
-          <div className={styles['text-list']}>Cart</div>
-        </li>
+        <Login />
+        <Order />
+        <Favorite />
+        <Cart />
       </ul>
     </nav>
   );
 }
 
+function Login() {
+  const navigate = useNavigate();
+  return (
+    <li className={`${styles.list} ${styles['list-sing-up']}`}>
+      <div className={styles['img-list']}>
+        <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
+      </div>
+      <div className={styles['text-list']}>Sign Up</div>
+      <div className={styles['sing-up-menu']}>
+        <div onClick={() => void navigate('/login')} className={styles['button-login']}>
+          LOG IN
+        </div>
+        <span>Don&apos;t have an account?</span>{' '}
+        <div onClick={() => void navigate('/registration')} className={styles['button-sing-up']}>
+          Sing Up
+        </div>
+      </div>
+    </li>
+  );
+}
+
+function Order() {
+  const navigate = useNavigate();
+  return (
+    <li
+      onClick={() => void navigate('/orders')}
+      className={`${styles.list} ${styles['list-order']}`}
+    >
+      <div className={styles['img-list']}>
+        <span className={`material-symbols-outlined ${styles['order-icon']}`}>package_2</span>
+      </div>
+      <div className={styles['text-list']}>Orders</div>
+    </li>
+  );
+}
+
+function Favorite() {
+  const navigate = useNavigate();
+  return (
+    <li
+      onClick={() => void navigate('/favorites')}
+      className={`${styles.list} ${styles['list-favorite']}`}
+    >
+      {' '}
+      <div className={styles['img-list']}>
+        <span className={`material-symbols-outlined ${styles['favorite-icon']}`}>favorite</span>
+      </div>
+      <div className={styles['text-list']}>Favorites</div>
+    </li>
+  );
+}
+
+function Cart() {
+  const navigate = useNavigate();
+  return (
+    <li
+      onClick={() => void navigate('/cart')}
+      className={`${styles.list} ${styles['list-counter']}`}
+    >
+      <div className={styles['counter-cart']}>0</div>
+      <div className={styles['img-list']}>
+        <span className={`material-symbols-outlined ${styles['cart-icon']}`}>shopping_cart</span>
+      </div>
+      <div className={styles['text-list']}>Cart</div>
+    </li>
+  );
+}
+
+// function handleClick(navigate: (path: string) => void, link: string): void {
+//   navigate(link);
+// }
+
 function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
+  const navigate = useNavigate();
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   }, [isOpen]);
@@ -145,7 +186,9 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
           All
         </div>
         <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-catalog']}>Catalog</div>
+          <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
+            Catalog
+          </div>
         </div>
         <div className={styles['add-menu-list']}>
           <div className={styles['add-menu-pet-food']}>Pet food</div>
