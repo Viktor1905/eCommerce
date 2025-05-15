@@ -50,6 +50,7 @@
 body{
     margin: 0;
     padding: 0;
+    min-width: 320px;
     background-color: #216e58;
     font-family: var(--font-main), sans-serif;
 }

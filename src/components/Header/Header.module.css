@@ -1,27 +1,40 @@
+.header-wrapper{
+  position: relative;
+  display: flex;
+  min-width: 320px;
+  height: auto;
+}
+
 .header {
   position: relative;
   display: flex;
+  width: 100%;
   height: 80px;
   margin: 0 0 40px 0;
   justify-content: center;
   align-items: center;
   background-color: #216e58;
   box-shadow: 0 0 30px #000000;
+  z-index: 2;
+}
+
+.header-wrapper:hover .add-header-menu{
+  bottom: 0;
 }
 
 .header-case {
   position: relative;
   display: flex;
+  width: 100%;
+  height: 60px;
   justify-content: space-between;
   align-items: center; 
   font-size: 0.7rem;
-  width: 100%;
   max-width: 1418px;
   margin: 0 20px;
-  height: 60px;
 }
 
-.header-wrapper {
+.header-inner {
   display: flex;
   width: 65%;
   height: 45px;
@@ -34,7 +47,6 @@
   height: 80px;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   gap: 5px;
 }
 
@@ -195,6 +207,7 @@
 
 .nav-home-link-wrapper {
   display: none;
+  align-items: center;
 }
 
 .main-home-icon {
@@ -222,6 +235,108 @@
   font-size: 1rem;
 }
 
+.add-header-menu {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  max-width: 1418px;
+  min-width: 320px;
+  height: 40px;
+  bottom: 50px;
+  left: calc(50% + 20px);
+  transform: translateX(-50%);
+  color: #e3e3e3;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  opacity: 0.8;
+  transition: bottom 0.4s ease-in;
+}
+
+.add-menu-button-all,
+.add-menu-catalog,
+.add-menu-pet-food,
+.add-menu-accessories,
+.add-menu-promotions {
+  display: flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+:is(.add-menu-button-all,
+.add-menu-catalog,
+.add-menu-pet-food,
+.add-menu-accessories,
+.add-menu-promotions):hover {
+  border: 1px solid #e3e3e3;
+}
+
+.add-menu-list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.canvas-aside-menu {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-color: #3e3d38a4;
+  z-index: 3;
+}
+
+.visible-canvas-aside-menu {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.hidden-canvas-aside-menu {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.aside-add-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: 100vh;
+  background-color: #e3e3e3;
+  z-index: 4;
+  transition: all 0.4s ease-in;
+}
+
+.open-aside-add-menu {
+  transform: translateX(0);
+}
+
+.close-aside-add-menu {
+  transform: translateX(-320px);
+}
+
+.aside-menu-header {
+  height: 40px;
+  display: flex;
+  color: #e3e3e3;
+  padding-left: 20px;
+  background-color: var(--color-olive);
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.button-close-aside-menu {
+  position: absolute;
+  display: flex;
+  top: 2px;
+  right: 2px;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #e3e3e3;
+  cursor: pointer;
+}
+
 @media (max-width: 800px) {
   .header {
     min-width: 320px;
@@ -237,7 +352,7 @@
     gap: 10px;
   }
 
-  .header-wrapper {
+  .header-inner {
     width: 100%;
   }
 
@@ -247,6 +362,7 @@
 
   .nav-home-link-wrapper {
     display: flex;
+    gap: 2px;
   }
 
   .menu {
@@ -255,7 +371,7 @@
   }
 
   .list {
-    font-size: clamp(0.4rem, 1.8vw, 0.8rem);
+    font-size: clamp(0.5rem, 1.8vw, 0.8rem);
   }
 
   .main-home-icon {
@@ -265,6 +381,10 @@
   .search {
     width: 100%;
     height: 40px;
+  }
+
+  .add-header-menu {
+    font-size: clamp(0.5rem, 1.8vw, 0.8rem);
   }
 }
 

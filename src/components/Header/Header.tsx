@@ -1,21 +1,36 @@
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
 import logo from './logo.png';
+import { useState } from 'react';
+import { useEffect } from 'react';
+
+interface AllMenuProps {
+  isOpen: boolean;
+  toggleMenu: () => void;
+}
 
 export function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  function toggleMenu() {
+    setIsOpen(!isOpen);
+  }
   return (
-    <header className={styles.header}>
-      <div className={styles['header-case']}>
-        <div className={styles['header-wrapper']}>
-          <div className={styles['home-link-wrapper']}>
-            <Logo />
-            <HomeLink />
+    <div className={styles['header-wrapper']}>
+      <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
+      <header className={styles.header}>
+        <div className={styles['header-case']}>
+          <div className={styles['header-inner']}>
+            <div className={styles['home-link-wrapper']}>
+              <Logo />
+              <HomeLink />
+            </div>
+            <SearchPanel />
           </div>
-          <SearchPanel />
+          <MenuHeader />
         </div>
-        <MenuHeader />
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }
 
@@ -100,5 +115,48 @@ function MenuHeader() {
         </li>
       </ul>
     </nav>
+  );
+}
+
+function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }, [isOpen]);
+  return (
+    <>
+      <div
+        onClick={toggleMenu}
+        className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
+      ></div>
+      <div
+        className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+      >
+        <div className={styles['aside-menu-header']}>
+          <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
+            <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
+          </div>
+          <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>person</span>
+          Hello
+        </div>
+      </div>
+      <div className={styles['add-header-menu']}>
+        <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
+          <span className="material-symbols-outlined">menu</span>
+          All
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-catalog']}>Catalog</div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-pet-food']}>Pet food</div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-accessories']}>Accessories</div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-promotions']}>Promotions</div>
+        </div>
+      </div>
+    </>
   );
 }
