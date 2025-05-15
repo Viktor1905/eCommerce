@@ -1,5 +1,4 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
-//import { FieldKey } from '../../pages/register/registration-page-data/registrationSchema';
 import { COUNTRIES_DATA } from './countries-data/countries-data';
 
 type CountrySelectorProps = {
@@ -8,17 +7,10 @@ type CountrySelectorProps = {
   register?: UseFormRegisterReturn;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function CountrySelector({
-  error,
-  id,
-  register,
-}: CountrySelectorProps) {
+export default function CountrySelector({ error, id, register }: CountrySelectorProps) {
   return (
     <div className={`relative flex flex-wrap w-[300px]`}>
-      <label
-        className="p-1 capitalize text-goldenrod font-medium w-[300px] "
-        htmlFor={id}
-      >
+      <label className="p-1 capitalize text-goldenrod font-medium w-[300px] " htmlFor={id}>
         Country
       </label>
       <select
@@ -32,11 +24,7 @@ export default function CountrySelector({
           Select a country
         </option>
         {COUNTRIES_DATA.map((country) => (
-          <option
-            value={country.code}
-            label={country.name}
-            key={country.code}
-          ></option>
+          <option value={country.code} label={country.name} key={country.code}></option>
         ))}
       </select>
       <p className="text-sm text-coral h-5 p-1 w-[300px] break-words whitespace-normal">

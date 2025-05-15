@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
+@import "tailwindcss";
 @theme {
   --color-olive: #3e3d38;
   --color-jungle: #2aa989;
@@ -9,6 +10,25 @@
   --font-additional: 'Marmelad', 'sans-serif';
   --font-main-bd: 'Rubik-bold', 'sans-serif';
 }
+:root {
+  --color-olive: #3e3d38;
+  --color-jungle: #2aa989;
+  --color-goldenrod: #daa629;
+  --color-coral: #e17978;
+  --color-khaki: #c0b79c;
+  --font-main: 'Rubik', 'sans-serif';
+  --font-additional: 'Marmelad', 'sans-serif';
+  --font-main-bd: 'Rubik-bold', 'sans-serif';
+  color-scheme: light dark;
+  color: #ffffffde;
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
 @font-face {
   font-family: 'Marmelad';
   src: url('./assets/fonts/Marmelad-Regular.ttf');
@@ -23,47 +43,15 @@
   font-family: 'Rubik-bold';
   src: url('./assets/fonts/Rubik-ExtraBold.ttf');
 }
-:root {
-  --color-olive: #3e3d38;
-  --color-jungle: #2aa989;
-  --color-goldenrod: #daa629;
-  --color-coral: #e17978;
-  --color-khaki: #c0b79c;
-  --font-main: 'Rubik', 'sans-serif';
-  --font-additional: 'Marmelad', 'sans-serif';
-  --font-main-bd: 'Rubik-bold', 'sans-serif';
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body{
+    margin: 0;
+    padding: 0;
+    min-width: 320px;
+    background-color: #216e58;
+    font-family: var(--font-main), sans-serif;
+    overflow-x: hidden;
 }
-
-/* TODO: remove tags styles*/
-/*
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}*/
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
