@@ -154,10 +154,6 @@ function Cart() {
   );
 }
 
-// function handleClick(navigate: (path: string) => void, link: string): void {
-//   navigate(link);
-// }
-
 function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
   const navigate = useNavigate();
   useEffect(() => {
@@ -181,23 +177,25 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
         </div>
       </div>
       <div className={styles['add-header-menu']}>
-        <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
-          <span className="material-symbols-outlined">menu</span>
-          All
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
-            Catalog
+        <div className={styles['wrapper-add-header-menu']}>
+          <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
+            <span className="material-symbols-outlined">menu</span>
+            All
           </div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-pet-food']}>Pet food</div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-accessories']}>Accessories</div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-promotions']}>Promotions</div>
+          <div className={styles['add-menu-list']}>
+            <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
+              Catalog
+            </div>
+          </div>
+          <div className={styles['add-menu-list']}>
+            <div className={styles['add-menu-pet-food']}>Pet food</div>
+          </div>
+          <div className={styles['add-menu-list']}>
+            <div className={styles['add-menu-accessories']}>Accessories</div>
+          </div>
+          <div className={styles['add-menu-list']}>
+            <div className={styles['add-menu-promotions']}>Promotions</div>
+          </div>
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import notFoundImage from './assets/image/404notFound2V.png';
+import notFoundImage from './assets/image/pageNotFound.png';
 import styles from './Page404.module.css';
 import { useNavigate } from 'react-router-dom';
 
