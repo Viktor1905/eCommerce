@@ -88,6 +88,7 @@ export default function DateInputElement({
                     setSelected(day);
                     if (day) {
                       field.onChange(format(day, 'yyyy-MM-dd'));
+                      console.log(format(day, 'yyyy-MM-dd'));
                     }
                     setOpen(false);
                   }}

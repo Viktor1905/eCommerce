@@ -7,6 +7,13 @@ import {
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import InputElement from '../../../../components/InputElement/InputElement';
 import { useEffect } from 'react';
+import {
+  CountryCode,
+  getAccessToken,
+  SignUpData,
+  signUpUser,
+} from '../../../../api/api';
+import { COUNTRIES_DATA } from '../../../../components/CountrySelector/countries-data/countries-data';
 
 export default function RegistrationForm() {
   const {
@@ -28,13 +35,13 @@ export default function RegistrationForm() {
       setValue('defaultAddress', false, {
         shouldValidate: true,
       });
-      setValue('billingStreet', undefined, {
+      setValue('billingStreetName', undefined, {
         shouldValidate: false,
       });
       setValue('billingCity', undefined, {
         shouldValidate: false,
       });
-      setValue('billingZip', undefined, {
+      setValue('billingPostalCode', undefined, {
         shouldValidate: false,
       });
       setValue('billingCountry', undefined, {
@@ -42,9 +49,9 @@ export default function RegistrationForm() {
       });
       void trigger([
         'sameAsShipping',
-        'billingStreet',
+        'billingStreetName',
         'billingCity',
-        'billingZip',
+        'billingPostalCode',
         'billingCountry',
       ]);
     } else {
@@ -55,8 +62,60 @@ export default function RegistrationForm() {
     void trigger(['sameAsShipping', 'defaultAddress']);
   }, [sameAsShipping, setValue, trigger]);
 
-  const handleValidSubmit = (data: FormFields) => {
-    console.log(data);
+  const handleValidSubmit = async (data: FormFields) => {
+    const validCountryCodes = new Set(COUNTRIES_DATA.map((c) => c.code));
+
+    const isValid = (code: string): code is CountryCode =>
+      validCountryCodes.has(code as CountryCode);
+
+    if (!isValid(data.shippingCountry)) {
+      console.error('Invalid shipping country:', data.shippingCountry);
+      return;
+    }
+
+    if (data.billingCountry && !isValid(data.billingCountry)) {
+      console.error('Invalid billing country:', data.billingCountry);
+      return;
+    }
+
+    const shippingAddress = {
+      streetName: data.shippingStreetName,
+      city: data.shippingCity,
+      postalCode: data.shippingPostalCode,
+      country: data.shippingCountry,
+    };
+
+    const billingAddress = data.sameAsShipping
+      ? shippingAddress
+      : {
+          streetName: data.billingStreetName ?? '',
+          city: data.billingCity ?? '',
+          postalCode: data.billingPostalCode ?? '',
+          country: (data.billingCountry ?? '') as CountryCode,
+        };
+
+    const addresses = data.sameAsShipping
+      ? [shippingAddress]
+      : [shippingAddress, billingAddress];
+
+    const apiPayload: SignUpData = {
+      ...data,
+      addresses,
+      shippingAddressIds: [0],
+      billingAddressIds: data.sameAsShipping ? [0] : [1],
+      custom: {
+        type: { key: 'customerCustomFields' },
+        fields: { petName: data.petName, petBirthDate: data.petBirthDate },
+      },
+    };
+
+    try {
+      const token = await getAccessToken();
+      const result = await signUpUser(apiPayload, token);
+      console.log('Sign-up successful:', result);
+    } catch (error) {
+      console.error('Sign-up failed:', error);
+    }
   };
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -65,9 +124,9 @@ export default function RegistrationForm() {
   };
 
   const userInfo = [
-    { title: 'first name', id: 'userFirstName', type: 'text' },
-    { title: 'last name', id: 'userLastName', type: 'text' },
-    { title: 'date of birth', id: 'userBirthDate', type: 'date' },
+    { title: 'first name', id: 'firstName', type: 'text' },
+    { title: 'last name', id: 'lastName', type: 'text' },
+    { title: 'date of birth', id: 'dateOfBirth', type: 'date' },
   ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 
   const userLogin = [
@@ -81,15 +140,15 @@ export default function RegistrationForm() {
   ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 
   const shippingAddressInfo = [
-    { title: 'Street', id: 'shippingStreet', type: 'text' },
+    { title: 'Street', id: 'shippingStreetName', type: 'text' },
     { title: 'City', id: 'shippingCity', type: 'text' },
-    { title: 'Postal Code', id: 'shippingZip', type: 'text' },
+    { title: 'Postal Code', id: 'shippingPostalCode', type: 'text' },
   ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 
   const billingAddressInfo = [
-    { title: 'Street', id: 'billingStreet', type: 'text' },
+    { title: 'Street', id: 'billingStreetName', type: 'text' },
     { title: 'City', id: 'billingCity', type: 'text' },
-    { title: 'Postal Code', id: 'billingZip', type: 'text' },
+    { title: 'Postal Code', id: 'billingPostalCode', type: 'text' },
   ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 
   return (
@@ -172,3 +231,48 @@ export default function RegistrationForm() {
     </section>
   );
 }
+
+/*
+  export const handleValidSubmit = async (data: FormFields) => {
+    console.log(data);
+    async function testSignUp() {
+      try {
+        const token = await getAccessToken();
+        const now = Date.now();
+        const mockData: SignUpData = {
+          email: `user${now.toString()}@test.com`, // Unique to avoid conflicts
+          firstName: 'John',
+          lastName: 'Doe',
+          password: 'StrongPass123!',
+          dateOfBirth: '1990-01-01',
+          custom: {
+            type: {
+              key: 'customerCustomFields',
+            },
+            fields: {
+              petName: 'Kitty',
+              petBirthDate: '2025-05-14',
+            },
+          },
+          addresses: [
+            {
+              streetName: '123 Main St',
+              city: 'Testville',
+              postalCode: '12345',
+              country: 'DE',
+            },
+          ],
+          shippingAddressIds: [0],
+          billingAddressIds: [0],
+        };
+
+        const result = await signUpUser(mockData, token);
+        console.log('✅ Sign-up successful:', result);
+      } catch (error) {
+        console.error('❌ Sign-up failed:', error);
+      }
+    }
+
+    await testSignUp();
+  };
+*/
