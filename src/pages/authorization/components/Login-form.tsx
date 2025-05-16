@@ -42,7 +42,10 @@ export function LoginForm(): React.ReactElement {
     <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
       <form
         className="flex flex-col gap-6"
-        onSubmit={(event: FormEvent<HTMLFormElement>): void => void handleSubmit(onSubmit)(event)}
+        onSubmit={(event: FormEvent<HTMLFormElement>): void => {
+          event.preventDefault();
+          void handleSubmit(onSubmit)(event);
+        }}
       >
         <h1 className="font-additional self-center text-3xl font-bold"> Login </h1>
         <LoginInput
@@ -63,13 +66,13 @@ export function LoginForm(): React.ReactElement {
         />
         <button
           type="submit"
-          className="w-[100%] !border-[2px] !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
+          className="w-[100%] m-auto !border-[2px] rounded-lg border-goldenrod !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
           disabled={!isValid}
         >
           Login
         </button>
-        {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
       </form>
+      {errors.root && <p className="text-red-500 text-xl mt-2">{errors.root.message}</p>}
       <div>
         <p>Don&#39;t have an account?</p>
         <a className="!text-olive hover:!text-goldenrod cursor-pointer">Sign Up!</a>
