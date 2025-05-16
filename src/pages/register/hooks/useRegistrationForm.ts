@@ -9,9 +9,8 @@ import {
   SignUpData,
   signUpUser,
 } from '../../../api/sign-up/api';
-import { useNavigate } from 'react-router-dom';
 
-export function useRegistrationForm(navigate: ReturnType<typeof useNavigate>) {
+export function useRegistrationForm(onSuccess: (firstName: string) => void) {
   const {
     register,
     handleSubmit,
@@ -89,7 +88,7 @@ export function useRegistrationForm(navigate: ReturnType<typeof useNavigate>) {
         data.defaultAddress ?? false
       );
       console.log('Addresses successful:', setAddressesResult);
-      await navigate('/');
+      onSuccess(data.firstName);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Something went wrong. Please try again.';

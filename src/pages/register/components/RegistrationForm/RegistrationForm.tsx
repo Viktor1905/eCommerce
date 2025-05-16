@@ -6,8 +6,12 @@ import {
   billingAddressInfo,
   registrationFormSections,
 } from '../../registration-page-data/registrationFieldGroups';
+import OKModalDialog from '../../../../components/OKModalDialog/OKModalDialog';
+import { useState } from 'react';
 
 export default function RegistrationForm() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [firstName, setFirstName] = useState('');
   const navigate = useNavigate();
   const {
     register,
@@ -19,13 +23,36 @@ export default function RegistrationForm() {
     isSubmitting,
     sameAsShipping,
     submitError,
-  } = useRegistrationForm(navigate);
+  } = useRegistrationForm((firstName) => {
+    setFirstName(firstName);
+    setIsModalOpen(true);
+  });
+
+  function closeModal() {
+    setIsModalOpen(false);
+    void navigate('/');
+  }
 
   const submitBtnClass =
-    'w-fit p-1 px-3 text-white bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium disabled:opacity-60';
+    'w-fit p-1 px-3 text-white min-w-3xs bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium disabled:opacity-60';
   return (
     <section className="w-fit flex flex-col items-center justify-center font-additional ">
       <h2 className="text-3xl p-2 text-center text-jungle font-main-bd ">Registration</h2>
+      {isModalOpen && (
+        <OKModalDialog
+          title="Account created"
+          message={
+            <>
+              Welcome, {firstName}!
+              <br />
+              Your account has been created. You will be redirected to the main page.
+            </>
+          }
+          buttonText="Confirm"
+          closeModal={closeModal}
+        />
+      )}
+      ;
       <form
         className="flex flex-col gap-2 p-2 items-center"
         onSubmit={(e) => {
