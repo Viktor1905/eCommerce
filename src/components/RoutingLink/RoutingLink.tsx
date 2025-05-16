@@ -16,9 +16,9 @@ export default function RoutingLink({
   return (
     <div className="flex gap-2 bg-white items-center p-2 justify-center font-additional">
       <span className="text-jungle">{additionalText}</span>
-      <a href={redirectTo} onClick={onClick} className="text-jungle m-2 font-bold  font-main">
+      <div onClick={onClick} className="text-jungle m-2 font-bold hover:cursor-pointer font-main">
         {linkText}
-      </a>
+      </div>
     </div>
   );
 }

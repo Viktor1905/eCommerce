@@ -34,7 +34,7 @@ export default function RegistrationForm() {
   }
 
   const submitBtnClass =
-    'w-fit p-1 px-3 text-white min-w-3xs bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium disabled:opacity-60';
+    'w-fit p-1 px-3 text-white min-w-3xs bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed';
   return (
     <section className="w-fit flex flex-col items-center justify-center font-additional ">
       <h2 className="text-3xl p-2 text-center text-jungle font-main-bd ">Registration</h2>

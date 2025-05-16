@@ -62,7 +62,7 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
             <div
               className={
                 `rounded-lg text-olive font-main ` +
-                'p-1 w-[300px] focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
+                'p-1 w-[300px] hover:cursor-pointer focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
               }
               onClick={() => {
                 setOpen(!open);
@@ -104,10 +104,12 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
                     disabled: `opacity-50`,
                     day_button: `w-full h-full rounded-full cursor-pointer`,
                     caption_label: 'hidden',
-                    years_dropdown: `${defaultClassNames.years_dropdown} bg-khaki outline-0 `,
-                    nav: 'absolute left-2',
+                    years_dropdown: `${defaultClassNames.years_dropdown} hover:cursor-pointer bg-khaki outline-0 `,
+                    nav: `${defaultClassNames.nav} hover:cursor-pointer absolute left-2`,
                     month_caption: `${defaultClassNames.month_caption} flex justify-end pr-2`,
                     month_grid: `${defaultClassNames.month_caption} w-full`,
+                    button_previous: `${defaultClassNames.button_previous} hover:cursor-pointer`,
+                    button_next: `${defaultClassNames.button_next} hover:cursor-pointer`,
                   }}
                 />
               </div>

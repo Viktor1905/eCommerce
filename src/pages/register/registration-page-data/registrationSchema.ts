@@ -4,8 +4,10 @@ import { COUNTRIES_DATA } from '../../../components/CountrySelector/countries-da
 const today = new Date();
 
 export const CountryCodeSchema = z
-  .enum([...COUNTRIES_DATA.map((c) => c.code)] as [string, ...string[]])
-  .refine((val) => val !== '', { message: 'Please select a country' });
+  .string()
+  .refine((val) => COUNTRIES_DATA.some((c) => c.code === val), {
+    message: 'Please select a country',
+  });
 
 const userSchema = z.object({
   firstName: z

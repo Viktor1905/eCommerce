@@ -14,7 +14,7 @@ export default function CountrySelector({ error, id, register }: CountrySelector
         Country
       </label>
       <select
-        className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block"
+        className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block hover:cursor-pointer"
         defaultValue=""
         id={id}
         name={id}
