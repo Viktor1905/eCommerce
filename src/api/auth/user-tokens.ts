@@ -1,16 +1,24 @@
-export async function getAuthToken(): Promise<string | null> {
-  const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
+import { LoginData } from './login.types.ts';
+import { isUserTokenResponse } from './check-response.ts';
+
+export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Promise<UsersToken> {
+  const authString = `${apiConfig.clientId}:${apiConfig.secretId}`;
   const encodedAuth: string = btoa(authString);
   try {
     const response: Response = await fetch(
-      `https://auth.${API_CONFIG.region}.commercetools.com/oauth/token`,
+      `https://auth.${apiConfig.region}.commercetools.com/oauth/${apiConfig.projectKey}/customers/token`,
       {
         method: 'POST',
         headers: {
           Authorization: `Basic ${encodedAuth}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `grant_type=client_credentials&scope=manage_customers:${API_CONFIG.projectKey}`,
+        body: new URLSearchParams({
+          grant_type: 'password',
+          username: data.email,
+          password: data.password,
+          scope: `manage_customers:${apiConfig.projectKey}`, // Убрал пробел после ":"
+        }).toString(),
       }
     );
     if (!response.ok) {
@@ -25,19 +33,14 @@ export async function getAuthToken(): Promise<string | null> {
       );
     }
     const tokenResponse: unknown = await response.json();
-    if (
-      !tokenResponse ||
-      !(typeof tokenResponse === 'object') ||
-      !('access_token' in tokenResponse) ||
-      !(typeof tokenResponse.access_token === 'string')
-    ) {
+    console.log(tokenResponse);
+    if (!isUserTokenResponse(tokenResponse)) {
       throw new Error('Unknown error occurred during getting token');
     }
-    console.log(tokenResponse);
-    return tokenResponse.access_token;
+    return tokenResponse;
   } catch (error) {
     console.log('Token fetch error:', error);
-    return null;
+    throw new Error(`Token fetch error`);
   }
 }
 interface API_CONFIG {
@@ -46,9 +49,11 @@ interface API_CONFIG {
   projectKey: string;
   region: string;
 }
-const API_CONFIG = {
-  clientId: 'QMdMW3dn2QFBIFpoFRm_yfE0',
-  secretId: 'CV6y3lEHvhTtkY4a-8wFxZ9d4hVzfIOw',
-  projectKey: 'ecommerce2v',
-  region: 'europe-west1.gcp',
-};
+
+export interface UsersToken {
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
+}

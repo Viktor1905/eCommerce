@@ -1,6 +1,7 @@
 import { LoginData, LoginResponse } from './login.types.ts';
 import { isLoginResponse } from './check-response.ts';
 import { getAuthToken } from './auth-token.ts';
+import { getUserTokens, UsersToken } from './user-tokens.ts';
 
 const API_CONFIG = {
   clientId: 'QMdMW3dn2QFBIFpoFRm_yfE0',
@@ -10,7 +11,7 @@ const API_CONFIG = {
 };
 
 export async function loginUser(data: LoginData): Promise<LoginResponse> {
-  const token = await getAuthToken(API_CONFIG);
+  const token = await getAuthToken();
   if (!token) {
     throw new Error('Failed to get auth token');
   }
@@ -44,6 +45,9 @@ export async function loginUser(data: LoginData): Promise<LoginResponse> {
     if (!isLoginResponse(loginResponse)) {
       throw new Error('Invalid login response format');
     }
+    const usersToken: UsersToken = await getUserTokens(API_CONFIG, data);
+    localStorage.setItem('userName', loginResponse.customer.firstName);
+    localStorage.setItem('refreshToken', usersToken.refresh_token);
     return loginResponse;
   } catch (error) {
     const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';
