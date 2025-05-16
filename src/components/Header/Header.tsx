@@ -172,8 +172,11 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
           <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
             <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
           </div>
-          <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>person</span>
-          Hello
+          <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>
+            manage_accounts
+          </span>
+          <span className={styles['user-name']}>Hello, Guest</span>
+          <span className={styles['select-dot']}></span>
         </div>
       </div>
       <div className={styles['add-header-menu']}>

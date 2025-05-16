@@ -1,5 +1,6 @@
 .w-screen {
   height: calc(100svh - 280px);
+  margin: auto;
 }
 
 @media (max-width: 800px) {

@@ -32,7 +32,7 @@
   justify-content: space-between;
   align-items: center; 
   font-size: 0.7rem;
-  max-width: 1418px;
+  max-width: 1480px;
   margin: 0 20px;
 }
 
@@ -310,7 +310,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 280px;
   height: 100vh;
   background-color: #e3e3e3;
   z-index: 4;
@@ -333,13 +333,27 @@
   background-color: var(--color-olive);
   justify-content: flex-start;
   align-items: center;
+  cursor: pointer;
+}
+
+.aside-menu-header:hover .select-dot {
+  display: flex;
+}
+
+.select-dot {
+  display: none;
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+  background-color:var(--color-coral);
+  border-radius: 50%;
 }
 
 .button-close-aside-menu {
   position: absolute;
   display: flex;
   top: 2px;
-  right: 2px;
+  right: -30px;
   justify-content: center;
   align-items: center;
   border: 2px solid #e3e3e3;
