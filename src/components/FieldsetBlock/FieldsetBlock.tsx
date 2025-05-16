@@ -1,33 +1,31 @@
-import {
-  FieldKey,
-  FormFields,
-} from '../../pages/register/registration-page-data/registrationSchema';
+import { Control, FieldErrors, Path, UseFormRegister } from 'react-hook-form';
 import CountrySelector from '../CountrySelector/CountrySelector';
 import DateInputElement from '../DateInputElement/DateInputElement';
 import InputElement from '../InputElement/InputElement';
-import { Control, FieldErrors, useForm } from 'react-hook-form';
 
-interface FieldsetBlockProps {
+interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
+  id: TFieldName;
   title: string;
-  content: {
-    id: FieldKey;
-    title: string;
-    type: string;
-  }[];
-  register: ReturnType<typeof useForm<FormFields>>['register'];
-  errors: FieldErrors<FormFields>;
-  hint?: string;
-  control?: Control<FormFields>;
+  type: string;
 }
 
-export default function FieldsetBlock({
+interface FieldsetBlockProps<TFieldValues extends Record<string, unknown>> {
+  title: string;
+  content: FieldDescriptor<Path<TFieldValues>, TFieldValues>[];
+  register: UseFormRegister<TFieldValues>;
+  errors: FieldErrors<TFieldValues>;
+  hint?: string;
+  control?: Control<TFieldValues>;
+}
+
+export default function FieldsetBlock<TFieldValues extends Record<string, unknown>>({
   title,
   content,
   register,
   errors,
   hint,
   control,
-}: FieldsetBlockProps) {
+}: FieldsetBlockProps<TFieldValues>) {
   return (
     <fieldset className="flex flex-row gap-4 p-2 flex-wrap justify-center">
       <legend className="text-2xl capitalize text-goldenrod p-2 font-medium text-center font-main">
@@ -36,35 +34,36 @@ export default function FieldsetBlock({
       </legend>
 
       {content.map((property) => {
-        const isDateField = property.id.toLowerCase().includes('date');
+        const id = property.id;
+        const isDateField = String(id).toLowerCase().includes('date');
 
         return isDateField ? (
           <DateInputElement
-            key={property.id}
+            key={String(id)}
             title={property.title}
-            error={errors[property.id]?.message}
-            id={property.id}
+            error={errors[id]?.message as string | undefined}
+            id={id}
             type={property.type}
             control={control}
-            register={register(property.id)}
+            register={register(id)}
           />
         ) : (
           <InputElement
-            key={property.id}
+            key={String(id)}
             title={property.title}
-            id={property.id}
+            id={String(id)}
             type={property.type}
-            register={register(property.id)}
-            error={errors[property.id]?.message}
+            register={register(id)}
+            error={errors[id]?.message as string | undefined}
           />
         );
       })}
 
       {title.includes('address') && (
         <CountrySelector
-          id={(title.split(' ')[0] + 'Country') as FieldKey}
-          register={register((title.split(' ')[0] + 'Country') as FieldKey)}
-          error={errors[(title.split(' ')[0] + 'Country') as FieldKey]?.message}
+          id={`${title.split(' ')[0]}Country`}
+          register={register(`${title.split(' ')[0]}Country` as Path<TFieldValues>)}
+          error={errors[`${title.split(' ')[0]}Country` as Path<TFieldValues>]?.message as string}
         />
       )}
     </fieldset>

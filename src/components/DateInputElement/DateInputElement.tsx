@@ -1,30 +1,26 @@
-import { Control, UseFormRegisterReturn } from 'react-hook-form';
-import {
-  FieldKey,
-  FormFields,
-} from '../../pages/register/registration-page-data/registrationSchema';
+import { Control, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
 import { format } from 'date-fns';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { useEffect, useRef, useState } from 'react';
 
-type DateInputElementProps = {
+type DateInputElementProps<TFieldValues extends Record<string, unknown>> = {
   title: string;
-  id: FieldKey;
+  id: Path<TFieldValues>;
   type: string;
   error?: string;
-  register?: UseFormRegisterReturn<FieldKey>;
-  control?: Control<FormFields>;
+  register?: UseFormRegisterReturn;
+  control?: Control<TFieldValues>;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function DateInputElement({
+export default function DateInputElement<TFieldValues extends Record<string, unknown>>({
   title,
   id,
   error,
   type,
   register,
   control,
-}: DateInputElementProps) {
+}: DateInputElementProps<TFieldValues>) {
   const [selected, setSelected] = useState<Date | undefined>(undefined);
   const defaultClassNames = getDefaultClassNames();
   const [open, setOpen] = useState(false);
@@ -66,7 +62,7 @@ export default function DateInputElement({
             <div
               className={
                 `rounded-lg text-olive font-main ` +
-                'p-1 w-[300px] focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
+                'p-1 w-[300px] hover:cursor-pointer focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
               }
               onClick={() => {
                 setOpen(!open);
@@ -108,10 +104,12 @@ export default function DateInputElement({
                     disabled: `opacity-50`,
                     day_button: `w-full h-full rounded-full cursor-pointer`,
                     caption_label: 'hidden',
-                    years_dropdown: `${defaultClassNames.years_dropdown} bg-khaki outline-0 `,
-                    nav: 'absolute left-2',
+                    years_dropdown: `${defaultClassNames.years_dropdown} hover:cursor-pointer bg-khaki outline-0 `,
+                    nav: `${defaultClassNames.nav} hover:cursor-pointer absolute left-2`,
                     month_caption: `${defaultClassNames.month_caption} flex justify-end pr-2`,
                     month_grid: `${defaultClassNames.month_caption} w-full`,
+                    button_previous: `${defaultClassNames.button_previous} hover:cursor-pointer`,
+                    button_next: `${defaultClassNames.button_next} hover:cursor-pointer`,
                   }}
                 />
               </div>
@@ -119,9 +117,7 @@ export default function DateInputElement({
           </>
         )}
       />
-      <p
-        className={`text-sm text-coral h-5 p-1 break-words whitespace-normal w-[300px]`}
-      >
+      <p className={`text-sm text-coral h-5 p-1 break-words whitespace-normal w-[300px]`}>
         {error ?? '\u00A0'}
       </p>
     </div>
