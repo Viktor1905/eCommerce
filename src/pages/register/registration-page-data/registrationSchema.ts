@@ -35,6 +35,12 @@ const loginSchema = z.object({
     .string()
     .min(1, 'Email is required')
     .superRefine((val, ctx) => {
+      if (val !== val.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Email must not have leading or trailing spaces',
+        });
+      }
       if (!val.includes('@')) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -46,12 +52,6 @@ const loginSchema = z.object({
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Email must contain a domain name (e.g., example.com)',
-        });
-      }
-      if (val !== val.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Email must not have leading or trailing spaces',
         });
       }
     }),
