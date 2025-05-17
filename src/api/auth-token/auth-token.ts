@@ -1,4 +1,4 @@
-export async function getAuthToken(): Promise<string | null> {
+export async function getAuthToken(): Promise<string> {
   const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
   try {
@@ -33,11 +33,10 @@ export async function getAuthToken(): Promise<string | null> {
     ) {
       throw new Error('Unknown error occurred during getting token');
     }
-    console.log(tokenResponse);
     return tokenResponse.access_token;
   } catch (error) {
-    console.log('Token fetch error:', error);
-    return null;
+    const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(errorMessage);
   }
 }
 interface API_CONFIG {
