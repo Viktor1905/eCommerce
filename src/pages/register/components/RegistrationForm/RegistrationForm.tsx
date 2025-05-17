@@ -9,6 +9,8 @@ import {
 import OKModalDialog from '../../../../components/OKModalDialog/OKModalDialog';
 import { useState } from 'react';
 
+const firstNameLocalstorageKey = 'firstName';
+
 export default function RegistrationForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -30,6 +32,7 @@ export default function RegistrationForm() {
 
   function closeModal() {
     setIsModalOpen(false);
+    localStorage.setItem(firstNameLocalstorageKey, firstName);
     void navigate('/');
   }
 
