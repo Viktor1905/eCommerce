@@ -8,7 +8,7 @@ const userInfo = [
 ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 
 const userLogin = [
-  { title: 'email', id: 'email', type: 'email' },
+  { title: 'email', id: 'email', type: 'text' },
   { title: 'password', id: 'password', type: 'password' },
 ] satisfies { id: Path<FormFields>; title: string; type: string }[];
 

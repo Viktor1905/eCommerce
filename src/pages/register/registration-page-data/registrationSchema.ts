@@ -31,13 +31,39 @@ const userSchema = z.object({
 });
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .superRefine((val, ctx) => {
+      if (!val.includes('@')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Email must contain an '@' symbol",
+        });
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Email must contain a domain name (e.g., example.com)',
+        });
+      }
+      if (val !== val.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Email must not have leading or trailing spaces',
+        });
+      }
+    }),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
     .regex(/[A-Z]/, 'Must include an uppercase letter')
     .regex(/[a-z]/, 'Must include a lowercase letter')
-    .regex(/[0-9]/, 'Must include a number'),
+    .regex(/[0-9]/, 'Must include a number')
+    .refine((val: string): boolean => !/\s/.test(val), {
+      message: 'Password must not contain spaces',
+    }),
 });
 
 const petSchema = z.object({
