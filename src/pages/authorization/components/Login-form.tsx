@@ -3,8 +3,8 @@ import { LoginInput } from './Login-input.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './login-scheme.tsx';
-import { loginUser } from '../../../api/auth/login.ts';
-import { LoginResponse } from '../../../api/auth/login.types.ts';
+import { authenticateUser } from '../../../api/login/login.ts';
+import { LoginResponse } from '../../../api/login/login.types.ts';
 import { FormEvent } from 'react';
 
 export function LoginForm(): React.ReactElement {
@@ -21,7 +21,7 @@ export function LoginForm(): React.ReactElement {
     data: LoginInputs
   ): Promise<void> => {
     try {
-      const response: LoginResponse = await loginUser(data);
+      const response: LoginResponse = await authenticateUser(data);
       if ('customer' in response) {
         console.log('User logged in:', response.customer);
       } else {

@@ -17,7 +17,7 @@ export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Pro
           grant_type: 'password',
           username: data.email,
           password: data.password,
-          scope: `manage_customers:${apiConfig.projectKey}`, // Убрал пробел после ":"
+          scope: `manage_customers:${apiConfig.projectKey}`,
         }).toString(),
       }
     );
@@ -33,14 +33,13 @@ export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Pro
       );
     }
     const tokenResponse: unknown = await response.json();
-    console.log(tokenResponse);
     if (!isUserTokenResponse(tokenResponse)) {
       throw new Error('Unknown error occurred during getting token');
     }
     return tokenResponse;
   } catch (error) {
-    console.log('Token fetch error:', error);
-    throw new Error(`Token fetch error`);
+    const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(errorMessage);
   }
 }
 interface API_CONFIG {
