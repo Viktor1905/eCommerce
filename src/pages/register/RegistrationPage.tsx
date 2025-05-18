@@ -11,6 +11,7 @@ export default function RegistrationPage() {
       void navigate('/', { replace: true });
     }
   }, [isAuthenticated, navigate]);
+
   return (
     <section className="w-fit m-auto flex flex-col justify-center items-center rounded-lg bg-white">
       <RoutingLink
