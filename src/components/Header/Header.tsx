@@ -26,7 +26,7 @@ export function Header() {
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
-  localStorage.setItem('user', JSON.stringify('44453t2t'));
+  // localStorage.setItem('user', JSON.stringify('44453t2t'));
 
   const data = localStorage.getItem('user');
   let userName = 'Guest';

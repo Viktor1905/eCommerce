@@ -19,10 +19,10 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="login" element={authStatus ? <Navigate to="/" replace /> : <LoginPage />} />
+        <Route path="login" element={authStatus ? <Navigate to="/" /> : <LoginPage />} />
         <Route
           path="registration"
-          element={authStatus ? <Navigate to="/" replace /> : <RegistrationPage />}
+          element={authStatus ? <Navigate to="/" /> : <RegistrationPage />}
         />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
