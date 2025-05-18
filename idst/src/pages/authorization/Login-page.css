@@ -1,0 +1,16 @@
+.w-screen {
+  height: calc(100svh - 280px);
+  margin: auto;
+}
+
+@media (max-width: 800px) {
+  .w-screen {
+    height: calc(100svh - 330px);
+  }
+}
+
+@media (max-width: 600px) {
+  .w-screen {
+    height: calc(100svh - 450px);
+  }
+}
