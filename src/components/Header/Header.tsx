@@ -31,7 +31,7 @@ export function Header() {
   const data = localStorage.getItem('firstName');
   let userName = 'Guest';
   if (data) {
-    const parsed: unknown = JSON.parse(data);
+    const parsed: unknown = data;
     if (typeof parsed === 'string') userName = parsed;
   }
   return (
