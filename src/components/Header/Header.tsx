@@ -5,7 +5,10 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
 
-export const UserContext = createContext<string | null>(null);
+const UserContext = createContext<string | null>(null);
+const RefreshContext = createContext<() => void>(() => {
+  return;
+});
 
 interface AllMenuProps {
   isOpen: boolean;
@@ -18,6 +21,7 @@ interface AddMenuBlockProps {
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [, setRefresh] = useState(0);
 
   function toggleMenu() {
     setIsOpen(!isOpen);
@@ -43,7 +47,13 @@ export function Header() {
               </div>
               <SearchPanel />
             </div>
-            <MenuHeader />
+            <RefreshContext.Provider
+              value={() => {
+                setRefresh((prev) => prev + 1);
+              }}
+            >
+              <MenuHeader />
+            </RefreshContext.Provider>
           </div>
         </header>
       </UserContext.Provider>
@@ -106,6 +116,7 @@ function MenuHeader() {
 function Login() {
   const navigate = useNavigate();
   const name = useContext(UserContext) ?? '';
+  const triggerRefresh = useContext(RefreshContext);
   let userState = name;
   let authStatus = 'LOG OUT';
   let hint = 'View Profile';
@@ -130,7 +141,7 @@ function Login() {
               void navigate('/login');
             } else {
               localStorage.removeItem('user');
-              window.location.reload();
+              triggerRefresh();
             }
           }}
           className={styles['button-login']}
@@ -138,7 +149,7 @@ function Login() {
           {authStatus}
         </div>
         <span className={styles.hint}>{hint}</span>{' '}
-        <div onClick={() => void navigate('/registration')} className={styles['button-sing-up']}>
+        <div onClick={() => void navigate('/profile')} className={styles['button-sing-up']}>
           {signUpOrProfile}
         </div>
       </div>
@@ -210,13 +221,20 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
 }
 
 function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
+  const navigate = useNavigate();
   const name = useContext(UserContext) ?? '';
   const userState = useContext(UserContext) === 'Guest' ? 'Guest' : name;
   return (
     <div
       className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
     >
-      <div className={styles['aside-menu-header']}>
+      <div
+        onClick={() => {
+          toggleMenu();
+          void navigate('/profile');
+        }}
+        className={styles['aside-menu-header']}
+      >
         <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
           <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
         </div>
