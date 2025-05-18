@@ -124,7 +124,7 @@ function Login() {
 
   if (useContext(UserContext) === 'Guest') {
     userState = 'Guest';
-    authStatus = 'LOG ON';
+    authStatus = 'LOG IN';
     hint = "Don't have an account?";
     signUpOrProfile = 'Sing Up';
   }
@@ -137,7 +137,7 @@ function Login() {
       <div className={styles['sing-up-menu']}>
         <div
           onClick={() => {
-            if (authStatus === 'LOG ON') {
+            if (authStatus === 'LOG IN') {
               void navigate('/login');
             } else {
               localStorage.removeItem('user');
@@ -151,7 +151,7 @@ function Login() {
         <span className={styles.hint}>{hint}</span>{' '}
         <div
           onClick={() => {
-            if (authStatus === 'LOG ON') {
+            if (authStatus === 'LOG IN') {
               void navigate('/registration');
             } else {
               void navigate('/profile');
