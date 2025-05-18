@@ -8,6 +8,7 @@ import {
 } from '../../registration-page-data/registrationFieldGroups';
 import OKModalDialog from '../../../../components/OKModalDialog/OKModalDialog';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const firstNameLocalstorageKey = 'firstName';
 
@@ -33,13 +34,17 @@ export default function RegistrationForm() {
   function closeModal() {
     setIsModalOpen(false);
     localStorage.setItem(firstNameLocalstorageKey, firstName);
+    window.dispatchEvent(new Event('userChange'));
+    toast.success('Account created!', {
+      position: 'top-right',
+    });
     void navigate('/');
   }
 
   const submitBtnClass =
     'w-fit p-1 px-3 text-white min-w-3xs bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed';
   return (
-    <section className="w-fit flex flex-col items-center justify-center font-additional ">
+    <section className="w-fit h-full flex flex-col items-center justify-center font-additional ">
       <h2 className="text-3xl p-2 text-center text-jungle font-main-bd ">Registration</h2>
       {isModalOpen && (
         <OKModalDialog
