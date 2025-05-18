@@ -31,8 +31,7 @@ export function Header() {
   const data = localStorage.getItem('firstName');
   let userName = 'Guest';
   if (data) {
-    const parsed: unknown = JSON.parse(data);
-    if (typeof parsed === 'string') userName = parsed;
+    if (typeof data === 'string') userName = data;
   }
   return (
     <div className={styles['header-wrapper']}>

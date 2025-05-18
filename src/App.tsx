@@ -7,7 +7,10 @@ import { CatalogPage } from './pages/catalog/CatalogPage.tsx';
 import { CartPage } from './pages/cart/Cart.tsx';
 import { FavoritesPage } from './pages/favorites/Favorites.tsx';
 import { OrdersPage } from './pages/orders/OrdersPage.tsx';
-import { NotFoundPage } from './pages/PageNotFound/Page404.tsx';
+import { NotFoundPage } from './pages/pageNotFound/Page404.tsx';
+import { AboutUsPage } from './pages/about/AboutPage.tsx';
+import { ProfilePage } from './pages/profile/ProfilePage.tsx';
+import { TeamPage } from './pages/team/TeamPage.tsx';
 
 function App() {
   return (
@@ -21,8 +24,9 @@ function App() {
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
-        {/* <Route path="/profile" element={<ProfilePage />} /> */}
-        {/* <Route path="/about" element={<AboutPage />} /> */}
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="about" element={<AboutUsPage />} />
+        <Route path="team" element={<TeamPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
