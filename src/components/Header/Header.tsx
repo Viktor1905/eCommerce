@@ -149,7 +149,16 @@ function Login() {
           {authStatus}
         </div>
         <span className={styles.hint}>{hint}</span>{' '}
-        <div onClick={() => void navigate('/profile')} className={styles['button-sing-up']}>
+        <div
+          onClick={() => {
+            if (authStatus === 'LOG ON') {
+              void navigate('/registration');
+            } else {
+              void navigate('/profile');
+            }
+          }}
+          className={styles['button-sing-up']}
+        >
           {signUpOrProfile}
         </div>
       </div>
