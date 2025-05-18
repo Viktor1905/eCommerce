@@ -9,6 +9,7 @@ import { LoginPage } from '../../pages/authorization/Login-page.tsx';
 import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
 import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
 import { ProfilePage } from '../../pages/profile/ProfilePage.tsx';
+import { AboutUsPage } from '../../pages/about/AboutPage.tsx';
 import { Navigate } from 'react-router-dom';
 
 export function AppRoutes() {
@@ -22,16 +23,13 @@ export function AppRoutes() {
           path="registration"
           element={authStatus ? <Navigate to="/" replace /> : <RegistrationPage />}
         />
-        <Route
-          path="catalog"
-          element={authStatus ? <Navigate to="/" replace /> : <CatalogPage />}
-        />
+        <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="profile" element={<ProfilePage />} />
-        {/* <Route path="/about" element={<AboutPage />} /> */}
+        <Route path="/about" element={<AboutUsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
