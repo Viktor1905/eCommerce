@@ -26,9 +26,9 @@ export function Header() {
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
-  // localStorage.setItem('user', JSON.stringify('44453t2t'));
+  localStorage.setItem('firstName', JSON.stringify('44453t2t'));
 
-  const data = localStorage.getItem('user');
+  const data = localStorage.getItem('firstName');
   let userName = 'Guest';
   if (data) {
     const parsed: unknown = JSON.parse(data);
@@ -140,7 +140,7 @@ function Login() {
             if (authStatus === 'LOG IN') {
               void navigate('/login');
             } else {
-              localStorage.removeItem('user');
+              localStorage.removeItem('firstName');
               triggerRefresh();
             }
           }}

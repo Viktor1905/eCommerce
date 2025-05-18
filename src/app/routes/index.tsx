@@ -14,7 +14,7 @@ import { TeamPage } from '../../pages/team/TeamPage.tsx';
 import { Navigate } from 'react-router-dom';
 
 export function AppRoutes() {
-  const authStatus = localStorage.getItem('user');
+  const authStatus = localStorage.getItem('firstName');
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
