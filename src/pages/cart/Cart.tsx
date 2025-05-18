@@ -1,7 +1,11 @@
 import styles from './Cart.module.css';
 import empty from './components/cartEmptyCorgi.png';
+import { useEffect } from 'react';
 
 export function CartPage() {
+  useEffect(() => {
+    document.title = 'Cart | Zoo Shop | Pet Supplies';
+  }, []);
   return (
     <div className={styles['canvas-page']}>
       <h2 className={styles['cart-title-empty']}>It&apos;s time to start shopping!</h2>

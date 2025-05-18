@@ -4,7 +4,7 @@
   margin-top: 100px;
   justify-content: center;
   color: var(--color-khaki);
-  background-color: #225649;
+  background-color: var(--color-jungle-green);
   box-shadow: 0 0 30px #000000;
 }
 

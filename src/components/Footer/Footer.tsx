@@ -1,4 +1,5 @@
 import styles from './Footer.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export function Footer() {
   return (
@@ -14,7 +15,15 @@ export function Footer() {
 }
 
 function AboutUsFooter() {
-  return <div className={`${styles.about} ${styles['about-link']}`}>ABOUT US</div>;
+  const navigate = useNavigate();
+  return (
+    <div
+      onClick={() => void navigate('/about')}
+      className={`${styles.about} ${styles['about-link']}`}
+    >
+      ABOUT US
+    </div>
+  );
 }
 
 function OurShopsFooter() {
