@@ -54,7 +54,7 @@ export default function InputElement<TFieldName extends string>({
           onClick={() => {
             setShowPassword((prev) => !prev);
           }}
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          aria-label={showPassword ? 'Hide' : 'Show'}
         >
           {showPassword ? '🙉' : '🙈'}
         </button>
