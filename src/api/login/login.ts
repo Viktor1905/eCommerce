@@ -47,7 +47,6 @@ export async function authenticateUser(data: LoginData): Promise<LoginResponse> 
     const usersToken: UsersToken = await getUserTokens(API_CONFIG, data);
     localStorage.setItem('firstName', loginResponse.customer.firstName);
     localStorage.setItem('refreshToken', usersToken.refresh_token);
-    window.location.href = '/';
     return loginResponse;
   } catch (error) {
     const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';

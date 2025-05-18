@@ -6,6 +6,7 @@ import { schema } from './login-scheme.tsx';
 import { authenticateUser } from '../../../api/login/login.ts';
 import { LoginResponse } from '../../../api/login/login.types.ts';
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function LoginForm(): React.ReactElement {
   const {
@@ -17,13 +18,14 @@ export function LoginForm(): React.ReactElement {
     mode: 'onChange',
     resolver: zodResolver(schema),
   });
+  const navigate = useNavigate();
   const onSubmit: (data: LoginInputs) => Promise<void> = async (
     data: LoginInputs
   ): Promise<void> => {
     try {
       const response: LoginResponse = await authenticateUser(data);
       if ('customer' in response) {
-        console.log('User logged in:', response.customer);
+        await navigate('/');
       } else {
         setError('root', {
           type: 'manual',
