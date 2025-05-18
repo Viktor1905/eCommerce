@@ -9,15 +9,23 @@ import { LoginPage } from '../../pages/authorization/Login-page.tsx';
 import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
 import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
 import { ProfilePage } from '../../pages/profile/ProfilePage.tsx';
+import { Navigate } from 'react-router-dom';
 
 export function AppRoutes() {
+  const authStatus = localStorage.getItem('user');
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="login" element={<LoginPage />} />
-        <Route path="registration" element={<RegistrationPage />} />
-        <Route path="catalog" element={<CatalogPage />} />
+        <Route path="login" element={authStatus ? <Navigate to="/" replace /> : <LoginPage />} />
+        <Route
+          path="registration"
+          element={authStatus ? <Navigate to="/" replace /> : <RegistrationPage />}
+        />
+        <Route
+          path="catalog"
+          element={authStatus ? <Navigate to="/" replace /> : <CatalogPage />}
+        />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
