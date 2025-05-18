@@ -1,15 +1,16 @@
 import RegistrationForm from './components/RegistrationForm/RegistrationForm';
 import RoutingLink from '../../components/RoutingLink/RoutingLink';
-import { useEffect } from 'react';
 
 export default function RegistrationPage() {
-  useEffect(() => {
-    document.title = 'Sing Up | Zoo Shop | Pet Supplies';
-  }, []);
+  <RoutingLink additionalText="Already have an account?" linkText="Sign in →" redirectTo="login" />;
   return (
-    <>
-      <RoutingLink additionalText="Already have an account?" linkText="Sign in →" />
+    <section className="w-fit m-auto flex flex-col justify-center items-center rounded-lg bg-white">
+      <RoutingLink
+        additionalText="Already have an account?"
+        linkText="Sign in →"
+        redirectTo="login"
+      />
       <RegistrationForm />
-    </>
+    </section>
   );
 }

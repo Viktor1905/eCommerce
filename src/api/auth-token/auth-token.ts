@@ -1,16 +1,16 @@
-export async function getAuthToken(ApiConfig: API_CONFIG): Promise<string | null> {
-  const authString = `${ApiConfig.clientId}:${ApiConfig.secretId}`;
+export async function getAuthToken(): Promise<string> {
+  const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
   try {
     const response: Response = await fetch(
-      `https://auth.${ApiConfig.region}.commercetools.com/oauth/token`,
+      `https://auth.${API_CONFIG.region}.commercetools.com/oauth/token`,
       {
         method: 'POST',
         headers: {
           Authorization: `Basic ${encodedAuth}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `grant_type=client_credentials&scope=manage_customers:${ApiConfig.projectKey}`,
+        body: `grant_type=client_credentials&scope=manage_customers:${API_CONFIG.projectKey}`,
       }
     );
     if (!response.ok) {
@@ -35,8 +35,8 @@ export async function getAuthToken(ApiConfig: API_CONFIG): Promise<string | null
     }
     return tokenResponse.access_token;
   } catch (error) {
-    console.log('Token fetch error:', error);
-    return null;
+    const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(errorMessage);
   }
 }
 interface API_CONFIG {
@@ -45,3 +45,9 @@ interface API_CONFIG {
   projectKey: string;
   region: string;
 }
+const API_CONFIG = {
+  clientId: 'QMdMW3dn2QFBIFpoFRm_yfE0',
+  secretId: 'CV6y3lEHvhTtkY4a-8wFxZ9d4hVzfIOw',
+  projectKey: 'ecommerce2v',
+  region: 'europe-west1.gcp',
+};

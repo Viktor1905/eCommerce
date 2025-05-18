@@ -3,13 +3,12 @@ import { LoginInput } from './Login-input.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schema } from './login-scheme.tsx';
-import { loginUser } from '../../../api/auth/login.ts';
-import { LoginResponse } from '../../../api/auth/login.types.ts';
+import { authenticateUser } from '../../../api/login/login.ts';
+import { LoginResponse } from '../../../api/login/login.types.ts';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function LoginForm(): React.ReactElement {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,13 +18,14 @@ export function LoginForm(): React.ReactElement {
     mode: 'onChange',
     resolver: zodResolver(schema),
   });
+  const navigate = useNavigate();
   const onSubmit: (data: LoginInputs) => Promise<void> = async (
     data: LoginInputs
   ): Promise<void> => {
     try {
-      const response: LoginResponse = await loginUser(data);
+      const response: LoginResponse = await authenticateUser(data);
       if ('customer' in response) {
-        console.log('User logged in:', response.customer);
+        await navigate('/');
       } else {
         setError('root', {
           type: 'manual',
@@ -44,7 +44,10 @@ export function LoginForm(): React.ReactElement {
     <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
       <form
         className="flex flex-col gap-6"
-        onSubmit={(event: FormEvent<HTMLFormElement>): void => void handleSubmit(onSubmit)(event)}
+        onSubmit={(event: FormEvent<HTMLFormElement>): void => {
+          event.preventDefault();
+          void handleSubmit(onSubmit)(event);
+        }}
       >
         <h1 className="font-additional self-center text-3xl font-bold"> Login </h1>
         <LoginInput
@@ -65,13 +68,13 @@ export function LoginForm(): React.ReactElement {
         />
         <button
           type="submit"
-          className="w-[100%] !border-[2px] !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
+          className="w-[100%] m-auto !border-[2px] rounded-lg border-goldenrod !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
           disabled={!isValid}
         >
           Login
         </button>
-        {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
       </form>
+      {errors.root && <p className="text-red-500 text-xl mt-2">{errors.root.message}</p>}
       <div>
         <p>Don&#39;t have an account?</p>
         <a
