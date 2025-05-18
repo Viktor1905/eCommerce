@@ -176,6 +176,10 @@
   color: var(--color-light-gray);
 }
 
+.hint {
+  margin-top: 10px;
+}
+
 .button-login,
 .button-sing-up {
   display: flex;
@@ -314,14 +318,15 @@
 }
 
 .aside-menu-header {
-  height: 40px;
   display: flex;
+  height: 40px;
   color: var(--color-light-gray);
   padding-left: 20px;
   background-color: var(--color-olive);
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  gap: 10px;
 }
 
 .aside-menu-header:hover .select-dot {

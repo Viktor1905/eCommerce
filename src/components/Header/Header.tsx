@@ -3,9 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import logo from './logo.png';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { createContext, useContext } from 'react';
+
+export const UserContext = createContext<string | null>(null);
 
 interface AllMenuProps {
   isOpen: boolean;
+  toggleMenu: () => void;
+}
+
+interface AddMenuBlockProps {
   toggleMenu: () => void;
 }
 
@@ -15,21 +22,31 @@ export function Header() {
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
+  // localStorage.setItem('user', JSON.stringify('44453t2t'));
+
+  const data = localStorage.getItem('user');
+  let userName = 'Guest';
+  if (data) {
+    const parsed: unknown = JSON.parse(data);
+    if (typeof parsed === 'string') userName = parsed;
+  }
   return (
     <div className={styles['header-wrapper']}>
-      <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
-      <header className={styles.header}>
-        <div className={styles['header-case']}>
-          <div className={styles['header-inner']}>
-            <div className={styles['home-link-wrapper']}>
-              <Logo />
-              <HomeLink />
+      <UserContext.Provider value={userName}>
+        <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
+        <header className={styles.header}>
+          <div className={styles['header-case']}>
+            <div className={styles['header-inner']}>
+              <div className={styles['home-link-wrapper']}>
+                <Logo />
+                <HomeLink />
+              </div>
+              <SearchPanel />
             </div>
-            <SearchPanel />
+            <MenuHeader />
           </div>
-          <MenuHeader />
-        </div>
-      </header>
+        </header>
+      </UserContext.Provider>
     </div>
   );
 }
@@ -88,19 +105,41 @@ function MenuHeader() {
 
 function Login() {
   const navigate = useNavigate();
+  const name = useContext(UserContext) ?? '';
+  let userState = name;
+  let authStatus = 'LOG OUT';
+  let hint = 'View Profile';
+  let signUpOrProfile = 'PROFILE';
+
+  if (useContext(UserContext) === 'Guest') {
+    userState = 'Guest';
+    authStatus = 'LOG ON';
+    hint = "Don't have an account?";
+    signUpOrProfile = 'Sing Up';
+  }
   return (
     <li className={`${styles.list} ${styles['list-sing-up']}`}>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
       </div>
-      <div className={styles['text-list']}>Sign Up</div>
+      <div className={styles['text-list']}>{userState}</div>
       <div className={styles['sing-up-menu']}>
-        <div onClick={() => void navigate('/login')} className={styles['button-login']}>
-          LOG IN
+        <div
+          onClick={() => {
+            if (authStatus === 'LOG ON') {
+              void navigate('/login');
+            } else {
+              localStorage.removeItem('user');
+              window.location.reload();
+            }
+          }}
+          className={styles['button-login']}
+        >
+          {authStatus}
         </div>
-        <span>Don&apos;t have an account?</span>{' '}
+        <span className={styles.hint}>{hint}</span>{' '}
         <div onClick={() => void navigate('/registration')} className={styles['button-sing-up']}>
-          Sing Up
+          {signUpOrProfile}
         </div>
       </div>
     </li>
@@ -155,7 +194,6 @@ function Cart() {
 }
 
 function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
-  const navigate = useNavigate();
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
   }, [isOpen]);
@@ -165,42 +203,57 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
         onClick={toggleMenu}
         className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
       ></div>
-      <div
-        className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
-      >
-        <div className={styles['aside-menu-header']}>
-          <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
-            <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
-          </div>
-          <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>
-            manage_accounts
-          </span>
-          <span className={styles['user-name']}>Hello, Guest</span>
-          <span className={styles['select-dot']}></span>
-        </div>
-      </div>
-      <div className={styles['add-header-menu']}>
-        <div className={styles['wrapper-add-header-menu']}>
-          <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
-            <span className="material-symbols-outlined">menu</span>
-            All
-          </div>
-          <div className={styles['add-menu-list']}>
-            <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
-              Catalog
-            </div>
-          </div>
-          <div className={styles['add-menu-list']}>
-            <div className={styles['add-menu-pet-food']}>Pet food</div>
-          </div>
-          <div className={styles['add-menu-list']}>
-            <div className={styles['add-menu-accessories']}>Accessories</div>
-          </div>
-          <div className={styles['add-menu-list']}>
-            <div className={styles['add-menu-promotions']}>Promotions</div>
-          </div>
-        </div>
-      </div>
+      <AsideMenuBlock isOpen={isOpen} toggleMenu={toggleMenu} />
+      <AddMenuBlock toggleMenu={toggleMenu} />
     </>
+  );
+}
+
+function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
+  const name = useContext(UserContext) ?? '';
+  const userState = useContext(UserContext) === 'Guest' ? 'Guest' : name;
+  return (
+    <div
+      className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+    >
+      <div className={styles['aside-menu-header']}>
+        <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
+          <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
+        </div>
+        <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>
+          manage_accounts
+        </span>
+        <span className={styles['user-name']}>Hello, {userState}</span>
+        <span className={styles['select-dot']}></span>
+      </div>
+    </div>
+  );
+}
+
+function AddMenuBlock({ toggleMenu }: AddMenuBlockProps) {
+  const navigate = useNavigate();
+  return (
+    <div className={styles['add-header-menu']}>
+      <div className={styles['wrapper-add-header-menu']}>
+        <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
+          <span className="material-symbols-outlined">menu</span>
+          All
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
+            Catalog
+          </div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-pet-food']}>Pet food</div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-accessories']}>Accessories</div>
+        </div>
+        <div className={styles['add-menu-list']}>
+          <div className={styles['add-menu-promotions']}>Promotions</div>
+        </div>
+      </div>
+    </div>
   );
 }
