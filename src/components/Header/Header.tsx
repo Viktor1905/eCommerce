@@ -4,6 +4,7 @@ import logo from './logo.png';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const UserContext = createContext<string | null>(null);
 const RefreshContext = createContext<() => void>(() => {
@@ -20,13 +21,18 @@ interface AddMenuBlockProps {
 }
 
 export function Header() {
+  const location = useLocation();
+  const [key, setKey] = useState(0);
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [location.pathname]);
+
   const [isOpen, setIsOpen] = useState(false);
   const [, setRefresh] = useState(0);
 
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
-  // localStorage.setItem('firstName', JSON.stringify('44453t2t'));
 
   const data = localStorage.getItem('firstName');
   let userName = 'Guest';
@@ -34,7 +40,7 @@ export function Header() {
     if (typeof data === 'string') userName = data;
   }
   return (
-    <div className={styles['header-wrapper']}>
+    <div key={key} className={styles['header-wrapper']}>
       <UserContext.Provider value={userName}>
         <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
         <header className={styles.header}>
@@ -250,7 +256,7 @@ function AsideMenuProfile({ toggleMenu }: AddMenuBlockProps) {
     <div
       onClick={() => {
         toggleMenu();
-        void navigate('/profile');
+        if (userState !== 'Guest') void navigate('/profile');
       }}
       className={styles['aside-menu-header']}
     >
