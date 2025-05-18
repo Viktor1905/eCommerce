@@ -1,4 +1,5 @@
 import styles from './TeamPage.module.css';
+import { useEffect } from 'react';
 import team from './components/ourTeam.png';
 import team2 from './components/ourTeam2.png';
 import team3 from './components/ourTeam3.png';
@@ -6,6 +7,9 @@ import team4 from './components/ourTeam4.png';
 import team5 from './components/ourTeam5.png';
 
 export function TeamPage() {
+  useEffect(() => {
+    document.title = 'Team | Zoo Shop | Pet Supplies';
+  }, []);
   return (
     <div className={styles['canvas-page']}>
       <h2 className={styles['team-title']}>Our friendly team of website developers</h2>

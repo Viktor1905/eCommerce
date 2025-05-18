@@ -1,8 +1,12 @@
 import notFoundImage from './assets/image/pageNotFound.png';
 import styles from './Page404.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export function NotFoundPage() {
+  useEffect(() => {
+    document.title = '404 | Zoo Shop | Pet Supplies';
+  }, []);
   const navigate = useNavigate();
   function handleClick(): void {
     void navigate('/');
