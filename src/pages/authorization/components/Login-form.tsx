@@ -6,8 +6,10 @@ import { schema } from './login-scheme.tsx';
 import { loginUser } from '../../../api/auth/login.ts';
 import { LoginResponse } from '../../../api/auth/login.types.ts';
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function LoginForm(): React.ReactElement {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -72,7 +74,12 @@ export function LoginForm(): React.ReactElement {
       </form>
       <div>
         <p>Don&#39;t have an account?</p>
-        <a className="!text-olive hover:!text-goldenrod cursor-pointer">Sign Up!</a>
+        <a
+          onClick={() => void navigate('/registration')}
+          className="!text-olive hover:!text-goldenrod cursor-pointer"
+        >
+          Sign Up!
+        </a>
       </div>
     </section>
   );

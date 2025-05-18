@@ -8,6 +8,7 @@ import { CatalogPage } from '../../pages/catalog/CatalogPage';
 import { LoginPage } from '../../pages/authorization/Login-page.tsx';
 import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
 import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
+import { ProfilePage } from '../../pages/profile/ProfilePage.tsx';
 
 export function AppRoutes() {
   return (
@@ -21,7 +22,7 @@ export function AppRoutes() {
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
-        {/* <Route path="/profile" element={<ProfilePage />} /> */}
+        <Route path="/profile" element={<ProfilePage />} />
         {/* <Route path="/about" element={<AboutPage />} /> */}
         <Route path="*" element={<NotFoundPage />} />
       </Route>
