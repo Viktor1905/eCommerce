@@ -7,12 +7,13 @@ import { authenticateUser } from '../../../api/login/login.ts';
 import { LoginResponse } from '../../../api/login/login.types.ts';
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export function LoginForm(): React.ReactElement {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
     setError,
   } = useForm<LoginInputs>({
     mode: 'onChange',
@@ -25,6 +26,11 @@ export function LoginForm(): React.ReactElement {
     try {
       const response: LoginResponse = await authenticateUser(data);
       if ('customer' in response) {
+        toast.success('Successful login!', {
+          position: 'top-right',
+        });
+
+        window.dispatchEvent(new Event('userChange'));
         await navigate('/');
       } else {
         setError('root', {
@@ -42,14 +48,14 @@ export function LoginForm(): React.ReactElement {
   };
   return (
     <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
+      <h1 className="text-3xl p-2 text-center text-jungle font-main-bd "> Login </h1>
       <form
-        className="flex flex-col gap-6"
+        className="flex flex-col gap-2"
         onSubmit={(event: FormEvent<HTMLFormElement>): void => {
           event.preventDefault();
           void handleSubmit(onSubmit)(event);
         }}
       >
-        <h1 className="font-additional self-center text-3xl font-bold"> Login </h1>
         <LoginInput
           register={register('email')}
           errorMessage={errors.email?.message}
@@ -68,22 +74,16 @@ export function LoginForm(): React.ReactElement {
         />
         <button
           type="submit"
-          className="w-[100%] m-auto !border-[2px] rounded-lg border-goldenrod !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0"
-          disabled={!isValid}
+          className={
+            'w-[100%] hover:cursor-pointed m-auto !border-[2px] rounded-lg  border-goldenrod !bg-goldenrod text-white hover:!bg-goldenrod/70 hover:!border-goldenrod  disabled:!cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-goldenrod' +
+            ' disabled:hover:text-white focus:!border-olive focus:!outline-0 hover:cursor-pointer disabled:cursor-not-allowed'
+          }
+          disabled={!isValid || isSubmitting}
         >
-          Login
+          {isSubmitting ? 'Loading...' : 'Login!'}
         </button>
       </form>
       {errors.root && <p className="text-red-500 text-xl mt-2">{errors.root.message}</p>}
-      <div>
-        <p>Don&#39;t have an account?</p>
-        <a
-          onClick={() => void navigate('/registration')}
-          className="!text-olive hover:!text-goldenrod cursor-pointer"
-        >
-          Sign Up!
-        </a>
-      </div>
     </section>
   );
 }
