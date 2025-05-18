@@ -1,7 +1,7 @@
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
 import logo from './logo.png';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -116,79 +116,64 @@ function MenuHeader() {
 
 function Login() {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(
-    localStorage.getItem('firstName')?.replace(/"/g, '') ?? ''
-  );
-  const hintValue = userName ? 'View Profile' : "Don't have an account?";
-  const [hint, setHint] = useState(hintValue);
+  const [userName, setUserName] = useState(() => {
+    const stored = localStorage.getItem('firstName');
+    return stored ? stored.replace(/"/g, '') : '';
+  });
+
+  const updateUserState = useCallback(() => {
+    const stored = localStorage.getItem('firstName');
+    const name = stored ? stored.replace(/"/g, '') : '';
+    setUserName(name);
+  }, []);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const stored = localStorage.getItem('firstName');
-      setUserName(stored ? stored.replace(/"/g, '') : '');
-      setHint(stored ? 'View Profile' : "Don't have an account?");
-    };
-
-    window.addEventListener('userChange', handleStorageChange);
+    window.addEventListener('userChange', updateUserState);
     return () => {
-      window.removeEventListener('userChange', handleStorageChange);
+      window.removeEventListener('userChange', updateUserState);
     };
-  }, []);
+  }, [updateUserState]);
+
+  const handleLogout = () => {
+    localStorage.setItem('firstName', '');
+    window.dispatchEvent(new Event('userChange'));
+    toast.success('Logged out!', { position: 'top-right' });
+  };
+
+  const renderButton = (label: string, path: string, onClick?: () => void) => (
+    <button
+      className="w-full p-1 pl-3 pr-3 text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
+      onClick={onClick ?? (() => void navigate(path))}
+    >
+      {label}
+    </button>
+  );
+
+  const isLoggedIn = Boolean(userName);
+  const hint = isLoggedIn ? 'View Profile' : "Don't have an account?";
 
   return (
     <li className={`${styles.list} ${styles['list-sing-up']}`}>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
       </div>
-      <div className={styles['text-list']}>{userName === '' ? 'Guest' : userName}</div>
+      <div className={styles['text-list']}>{isLoggedIn ? userName : 'Guest'}</div>
       <div className={styles['sing-up-menu']}>
-        {!userName ? (
-          <div className="flex flex-col items-center justify-center w-full ">
-            <button
-              className="w-full p-1 pl-3 pr-3 text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
-              onClick={() => {
-                void navigate('/login');
-              }}
-            >
-              Log in
-            </button>
-            <span className="font-main">{hint}</span>
-            <button
-              className="w-full p-1 pl-3 pr-3 text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
-              onClick={() => {
-                void navigate('/registration');
-              }}
-            >
-              Sign up
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center w-full ">
-            <button
-              className="w-full p-1 pl-3 pr-3 text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
-              onClick={() => {
-                localStorage.setItem('firstName', '');
-                window.dispatchEvent(new Event('userChange'));
-                toast.success('Logged out!', {
-                  position: 'top-right',
-                });
-                setHint("Don't have an account?");
-                void navigate('/');
-              }}
-            >
-              Log out
-            </button>
-            <span className="font-main">{hint}</span>
-            <button
-              className="w-full p-1 pl-3 pr-3  text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
-              onClick={() => {
-                void navigate('/profile');
-              }}
-            >
-              Profile
-            </button>
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-center w-full">
+          {isLoggedIn ? (
+            <>
+              {renderButton('Log out', '', handleLogout)}
+              <span className="font-main">{hint}</span>
+              {renderButton('Profile', '/profile')}
+            </>
+          ) : (
+            <>
+              {renderButton('Log in', '/login')}
+              <span className="font-main">{hint}</span>
+              {renderButton('Sign up', '/registration')}
+            </>
+          )}
+        </div>
       </div>
     </li>
   );
