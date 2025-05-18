@@ -10,6 +10,7 @@ import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
 import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
 import { ProfilePage } from '../../pages/profile/ProfilePage.tsx';
 import { AboutUsPage } from '../../pages/about/AboutPage.tsx';
+import { TeamPage } from '../../pages/team/TeamPage.tsx';
 import { Navigate } from 'react-router-dom';
 
 export function AppRoutes() {
@@ -31,6 +32,7 @@ export function AppRoutes() {
         <Route path="profile" element={<ProfilePage />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="team" element={<TeamPage />} />
       </Route>
     </Routes>
   );

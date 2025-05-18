@@ -230,29 +230,54 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
 }
 
 function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
+  return (
+    <div
+      className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+    >
+      <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
+        <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
+      </div>
+      <AsideMenuProfile toggleMenu={toggleMenu} />
+      <AsideMenuOurTeam toggleMenu={toggleMenu} />
+    </div>
+  );
+}
+
+function AsideMenuProfile({ toggleMenu }: AddMenuBlockProps) {
   const navigate = useNavigate();
   const name = useContext(UserContext) ?? '';
   const userState = useContext(UserContext) === 'Guest' ? 'Guest' : name;
   return (
     <div
-      className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+      onClick={() => {
+        toggleMenu();
+        void navigate('/profile');
+      }}
+      className={styles['aside-menu-header']}
     >
-      <div
-        onClick={() => {
-          toggleMenu();
-          void navigate('/profile');
-        }}
-        className={styles['aside-menu-header']}
-      >
-        <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
-          <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
-        </div>
-        <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>
-          manage_accounts
-        </span>
-        <span className={styles['user-name']}>Hello, {userState}</span>
-        <span className={styles['select-dot']}></span>
-      </div>
+      <span className={`material-symbols-outlined ${styles['aside-person-icon']}`}>
+        manage_accounts
+      </span>
+      <span className={styles['user-name']}>Hello, {userState}</span>
+      <span className={styles['select-dot']}></span>
+    </div>
+  );
+}
+
+function AsideMenuOurTeam({ toggleMenu }: AddMenuBlockProps) {
+  const navigate = useNavigate();
+  return (
+    <div
+      onClick={() => {
+        toggleMenu();
+        void navigate('/team');
+      }}
+      className={styles['aside-menu-team']}
+    >
+      <span className={styles['about-team']}>Our Friendly Team</span>
+      <span className={`material-symbols-outlined ${styles['aside-menu-arrow']}`}>
+        arrow_forward_ios
+      </span>
     </div>
   );
 }

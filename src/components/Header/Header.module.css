@@ -317,7 +317,8 @@
   transform: translateX(-320px);
 }
 
-.aside-menu-header {
+.aside-menu-header,
+.aside-menu-team {
   display: flex;
   height: 40px;
   color: var(--color-light-gray);
@@ -327,6 +328,22 @@
   align-items: center;
   cursor: pointer;
   gap: 10px;
+}
+
+.aside-menu-team {
+  position: relative;
+  color: var(--color-olive);
+  background-color: var(--color-light-gray);
+}
+
+.aside-menu-team:hover {
+  background-color: var(--color-khaki);
+}
+
+.aside-menu-arrow {
+  position: absolute;
+  right: 0;
+  color: var(--color-light-gray);
 }
 
 .aside-menu-header:hover .select-dot {
@@ -349,6 +366,7 @@
   right: -30px;
   justify-content: center;
   align-items: center;
+  color: var(--color-light-gray);
   border: 2px solid var(--color-light-gray);
   cursor: pointer;
 }
