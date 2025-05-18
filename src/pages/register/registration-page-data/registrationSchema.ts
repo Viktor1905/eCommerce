@@ -12,12 +12,12 @@ export const CountryCodeSchema = z
 const userSchema = z.object({
   firstName: z
     .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(20, 'First name must be no longer than characters'),
+    .min(1, 'First name must be at least 1 character')
+    .max(20, 'First name must be no longer than 20 characters'),
   lastName: z
     .string()
     .min(2, 'Last name must be at least 2 characters')
-    .max(20, 'Last name must be no longer than characters'),
+    .max(20, 'Last name must be no longer than 20 characters'),
   dateOfBirth: z.string().refine((val) => {
     const dateOfBirth = new Date(val);
     let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -58,9 +58,9 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Must include an uppercase letter')
-    .regex(/[a-z]/, 'Must include a lowercase letter')
-    .regex(/[0-9]/, 'Must include a number')
+    .regex(/[A-Z]/, 'Password must include an uppercase letter')
+    .regex(/[a-z]/, 'Password must include a lowercase letter')
+    .regex(/[0-9]/, 'Password must include a number')
     .refine((val: string): boolean => !/\s/.test(val), {
       message: 'Password must not contain spaces',
     }),
@@ -83,15 +83,15 @@ const petSchema = z.object({
 const postalCodeRegex = /^(\d{5}(-\d{4})?|[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d)$/;
 
 const shippingAddressSchema = z.object({
-  shippingStreetName: z.string().min(5, 'Please enter a valid street name'),
-  shippingCity: z.string().min(2, 'City name must be at least 2 characters').max(50),
+  shippingStreetName: z.string().min(5, 'Street name must be at least 5 characters'),
+  shippingCity: z.string().min(2, 'City name must be at least 2 characters'),
   shippingPostalCode: z.string().regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)'),
   shippingCountry: CountryCodeSchema,
 });
 
 const billingAddressSchema = z.object({
-  billingStreetName: z.string().min(5, 'Please enter a valid street name').optional(),
-  billingCity: z.string().min(2, 'City name must be at least 2 characters').max(50).optional(),
+  billingStreetName: z.string().min(5, 'Street name must be at least 5 characters').optional(),
+  billingCity: z.string().min(2, 'City name must be at least 2 characters').optional(),
   billingPostalCode: z
     .string()
     .regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)')
