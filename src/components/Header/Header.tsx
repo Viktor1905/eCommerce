@@ -41,14 +41,7 @@ export function Header() {
   }
   return (
     <div key={key} className={styles['header-wrapper']}>
-      <span
-        onClick={() => {
-          toggleMenu();
-        }}
-        className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}
-      >
-        bookmark
-      </span>
+      <span className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}>bookmark</span>
       <UserContext.Provider value={userName}>
         <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
         <header className={styles.header}>
@@ -232,10 +225,6 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
   }, [isOpen]);
   return (
     <>
-      <div
-        onClick={toggleMenu}
-        className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
-      ></div>
       <AsideMenuBlock isOpen={isOpen} toggleMenu={toggleMenu} />
       <AddMenuBlock toggleMenu={toggleMenu} />
     </>
@@ -244,15 +233,21 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
 
 function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
   return (
-    <div
-      className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
-    >
-      <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
-        <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
+    <>
+      <div
+        onClick={toggleMenu}
+        className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
+      ></div>
+      <div
+        className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+      >
+        <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
+          <span className={`material-symbols-outlined`}>close</span>
+        </div>
+        <AsideMenuProfile toggleMenu={toggleMenu} />
+        <AsideMenuOurTeam toggleMenu={toggleMenu} />
       </div>
-      <AsideMenuProfile toggleMenu={toggleMenu} />
-      <AsideMenuOurTeam toggleMenu={toggleMenu} />
-    </div>
+    </>
   );
 }
 
