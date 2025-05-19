@@ -143,7 +143,11 @@ function Login() {
       <div className={styles['sing-up-menu']}>
         <div
           onClick={() => {
-            if (authStatus === 'LOG IN') {
+            console.log(authStatus);
+            console.log(localStorage.getItem('firstName'));
+
+            if (authStatus === 'LOG IN' || localStorage.getItem('firstName') === null) {
+              console.log('Current path:', location.pathname);
               void navigate('/login');
             } else {
               localStorage.removeItem('firstName');

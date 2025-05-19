@@ -14,15 +14,17 @@ import { TeamPage } from './pages/team/TeamPage.tsx';
 import { Navigate } from 'react-router-dom';
 
 function App() {
-  const authStatus = localStorage.getItem('firstName');
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="login" element={authStatus ? <Navigate to="/" /> : <LoginPage />} />
+        <Route
+          path="login"
+          element={!localStorage.getItem('firstName') ? <LoginPage /> : <Navigate to="/" />}
+        />
         <Route
           path="/registration"
-          element={authStatus ? <Navigate to="/" /> : <RegistrationPage />}
+          element={!localStorage.getItem('firstName') ? <RegistrationPage /> : <Navigate to="/" />}
         />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
