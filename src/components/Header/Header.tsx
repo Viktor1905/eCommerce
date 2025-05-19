@@ -41,6 +41,14 @@ export function Header() {
   }
   return (
     <div key={key} className={styles['header-wrapper']}>
+      <span
+        onClick={() => {
+          toggleMenu();
+        }}
+        className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}
+      >
+        bookmark
+      </span>
       <UserContext.Provider value={userName}>
         <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
         <header className={styles.header}>

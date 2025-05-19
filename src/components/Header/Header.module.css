@@ -25,6 +25,14 @@
   bottom: 0;
 }
 
+.add-menu-bookmark {
+  position: absolute;
+  left: min(116rem, 80%);
+  bottom: 5px;
+  font-size: 3rem;
+  color: var(--color-coral);
+}
+
 .header-case {
   position: relative;
   display: flex;
