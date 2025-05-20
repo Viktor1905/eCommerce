@@ -7,9 +7,6 @@ import { createContext, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const UserContext = createContext<string | null>(null);
-const RefreshContext = createContext<() => void>(() => {
-  return;
-});
 
 interface AllMenuProps {
   isOpen: boolean;
@@ -28,7 +25,6 @@ export function Header() {
   }, [location.pathname]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [, setRefresh] = useState(0);
 
   function toggleMenu() {
     setIsOpen(!isOpen);
@@ -53,13 +49,7 @@ export function Header() {
               </div>
               <SearchPanel />
             </div>
-            <RefreshContext.Provider
-              value={() => {
-                setRefresh((prev) => prev + 1);
-              }}
-            >
-              <MenuHeader />
-            </RefreshContext.Provider>
+            <MenuHeader />
           </div>
         </header>
       </UserContext.Provider>
@@ -122,7 +112,6 @@ function MenuHeader() {
 function Login() {
   const navigate = useNavigate();
   const name = useContext(UserContext) ?? '';
-  const triggerRefresh = useContext(RefreshContext);
   let userState = name;
   let authStatus = 'LOG OUT';
   let hint = 'View Profile';
@@ -147,7 +136,7 @@ function Login() {
               void navigate('/login');
             } else {
               localStorage.removeItem('firstName');
-              triggerRefresh();
+              setTimeout(() => navigate('/login'), 0);
             }
           }}
           className={styles['button-login']}

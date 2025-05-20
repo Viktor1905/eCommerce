@@ -7,24 +7,31 @@ import { CatalogPage } from './pages/catalog/CatalogPage.tsx';
 import { CartPage } from './pages/cart/Cart.tsx';
 import { FavoritesPage } from './pages/favorites/Favorites.tsx';
 import { OrdersPage } from './pages/orders/OrdersPage.tsx';
-import { NotFoundPage } from './pages/PageNotFound/Page404.tsx';
+import { NotFoundPage } from './pages/pageNotFound/Page404.tsx';
 import { AboutUsPage } from './pages/about/AboutPage.tsx';
 import { ProfilePage } from './pages/profile/ProfilePage.tsx';
 import { TeamPage } from './pages/team/TeamPage.tsx';
 import { Navigate } from 'react-router-dom';
 
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 function App() {
+  const [firstName, setFirstName] = useState(localStorage.getItem('firstName'));
+  const location = useLocation();
+
+  useEffect(() => {
+    const currentFirstName = localStorage.getItem('firstName');
+    setFirstName(currentFirstName);
+  }, [location.pathname]);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="login" element={<>{!firstName ? <LoginPage /> : <Navigate to="/" />}</>} />
         <Route
-          path="login"
-          element={!localStorage.getItem('firstName') ? <LoginPage /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/registration"
-          element={!localStorage.getItem('firstName') ? <RegistrationPage /> : <Navigate to="/" />}
+          path="registration"
+          element={<>{!firstName ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
