@@ -21,7 +21,7 @@ const userSchema = z.object({
     ),
   lastName: z
     .string()
-    .min(1, 'Last name must be at least 2 characters')
+    .min(1, 'Last name must be at least 1 character')
     .regex(
       nameRegex,
       'Last name can only contain letters and spaces, without leading or trailing spaces'
