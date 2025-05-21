@@ -4,11 +4,9 @@ import logo from './logo.png';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const UserContext = createContext<string | null>(null);
-const RefreshContext = createContext<() => void>(() => {
-  return;
-});
 
 interface AllMenuProps {
   isOpen: boolean;
@@ -20,13 +18,17 @@ interface AddMenuBlockProps {
 }
 
 export function Header() {
+  const location = useLocation();
+  const [key, setKey] = useState(0);
+  useEffect(() => {
+    setKey((prev) => prev + 1);
+  }, [location.pathname]);
+
   const [isOpen, setIsOpen] = useState(false);
-  const [, setRefresh] = useState(0);
 
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
-  // localStorage.setItem('firstName', JSON.stringify('44453t2t'));
 
   const data = localStorage.getItem('firstName');
   let userName = 'Guest';
@@ -34,7 +36,8 @@ export function Header() {
     if (typeof data === 'string') userName = data;
   }
   return (
-    <div className={styles['header-wrapper']}>
+    <div key={key} className={styles['header-wrapper']}>
+      <span className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}>bookmark</span>
       <UserContext.Provider value={userName}>
         <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
         <header className={styles.header}>
@@ -46,13 +49,7 @@ export function Header() {
               </div>
               <SearchPanel />
             </div>
-            <RefreshContext.Provider
-              value={() => {
-                setRefresh((prev) => prev + 1);
-              }}
-            >
-              <MenuHeader />
-            </RefreshContext.Provider>
+            <MenuHeader />
           </div>
         </header>
       </UserContext.Provider>
@@ -115,7 +112,6 @@ function MenuHeader() {
 function Login() {
   const navigate = useNavigate();
   const name = useContext(UserContext) ?? '';
-  const triggerRefresh = useContext(RefreshContext);
   let userState = name;
   let authStatus = 'LOG OUT';
   let hint = 'View Profile';
@@ -136,11 +132,11 @@ function Login() {
       <div className={styles['sing-up-menu']}>
         <div
           onClick={() => {
-            if (authStatus === 'LOG IN') {
+            if (authStatus === 'LOG IN' || localStorage.getItem('firstName') === null) {
               void navigate('/login');
             } else {
               localStorage.removeItem('firstName');
-              triggerRefresh();
+              setTimeout(() => navigate('/login'), 0);
             }
           }}
           className={styles['button-login']}
@@ -218,10 +214,6 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
   }, [isOpen]);
   return (
     <>
-      <div
-        onClick={toggleMenu}
-        className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
-      ></div>
       <AsideMenuBlock isOpen={isOpen} toggleMenu={toggleMenu} />
       <AddMenuBlock toggleMenu={toggleMenu} />
     </>
@@ -230,15 +222,21 @@ function AddMenu({ isOpen, toggleMenu }: AllMenuProps) {
 
 function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
   return (
-    <div
-      className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
-    >
-      <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
-        <span className={`material-symbols-outlined ${styles['aside-close-icon']}`}>close</span>
+    <>
+      <div
+        onClick={toggleMenu}
+        className={`${styles['canvas-aside-menu']} ${isOpen ? styles['visible-canvas-aside-menu'] : styles['hidden-canvas-aside-menu']}`}
+      ></div>
+      <div
+        className={`${styles['aside-add-menu']} ${isOpen ? styles['open-aside-add-menu'] : styles['close-aside-add-menu']}`}
+      >
+        <div onClick={toggleMenu} className={styles['button-close-aside-menu']}>
+          <span className={`material-symbols-outlined`}>close</span>
+        </div>
+        <AsideMenuProfile toggleMenu={toggleMenu} />
+        <AsideMenuOurTeam toggleMenu={toggleMenu} />
       </div>
-      <AsideMenuProfile toggleMenu={toggleMenu} />
-      <AsideMenuOurTeam toggleMenu={toggleMenu} />
-    </div>
+    </>
   );
 }
 
@@ -250,7 +248,7 @@ function AsideMenuProfile({ toggleMenu }: AddMenuBlockProps) {
     <div
       onClick={() => {
         toggleMenu();
-        void navigate('/profile');
+        if (userState !== 'Guest') void navigate('/profile');
       }}
       className={styles['aside-menu-header']}
     >

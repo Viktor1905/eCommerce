@@ -4,6 +4,7 @@
   max-height: 100dvh;
   color: var(--color-light-gray);
   flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
 

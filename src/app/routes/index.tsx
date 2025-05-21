@@ -7,7 +7,7 @@
 // import { CatalogPage } from '../../pages/catalog/CatalogPage';
 // import { LoginPage } from '../../pages/authorization/Login-page.tsx';
 // import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
-// import { NotFoundPage } from '../../pages/PageNotFound/Page404.tsx';
+// import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
 
 // export function AppRoutes() {
 //   return (

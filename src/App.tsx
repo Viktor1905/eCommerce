@@ -13,16 +13,25 @@ import { ProfilePage } from './pages/profile/ProfilePage.tsx';
 import { TeamPage } from './pages/team/TeamPage.tsx';
 import { Navigate } from 'react-router-dom';
 
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 function App() {
-  const authStatus = localStorage.getItem('firstName');
+  const [firstName, setFirstName] = useState(localStorage.getItem('firstName'));
+  const location = useLocation();
+
+  useEffect(() => {
+    const currentFirstName = localStorage.getItem('firstName');
+    setFirstName(currentFirstName);
+  }, [location.pathname]);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="login" element={authStatus ? <Navigate to="/" /> : <LoginPage />} />
+        <Route path="login" element={<>{!firstName ? <LoginPage /> : <Navigate to="/" />}</>} />
         <Route
-          path="/registration"
-          element={authStatus ? <Navigate to="/" /> : <RegistrationPage />}
+          path="registration"
+          element={<>{!firstName ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
