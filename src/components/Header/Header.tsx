@@ -1,10 +1,9 @@
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
 import logo from './logo.png';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
 
 const UserContext = createContext<string | null>(null);
 const RefreshContext = createContext<() => void>(() => {
@@ -103,7 +102,6 @@ function MenuHeader() {
         <Logo />
         <HomeLink />
       </div>
-      <ToastContainer className={'w-0 h-0'} />
       <ul className={styles['menu-list']}>
         <Login />
         <Order />
@@ -116,63 +114,51 @@ function MenuHeader() {
 
 function Login() {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(() => {
-    const stored = localStorage.getItem('firstName');
-    return stored ? stored.replace(/"/g, '') : '';
-  });
+  const name = useContext(UserContext) ?? '';
+  const triggerRefresh = useContext(RefreshContext);
+  let userState = name;
+  let authStatus = 'LOG OUT';
+  let hint = 'View Profile';
+  let signUpOrProfile = 'PROFILE';
 
-  const updateUserState = useCallback(() => {
-    const stored = localStorage.getItem('firstName');
-    const name = stored ? stored.replace(/"/g, '') : '';
-    setUserName(name);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('userChange', updateUserState);
-    return () => {
-      window.removeEventListener('userChange', updateUserState);
-    };
-  }, [updateUserState]);
-
-  const handleLogout = () => {
-    localStorage.setItem('firstName', '');
-    window.dispatchEvent(new Event('userChange'));
-    toast.success('Logged out!', { position: 'top-right' });
-  };
-
-  const renderButton = (label: string, path: string, onClick?: () => void) => (
-    <button
-      className="w-full p-1 pl-3 pr-3 text-white bg-goldenrod rounded-xl text-sm capitalize font-main font-medium hover:cursor-pointer"
-      onClick={onClick ?? (() => void navigate(path))}
-    >
-      {label}
-    </button>
-  );
-
-  const isLoggedIn = Boolean(userName);
-  const hint = isLoggedIn ? 'View Profile' : "Don't have an account?";
-
+  if (useContext(UserContext) === 'Guest') {
+    userState = 'Guest';
+    authStatus = 'LOG IN';
+    hint = "Don't have an account?";
+    signUpOrProfile = 'Sing Up';
+  }
   return (
     <li className={`${styles.list} ${styles['list-sing-up']}`}>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
       </div>
-      <div className={styles['text-list']}>{isLoggedIn ? userName : 'Guest'}</div>
+      <div className={styles['text-list']}>{userState}</div>
       <div className={styles['sing-up-menu']}>
-        <div className="flex flex-col items-center justify-center w-full">
-          {isLoggedIn ? (
-            <>
-              {renderButton('Log out', '', handleLogout)}
-              <span className="font-main">{hint}</span>
-              {renderButton('Profile', '/profile')}
-            </>
-          ) : (
-            <>
-              {renderButton('Log in', '/login')}
-              <span className="font-main">{hint}</span>
-              {renderButton('Sign up', '/registration')}
-            </>
-          )}
+        <div
+          onClick={() => {
+            if (authStatus === 'LOG IN') {
+              void navigate('/login');
+            } else {
+              localStorage.removeItem('firstName');
+              triggerRefresh();
+            }
+          }}
+          className={styles['button-login']}
+        >
+          {authStatus}
+        </div>
+        <span className={styles.hint}>{hint}</span>{' '}
+        <div
+          onClick={() => {
+            if (authStatus === 'LOG IN') {
+              void navigate('/registration');
+            } else {
+              void navigate('/profile');
+            }
+          }}
+          className={styles['button-sing-up']}
+        >
+          {signUpOrProfile}
         </div>
       </div>
     </li>
