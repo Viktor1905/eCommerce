@@ -29,13 +29,23 @@ export interface SignUpData {
     };
   };
   addresses: address[];
+  shippingAddressIds: string[];
+  billingAddressIds: string[];
 }
 
-export async function setShippingAddress(
-  successUserResponse: userResponse,
-  token: string,
-  defaultAddress: boolean
-): Promise<customerResponse> {
+export async function setShippingAddress({
+  successUserResponse,
+  token,
+  allDefaultAddress,
+  shippingDefaultAddress,
+  billingDefaultAddress,
+}: {
+  successUserResponse: userResponse;
+  token: string;
+  allDefaultAddress: boolean;
+  shippingDefaultAddress: boolean;
+  billingDefaultAddress: boolean;
+}): Promise<customerResponse> {
   const parsedSuccessUserResponse = UserResponseSchema.safeParse(successUserResponse);
 
   const customerVersion = parsedSuccessUserResponse.data?.customer.version;
@@ -57,12 +67,23 @@ export async function setShippingAddress(
     },
   ];
 
-  const defaultActions = defaultAddress
-    ? [
-        { action: 'setDefaultShippingAddress', addressId: shippingAddressID },
-        { action: 'setDefaultBillingAddress', addressId: billingAddressID },
-      ]
-    : [];
+  const defaultActions: Record<string, unknown>[] = [];
+
+  if (allDefaultAddress || shippingDefaultAddress) {
+    defaultActions.push({
+      action: 'setDefaultShippingAddress',
+      addressId: shippingAddressID,
+    });
+  }
+
+  if (allDefaultAddress || billingDefaultAddress) {
+    defaultActions.push({
+      action: 'setDefaultBillingAddress',
+      addressId: billingAddressID,
+    });
+  }
+
+  console.log(defaultActions);
 
   const body = {
     version: customerVersion ?? 1,
@@ -79,11 +100,10 @@ export async function setShippingAddress(
 
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
-
   if (!parsed.success) {
     console.error('Invalid response structure:', parsed.error);
     console.log('Raw response:', raw);
-    throw new Error('Sign-up failed: Invalid response structure');
+    throw new Error('Something went wrong, please try again later'); //Sign-up failed: Invalid response structure
   }
 
   return parsed.data;
@@ -133,12 +153,12 @@ export async function getAccessToken(): Promise<string> {
         `Token fetch failed: ${parsedError.data.error_description ?? parsedError.data.message ?? parsedError.data.error}`
       );
     }
-    throw new Error('Token fetch failed: Unknown error response');
+    throw new Error('Something went wrong, please try again later'); //Token fetch failed: Unknown error response
   }
 
   const parsedToken = TokenResponseSchema.safeParse(raw);
   if (!parsedToken.success) {
-    throw new Error('Token fetch failed: Invalid response format');
+    throw new Error('Something went wrong, please try again later'); //Token fetch failed: Unknown error response
   }
   console.log(parsedToken.data.access_token);
   return parsedToken.data.access_token;
@@ -224,6 +244,7 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
   });
   const raw: unknown = await response.json();
 
+  console.log(raw);
   if (!response.ok) {
     const message = (raw as { message?: string }).message ?? response.statusText;
     throw new Error(`Sign-up failed: ${message}`);
@@ -233,7 +254,7 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
   if (!parsed.success) {
     console.error('Invalid response structure:', parsed.error.format());
     console.log('Raw response:', raw);
-    throw new Error('Sign-up failed: Invalid response structure');
+    throw new Error('Something went wrong, please try again later'); //'Sign-up failed: Invalid response structure'
   }
 
   return parsed.data;

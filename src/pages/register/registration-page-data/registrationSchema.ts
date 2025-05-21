@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import PostalCodes from 'postal-codes-js';
 import { COUNTRIES_DATA } from '../../../components/CountrySelector/countries-data/countries-data';
 
 const today = new Date();
@@ -9,15 +10,22 @@ export const CountryCodeSchema = z
     message: 'Please select a country',
   });
 
+const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
 const userSchema = z.object({
   firstName: z
     .string()
     .min(1, 'First name must be at least 1 character')
-    .max(20, 'First name must be no longer than 20 characters'),
+    .regex(
+      nameRegex,
+      'First name can only contain letters and spaces, without leading or trailing spaces'
+    ),
   lastName: z
     .string()
-    .min(2, 'Last name must be at least 2 characters')
-    .max(20, 'Last name must be no longer than 20 characters'),
+    .min(1, 'Last name must be at least 1 character')
+    .regex(
+      nameRegex,
+      'Last name can only contain letters and spaces, without leading or trailing spaces'
+    ),
   dateOfBirth: z.string().refine((val) => {
     const dateOfBirth = new Date(val);
     let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -67,7 +75,10 @@ const loginSchema = z.object({
 });
 
 const petSchema = z.object({
-  petName: z.string().min(2, 'First name must be at least 2 characters').max(20),
+  petName: z
+    .string()
+    .min(1, 'First name must be at least 1 character')
+    .regex(nameRegex, 'Pet name can only contain letters and spaces'),
   petBirthDate: z.string().refine((val) => {
     const dateOfBirth = new Date(val);
     let age = today.getFullYear() - dateOfBirth.getFullYear();
@@ -80,21 +91,23 @@ const petSchema = z.object({
   }, 'Your pet must be very old... Try applying for Guinness World Records'),
 });
 
-const postalCodeRegex = /^(\d{5}(-\d{4})?|[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d)$/;
+const postalCodeRegex = /^[A-Za-z0-9]+([ -][A-Za-z0-9]+)*$/;
 
 const shippingAddressSchema = z.object({
-  shippingStreetName: z.string().min(5, 'Street name must be at least 5 characters'),
-  shippingCity: z.string().min(2, 'City name must be at least 2 characters'),
-  shippingPostalCode: z.string().regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)'),
+  shippingStreetName: z.string().min(1, 'Street name must be at least 1 character'),
+  shippingCity: z.string().min(1, 'City name must be at least 1 character'),
+  shippingPostalCode: z
+    .string()
+    .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)'),
   shippingCountry: CountryCodeSchema,
 });
 
 const billingAddressSchema = z.object({
-  billingStreetName: z.string().min(5, 'Street name must be at least 5 characters').optional(),
-  billingCity: z.string().min(2, 'City name must be at least 2 characters').optional(),
+  billingStreetName: z.string().min(1, 'Street name must be at least 1 character').optional(),
+  billingCity: z.string().min(1, 'City name must be at least 1 character').optional(),
   billingPostalCode: z
     .string()
-    .regex(postalCodeRegex, 'Postal code must be valid (e.g., 12345)')
+    .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)')
     .optional(),
   billingCountry: CountryCodeSchema.optional(),
 });
@@ -105,7 +118,9 @@ export const flatSchema = userSchema
   .merge(shippingAddressSchema)
   .merge(billingAddressSchema)
   .extend({
-    defaultAddress: z.boolean().optional(),
+    allDefaultAddress: z.boolean().optional(),
+    billingDefaultAddress: z.boolean().optional(),
+    shippingDefaultAddress: z.boolean().optional(),
   });
 
 export const optionalSchema = flatSchema
@@ -136,10 +151,31 @@ export const optionalSchema = flatSchema
       return result.success;
     },
     {
-      message: 'Please fill billing address',
+      message: '',
       path: ['sameAsShipping'],
     }
-  );
+  )
+  .superRefine((data, ctx) => {
+    if (!data.billingCountry) return;
+    const result = PostalCodes.validate(data.billingCountry, data.billingPostalCode ?? '');
+    if (result !== true) {
+      ctx.addIssue({
+        path: ['billingPostalCode'],
+        message: 'Invalid postal code for selected country',
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  })
+  .superRefine((data, ctx) => {
+    const result = PostalCodes.validate(data.shippingCountry, data.shippingPostalCode);
+    if (result !== true) {
+      ctx.addIssue({
+        path: ['shippingPostalCode'],
+        message: 'Invalid postal code for selected country',
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 export type FormFields = z.infer<typeof optionalSchema>;
 

@@ -8,6 +8,7 @@ import {
 } from '../../registration-page-data/registrationFieldGroups';
 import OKModalDialog from '../../../../components/OKModalDialog/OKModalDialog';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const firstNameLocalstorageKey = 'firstName';
 
@@ -33,13 +34,16 @@ export default function RegistrationForm() {
   function closeModal() {
     setIsModalOpen(false);
     localStorage.setItem(firstNameLocalstorageKey, firstName);
+    toast.success('Account created!', {
+      position: 'top-right',
+    });
     void navigate('/');
   }
 
   const submitBtnClass =
     'w-fit p-1 px-3 text-white min-w-3xs bg-jungle rounded-xl m-2 text-2xl capitalize font-main font-medium hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed';
   return (
-    <section className="w-fit flex flex-col items-center justify-center font-additional ">
+    <section className="w-fit h-full flex flex-col items-center justify-center font-additional ">
       <h2 className="text-3xl p-2 text-center text-jungle font-main-bd ">Registration</h2>
       {isModalOpen && (
         <OKModalDialog
@@ -55,7 +59,6 @@ export default function RegistrationForm() {
           closeModal={closeModal}
         />
       )}
-      ;
       <form
         className="flex flex-col gap-2 p-2 items-center"
         onSubmit={(e) => {
@@ -75,28 +78,45 @@ export default function RegistrationForm() {
           />
         ))}
 
+        {!sameAsShipping && (
+          <InputElement
+            type="checkbox"
+            title="Set as default shipping address"
+            id="shippingDefaultAddress"
+            register={register('shippingDefaultAddress')}
+          />
+        )}
+
         <InputElement
           type="checkbox"
           title="Billing address same as shipping"
           id="sameAsShipping"
           register={register('sameAsShipping')}
-          error={errors.sameAsShipping?.message}
         />
 
         {sameAsShipping ? (
           <InputElement
             type="checkbox"
-            title="Set as default address"
-            id="defaultAddress"
-            register={register('defaultAddress')}
+            title="Set as default billing and shipping address"
+            id="allDefaultAddress"
+            register={register('allDefaultAddress')}
           />
         ) : (
-          <FieldsetBlock
-            title="billing address"
-            content={billingAddressInfo}
-            register={register}
-            errors={errors}
-          />
+          <>
+            <FieldsetBlock
+              title="billing address"
+              content={billingAddressInfo}
+              register={register}
+              errors={errors}
+            />
+
+            <InputElement
+              type="checkbox"
+              title="Set as default billing address"
+              id="billingDefaultAddress"
+              register={register('billingDefaultAddress')}
+            />
+          </>
         )}
 
         <button disabled={!isValid || isSubmitting} type="submit" className={submitBtnClass}>
