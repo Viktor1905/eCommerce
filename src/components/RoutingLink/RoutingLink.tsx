@@ -15,8 +15,11 @@ export default function RoutingLink({
   }
   return (
     <div className="flex gap-2 bg-white items-center p-2 justify-center font-additional">
-      <span className="text-jungle">{additionalText}</span>
-      <div onClick={onClick} className="text-jungle m-2 font-bold hover:cursor-pointer font-main">
+      <span className="text-goldenrod">{additionalText}</span>
+      <div
+        onClick={onClick}
+        className="text-goldenrod m-2 font-bold hover:cursor-pointer font-main"
+      >
         {linkText}
       </div>
     </div>

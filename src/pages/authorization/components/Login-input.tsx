@@ -1,7 +1,5 @@
 import { ReactElement, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import eye from './assets/eye.svg';
-import eyeOff from './assets/eye-off.svg';
 
 export function LoginInput({
   register,
@@ -33,18 +31,15 @@ export function LoginInput({
           autoComplete={type}
         />
         {isPassword && (
-          <div
-            className="absolute right-[1%] top-1/2 -translate-y-1/2 cursor-pointer opacity-50"
+          <button
+            type="button"
+            className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer "
             onClick={(): void => {
               setShowPassword((prev) => !prev);
             }}
           >
-            <img
-              className="w-[20px]"
-              src={showPassword ? eyeOff : eye}
-              alt="Toggle password visibility"
-            />
-          </div>
+            {showPassword ? '🙉' : '🙈'}
+          </button>
         )}
       </div>
       <p className="text-sm h-fit font-main-bd text-red-500 h-5 mt-1">{errorMessage ?? '\u00A0'}</p>

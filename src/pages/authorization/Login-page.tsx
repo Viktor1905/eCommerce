@@ -14,12 +14,12 @@ export function LoginPage(): React.ReactElement {
   }, [isAuthenticated, navigate]);
   return (
     <section className="w-fit m-auto flex flex-col justify-center items-center rounded-lg bg-white">
+      <LoginForm />
       <RoutingLink
         additionalText="Don't have an account?"
         linkText="Sign up →"
         redirectTo="registration"
       />
-      <LoginForm />
     </section>
   );
 }

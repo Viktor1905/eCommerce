@@ -47,7 +47,7 @@ export function LoginForm(): React.ReactElement {
   };
   return (
     <section className="w-[35%] p-[10px] font-main rounded-[20px] text-xl min-w-[300px] !text-goldenrod max-[400px]:p-[3px], max-[400px]:min-w-[250px]">
-      <h1 className="text-3xl p-2 text-center text-jungle font-main-bd "> Login </h1>
+      <h1 className="text-3xl p-2 text-center text-goldenrod font-main-bd "> Login </h1>
       <form
         className="flex flex-col gap-2"
         onSubmit={(event: FormEvent<HTMLFormElement>): void => {
