@@ -30,7 +30,7 @@
   left: min(116rem, 80%);
   bottom: 5px;
   font-size: 3rem;
-  color: var(--color-goldenrod);
+  color: var(--color-coral);
 }
 
 .header-case {
@@ -241,6 +241,7 @@
   min-width: 320px;
   height: 40px;
   bottom: 50px;
+  padding-left: 25px;
   color: var(--color-light-gray);
   background-color: var(--color-olive-trans);
   justify-content: center;
@@ -296,11 +297,12 @@
 }
 
 .visible-canvas-aside-menu {
+  transform: translateX(0);
   opacity: 1;
 }
 
 .hidden-canvas-aside-menu {
-  display: none;
+  transform: translateX(100%);
   opacity: 0;
 }
 
@@ -373,7 +375,6 @@
   justify-content: center;
   align-items: center;
   color: var(--color-light-gray);
-  background-color: var(--color-olive);
   border: 2px solid var(--color-light-gray);
   cursor: pointer;
 }

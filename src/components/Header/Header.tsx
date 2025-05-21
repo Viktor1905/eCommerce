@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { createContext, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import { logoutUser } from '../../api/logout/logout';
 
 const UserContext = createContext<string | null>(null);
 
@@ -19,24 +20,44 @@ interface AddMenuBlockProps {
 
 export function Header() {
   const location = useLocation();
-  const [key, setKey] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState('Guest');
+
   useEffect(() => {
-    setKey((prev) => prev + 1);
+    const updateUser = () => {
+      const name = localStorage.getItem('firstName') ?? 'Guest';
+      setUserName(name);
+    };
+
+    updateUser();
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'firstName') updateUser();
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
   }, [location.pathname]);
 
-  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const handleGlobalUpdate = () => {
+      setUserName(localStorage.getItem('firstName') ?? 'Guest');
+    };
 
-  function toggleMenu() {
-    setIsOpen(!isOpen);
-  }
+    window.addEventListener('auth-update', handleGlobalUpdate);
+    return () => {
+      window.removeEventListener('auth-update', handleGlobalUpdate);
+    };
+  }, []);
 
-  const data = localStorage.getItem('firstName');
-  let userName = 'Guest';
-  if (data) {
-    if (typeof data === 'string') userName = data;
-  }
+  const toggleMenu = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <div key={key} className={styles['header-wrapper']}>
+    <div className={styles['header-wrapper']}>
       <span className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}>bookmark</span>
       <UserContext.Provider value={userName}>
         <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
@@ -111,50 +132,36 @@ function MenuHeader() {
 
 function Login() {
   const navigate = useNavigate();
-  const name = useContext(UserContext) ?? '';
-  let userState = name;
-  let authStatus = 'LOG OUT';
-  let hint = 'View Profile';
-  let signUpOrProfile = 'PROFILE';
+  const userName = useContext(UserContext) ?? '';
+  const isGuest = userName === 'Guest';
 
-  if (useContext(UserContext) === 'Guest') {
-    userState = 'Guest';
-    authStatus = 'LOG IN';
-    hint = "Don't have an account?";
-    signUpOrProfile = 'Sing Up';
-  }
+  const handleAuth = () => {
+    if (!isGuest) {
+      logoutUser();
+      void navigate('/login');
+      window.dispatchEvent(new CustomEvent('auth-update'));
+    } else {
+      void navigate('/login');
+    }
+  };
+
+  const handleProfile = () => {
+    void navigate(isGuest ? '/registration' : '/profile');
+  };
+
   return (
     <li className={`${styles.list} ${styles['list-sing-up']}`}>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['person-icon']}`}>person</span>
       </div>
-      <div className={styles['text-list']}>{userState}</div>
+      <div className={styles['text-list']}>{userName}</div>
       <div className={styles['sing-up-menu']}>
-        <div
-          onClick={() => {
-            if (authStatus === 'LOG IN' || localStorage.getItem('firstName') === null) {
-              void navigate('/login');
-            } else {
-              localStorage.removeItem('firstName');
-              setTimeout(() => navigate('/login'), 0);
-            }
-          }}
-          className={styles['button-login']}
-        >
-          {authStatus}
+        <div onClick={handleAuth} className={styles['button-login']}>
+          {isGuest ? 'LOG IN' : 'LOG OUT'}
         </div>
-        <span className={styles.hint}>{hint}</span>{' '}
-        <div
-          onClick={() => {
-            if (authStatus === 'LOG IN') {
-              void navigate('/registration');
-            } else {
-              void navigate('/profile');
-            }
-          }}
-          className={styles['button-sing-up']}
-        >
-          {signUpOrProfile}
+        <span className={styles.hint}>{isGuest ? "Don't have an account?" : 'View Profile'}</span>
+        <div onClick={handleProfile} className={styles['button-sing-up']}>
+          {isGuest ? 'SIGN UP' : 'PROFILE'}
         </div>
       </div>
     </li>
