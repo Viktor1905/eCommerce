@@ -30,7 +30,6 @@ export function LoginForm(): React.ReactElement {
           position: 'top-right',
         });
 
-        window.dispatchEvent(new Event('userChange'));
         await navigate('/');
       } else {
         setError('root', {

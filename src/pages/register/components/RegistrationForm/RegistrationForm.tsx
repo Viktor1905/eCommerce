@@ -34,7 +34,6 @@ export default function RegistrationForm() {
   function closeModal() {
     setIsModalOpen(false);
     localStorage.setItem(firstNameLocalstorageKey, firstName);
-    window.dispatchEvent(new Event('userChange'));
     toast.success('Account created!', {
       position: 'top-right',
     });
@@ -60,7 +59,6 @@ export default function RegistrationForm() {
           closeModal={closeModal}
         />
       )}
-      ;
       <form
         className="flex flex-col gap-2 p-2 items-center"
         onSubmit={(e) => {
@@ -80,28 +78,45 @@ export default function RegistrationForm() {
           />
         ))}
 
+        {!sameAsShipping && (
+          <InputElement
+            type="checkbox"
+            title="Set as default shipping address"
+            id="shippingDefaultAddress"
+            register={register('shippingDefaultAddress')}
+          />
+        )}
+
         <InputElement
           type="checkbox"
           title="Billing address same as shipping"
           id="sameAsShipping"
           register={register('sameAsShipping')}
-          error={errors.sameAsShipping?.message}
         />
 
         {sameAsShipping ? (
           <InputElement
             type="checkbox"
-            title="Set as default address"
-            id="defaultAddress"
-            register={register('defaultAddress')}
+            title="Set as default billing and shipping address"
+            id="allDefaultAddress"
+            register={register('allDefaultAddress')}
           />
         ) : (
-          <FieldsetBlock
-            title="billing address"
-            content={billingAddressInfo}
-            register={register}
-            errors={errors}
-          />
+          <>
+            <FieldsetBlock
+              title="billing address"
+              content={billingAddressInfo}
+              register={register}
+              errors={errors}
+            />
+
+            <InputElement
+              type="checkbox"
+              title="Set as default billing address"
+              id="billingDefaultAddress"
+              register={register('billingDefaultAddress')}
+            />
+          </>
         )}
 
         <button disabled={!isValid || isSubmitting} type="submit" className={submitBtnClass}>
