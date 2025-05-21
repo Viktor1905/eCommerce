@@ -5,30 +5,36 @@ type CountrySelectorProps = {
   error?: string;
   id: string;
   register?: UseFormRegisterReturn;
+  required?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function CountrySelector({ error, id, register }: CountrySelectorProps) {
+export default function CountrySelector({ error, id, register, required }: CountrySelectorProps) {
   return (
-    <div className={`relative flex flex-wrap w-[300px]`}>
-      <label className="p-1 capitalize text-goldenrod font-medium w-[300px] font-main" htmlFor={id}>
-        Country
-      </label>
-      <select
-        className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block hover:cursor-pointer"
-        defaultValue=""
-        id={id}
-        name={id}
-        {...register}
-      >
-        <option value="" disabled hidden>
-          Select a country
-        </option>
-        {COUNTRIES_DATA.map(({ code, name }) => (
-          <option value={code} key={code} className="text-olive">
-            {name}
+    <div className={`relative flex flex-col`}>
+      <div className={'flex flex-col'}>
+        <label
+          className="p-1 capitalize text-goldenrod font-medium w-[300px] font-main"
+          htmlFor={id}
+        >
+          {required && <span className="text-red-700">* </span>}Country
+        </label>
+        <select
+          className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block hover:cursor-pointer"
+          defaultValue=""
+          id={id}
+          name={id}
+          {...register}
+        >
+          <option value="" disabled hidden>
+            Select a country
           </option>
-        ))}
-      </select>
+          {COUNTRIES_DATA.map(({ code, name }) => (
+            <option value={code} key={code} className="text-olive">
+              {name}
+            </option>
+          ))}
+        </select>
+      </div>
       <p className="text-sm text-coral h-5 p-1 w-[300px] break-words whitespace-normal">
         {error ?? '\u00A0'}
       </p>

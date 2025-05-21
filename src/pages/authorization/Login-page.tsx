@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LoginForm } from './components/Login-form.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import RoutingLink from '../../components/RoutingLink/RoutingLink.tsx';
 
 export function LoginPage(): React.ReactElement {
   const navigate = useNavigate();
@@ -12,8 +13,13 @@ export function LoginPage(): React.ReactElement {
     }
   }, [isAuthenticated, navigate]);
   return (
-    <section className="w-screen flex justify-center max-w-[1440px] m-auto items-center mw">
+    <section className="w-fit m-auto flex flex-col justify-center items-center rounded-lg bg-white">
       <LoginForm />
+      <RoutingLink
+        additionalText="Don't have an account?"
+        linkText="Sign up →"
+        redirectTo="registration"
+      />
     </section>
   );
 }

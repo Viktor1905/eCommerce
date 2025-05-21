@@ -15,8 +15,8 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
     register,
     handleSubmit,
     setValue,
-    control,
     trigger,
+    control,
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormFields>({
     mode: 'all',
@@ -27,10 +27,17 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
 
   const sameAsShipping = useWatch({ name: 'sameAsShipping', control });
 
+  const billingCountry = useWatch({ name: 'billingCountry', control });
+  const billingPostalCode = useWatch({ name: 'billingPostalCode', control });
+
+  const shippingCountry = useWatch({ name: 'shippingCountry', control });
+  const shippingPostalCode = useWatch({ name: 'shippingPostalCode', control });
+
   useEffect(() => {
-    setValue('defaultAddress', false, { shouldValidate: true });
+    setValue('allDefaultAddress', false, { shouldValidate: true });
     if (sameAsShipping) {
-      setValue('defaultAddress', false, { shouldValidate: true });
+      setValue('billingDefaultAddress', false, { shouldValidate: true });
+      setValue('shippingDefaultAddress', false, { shouldValidate: true });
       setValue('billingStreetName', undefined, { shouldValidate: false });
       setValue('billingCity', undefined, { shouldValidate: false });
       setValue('billingPostalCode', undefined, { shouldValidate: false });
@@ -38,9 +45,19 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
 
       void trigger(['billingStreetName', 'billingCity', 'billingPostalCode', 'billingCountry']);
     }
-
-    void trigger(['defaultAddress']);
   }, [sameAsShipping, setValue, trigger]);
+
+  useEffect(() => {
+    if (billingPostalCode) {
+      void trigger(['billingPostalCode']);
+    }
+  }, [billingCountry, billingPostalCode, trigger]);
+
+  useEffect(() => {
+    if (shippingPostalCode) {
+      void trigger(['shippingPostalCode']);
+    }
+  }, [shippingCountry, shippingPostalCode, trigger]);
 
   const handleValidSubmit = async (data: FormFields) => {
     const shippingAddress = {
@@ -65,9 +82,20 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
 
     const addresses = data.sameAsShipping ? [shippingAddress] : [shippingAddress, billingAddress];
 
+    const shippingAddressIndex = '0';
+    const billingAddressIndex = data.sameAsShipping ? '0' : '1';
+
     const apiPayload: SignUpData = {
       ...data,
       addresses,
+      shippingAddressIds: [shippingAddressIndex],
+      billingAddressIds: [billingAddressIndex],
+      ...(data.shippingDefaultAddress || data.allDefaultAddress
+        ? { defaultShippingAddressId: shippingAddressIndex }
+        : {}),
+      ...(data.billingDefaultAddress || data.allDefaultAddress
+        ? { defaultBillingAddressId: billingAddressIndex }
+        : {}),
       custom: {
         type: { key: 'customerCustomFields' },
         fields: {
@@ -82,11 +110,18 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
       const token = await getAccessToken();
       const signUpResult = await signUpUser(apiPayload, token);
       console.log('Sign-up successful:', signUpResult);
-      const setAddressesResult = await setShippingAddress(
-        signUpResult,
-        token,
-        data.defaultAddress ?? false
-      );
+      console.log('def: ', data.allDefaultAddress);
+
+      console.log('ship: ', data.shippingDefaultAddress);
+
+      console.log('bill: ', data.billingDefaultAddress);
+      const setAddressesResult = await setShippingAddress({
+        successUserResponse: signUpResult,
+        token: token,
+        allDefaultAddress: data.allDefaultAddress ?? false,
+        shippingDefaultAddress: data.shippingDefaultAddress ?? false,
+        billingDefaultAddress: data.billingDefaultAddress ?? false,
+      });
       console.log('Addresses successful:', setAddressesResult);
       onSuccess(data.firstName);
     } catch (error) {
@@ -102,6 +137,7 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
     control,
     handleValidSubmit,
     handleSubmit,
+    trigger,
     errors,
     isValid,
     isSubmitting,

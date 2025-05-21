@@ -27,6 +27,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.9.4",
     "i18next": "^25.0.2",
+    "postal-codes-js": "^2.5.2",
     "react": "^19.0.0",
     "react-day-picker": "^9.6.7",
     "react-dom": "^19.0.0",

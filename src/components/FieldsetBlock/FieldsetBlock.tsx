@@ -4,6 +4,7 @@ import DateInputElement from '../DateInputElement/DateInputElement';
 import InputElement from '../InputElement/InputElement';
 
 interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
+  required?: boolean;
   id: TFieldName;
   title: string;
   type: string;
@@ -46,6 +47,7 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
             type={property.type}
             control={control}
             register={register(id)}
+            required={property.required}
           />
         ) : (
           <InputElement
@@ -55,6 +57,7 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
             type={property.type}
             register={register(id)}
             error={errors[id]?.message as string | undefined}
+            required={property.required}
           />
         );
       })}
@@ -64,6 +67,7 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
           id={`${title.split(' ')[0]}Country`}
           register={register(`${title.split(' ')[0]}Country` as Path<TFieldValues>)}
           error={errors[`${title.split(' ')[0]}Country` as Path<TFieldValues>]?.message as string}
+          required={true}
         />
       )}
     </fieldset>
