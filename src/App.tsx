@@ -7,7 +7,7 @@ import { CatalogPage } from './pages/catalog/CatalogPage.tsx';
 import { CartPage } from './pages/cart/Cart.tsx';
 import { FavoritesPage } from './pages/favorites/Favorites.tsx';
 import { OrdersPage } from './pages/orders/OrdersPage.tsx';
-import { NotFoundPage } from './pages/PageNotFound/Page404.tsx';
+import { NotFoundPage } from './pages/pageNotFound/Page404.tsx';
 import { AboutUsPage } from './pages/about/AboutPage.tsx';
 import { ProfilePage } from './pages/profile/ProfilePage.tsx';
 import { TeamPage } from './pages/team/TeamPage.tsx';
