@@ -27,9 +27,9 @@ export interface ProductProjection {
 
 export interface ProductVariant {
   id: number;
+  prices: Price[];
   sku?: string;
   key?: string;
-  prices?: Price[];
   images?: Image[];
   attributes?: Attribute[];
 }
@@ -45,8 +45,16 @@ export interface Price {
   id: string;
   value: TypedMoney;
   country?: string;
+  discounted?: Discounted;
 }
-
+export interface Discounted {
+  discount: Discount;
+  value: TypedMoney;
+}
+export interface Discount {
+  typeId: string;
+  id: string;
+}
 export interface TypedMoney {
   type: string;
   currencyCode: string;
@@ -64,7 +72,7 @@ export interface Image {
 
 export interface Attribute {
   name: string;
-  value: unknown;
+  value: boolean | number | string;
 }
 
 export type SearchKeywords = Record<string, SearchKeyword[]>;
