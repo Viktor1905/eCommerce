@@ -36,7 +36,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
       <h3 className="font-semibold text-lg font-main-bd">
         {product.name['en-US'] ?? 'Unnamed Product'}
       </h3>
-      <div>
+      <div className={'flex gap-2 items-center'}>
         <div className={discountPrice ? 'line-through italic text-sm' : 'text-lg'}>{price} $</div>
         {discountPrice && (
           <div className={'text-red-700 font-additional text-lg flex gap-x-2'}>
