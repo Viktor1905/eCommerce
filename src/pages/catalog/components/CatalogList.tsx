@@ -1,44 +1,28 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { getProducts } from '../../../api/catalog/requestProducts.ts';
-import { ProductProjectionResponse } from '../../../api/catalog/products.types.ts';
+import { ReactElement } from 'react';
+import {
+  ProductProjection,
+  ProductProjectionResponse,
+} from '../../../api/catalog/products.types.ts';
+import { CatalogItem } from './CatalogItem.tsx';
 
-export function CatalogList(): ReactElement {
-  const [products, setProducts] = useState<ProductProjectionResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchData = async () => {
-      try {
-        const data = await getProducts();
-        if (isMounted) {
-          setProducts(data);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Fetch error'));
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-    void fetchData();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+export function CatalogList({ products }: CatalogListProps): ReactElement {
   return (
     <section className={'bg-white h-full'}>
-      {products && <div>{/* Здесь можно рендерить список продуктов */}</div>}
+      {!products ? (
+        <div className="text-red-500">Just a second please</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.results.map(
+            (item: ProductProjection): ReactElement => (
+              <CatalogItem key={item.id} product={item} />
+            )
+          )}
+        </div>
+      )}
     </section>
   );
+}
+
+interface CatalogListProps {
+  products: ProductProjectionResponse | null;
 }
