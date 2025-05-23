@@ -22,7 +22,7 @@ export async function getProducts(): Promise<ProductProjectionResponse> {
         'message' in errorData &&
         typeof errorData.message === 'string'
           ? errorData.message
-          : 'Login failed'
+          : 'Products request failed'
       );
     }
     const productsResponse: unknown = await response.json();

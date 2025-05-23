@@ -15,7 +15,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   return (
     <div
       key={product.id}
-      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0 hover:max-h-[800px] hover:scale-105 duration-300 origin-top transition-transform min-h-[400px] group"
+      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 duration-300 origin-top transition-transform min-h-[400px] "
     >
       {product.masterVariant.images?.[0] && (
         <div className={'relative'}>
@@ -44,7 +44,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
           </div>
         )}
       </div>
-      <p className="mt-2 text-gray-600 line-clamp-3 group-hover:line-clamp-none overflow-hidden">
+      <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">
         {description ? description.value : 'No description available'}
       </p>
     </div>
