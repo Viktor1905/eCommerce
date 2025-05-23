@@ -1,4 +1,6 @@
-export async function getAuthToken(): Promise<string> {
+import { API_CONFIG } from '../login/login.ts';
+
+export async function getCatalogToken() {
   const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
   try {
@@ -10,7 +12,7 @@ export async function getAuthToken(): Promise<string> {
           Authorization: `Basic ${encodedAuth}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `grant_type=client_credentials&scope=manage_customers:${API_CONFIG.projectKey}`,
+        body: `grant_type=client_credentials&scope=view_published_products:${API_CONFIG.projectKey}`,
       }
     );
     if (!response.ok) {
@@ -33,22 +35,9 @@ export async function getAuthToken(): Promise<string> {
     ) {
       throw new Error('Unknown error occurred during getting token');
     }
-    console.log(tokenResponse);
     return tokenResponse.access_token;
   } catch (error) {
     const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';
     throw new Error(errorMessage);
   }
 }
-interface API_CONFIG {
-  clientId: string;
-  secretId: string;
-  projectKey: string;
-  region: string;
-}
-const API_CONFIG = {
-  clientId: 'QMdMW3dn2QFBIFpoFRm_yfE0',
-  secretId: 'CV6y3lEHvhTtkY4a-8wFxZ9d4hVzfIOw',
-  projectKey: 'ecommerce2v',
-  region: 'europe-west1.gcp',
-};
