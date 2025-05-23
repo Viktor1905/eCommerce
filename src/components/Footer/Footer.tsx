@@ -17,23 +17,20 @@ export function Footer() {
 function AboutUsFooter() {
   const navigate = useNavigate();
   return (
-    <div
-      onClick={() => void navigate('/about')}
-      className={`${styles.about} ${styles['about-link']}`}
-    >
+    <div onClick={() => void navigate('/about')} className={styles['about-link']}>
       ABOUT US
     </div>
   );
 }
 
 function OurShopsFooter() {
-  return <div className={`${styles.shop} ${styles['shop-link']}`}>OUR SHOPS</div>;
+  return <div className={styles['shop-link']}>OUR SHOPS</div>;
 }
 
 function OurTelegramStickersFooter() {
-  return <div className={`${styles.sticker} ${styles['sticker-link']}`}>Our Telegram Stickers</div>;
+  return <div className={styles['sticker-link']}>Our Telegram Stickers</div>;
 }
 
 function HelpHomelessAnimals() {
-  return <div className={`${styles.help} ${styles['help-link']}`}>Help Homeless Animals</div>;
+  return <div className={styles['help-link']}>Help Homeless Animals</div>;
 }

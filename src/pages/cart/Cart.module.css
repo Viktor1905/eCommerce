@@ -1,7 +1,5 @@
 .canvas-page {
   display: flex;
-  height: calc(100svh - 280px);
-  max-height: 100dvh;
   color: var(--color-light-gray);
   flex-direction: column;
   justify-content: center;
@@ -27,10 +25,4 @@
 .cart-text-empty {
   margin-bottom: 40px;
   font-size: clamp(0.5rem, 2vw, 1rem);
-}
-
-@media (max-width: 800px) {
-  .canvas-page {
-  height: calc(100svh - 330px);
-  }
 }

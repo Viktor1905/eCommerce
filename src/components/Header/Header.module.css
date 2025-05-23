@@ -241,7 +241,6 @@
   min-width: 320px;
   height: 40px;
   bottom: 50px;
-  padding-left: 25px;
   color: var(--color-light-gray);
   background-color: var(--color-olive-trans);
   justify-content: center;
@@ -297,12 +296,11 @@
 }
 
 .visible-canvas-aside-menu {
-  transform: translateX(0);
   opacity: 1;
 }
 
 .hidden-canvas-aside-menu {
-  transform: translateX(100%);
+  display: none;
   opacity: 0;
 }
 
