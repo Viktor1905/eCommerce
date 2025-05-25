@@ -1,6 +1,7 @@
 import { ReactElement } from 'react';
 import { Attribute, ProductProjection } from '../../../api/catalog/products.types.ts';
 import saleIcon from './assets/sale.svg';
+import { useNavigate } from 'react-router-dom';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {
   const description = product.masterVariant.attributes?.find((obj: Attribute): boolean => {
@@ -12,10 +13,17 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   const discountPrice: number | false = isDiscount ? isDiscount / 100 : false;
   const price: number =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.value.centAmount / 100;
+  const navigate = useNavigate();
+  const onClick = async (): Promise<void> => {
+    await navigate(`/product/${product.id}`);
+  };
   return (
     <div
       key={product.id}
       className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 duration-300 origin-top transition-transform min-h-[400px] "
+      onClick={(): void => {
+        void onClick();
+      }}
     >
       {product.masterVariant.images?.[0] && (
         <div className={'relative'}>
@@ -48,7 +56,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         {description ? description.value : 'No description available'}
       </p>
     </div>
-  );
+  ) as React.ReactElement;
 }
 interface ProductListProps {
   product: ProductProjection;
