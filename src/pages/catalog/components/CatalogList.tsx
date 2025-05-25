@@ -14,6 +14,11 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
   useEffect((): void => {
+    if (page > pageQuantity) {
+      setPage(pageQuantity > 1 ? pageQuantity - 1 : 1);
+    }
+  }, [itemsLimit, page, pageQuantity, products]);
+  useEffect((): void => {
     if (products?.results.length) {
       setPageQuantity(Math.ceil(products.results.length / itemsLimit));
     }
