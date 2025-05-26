@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { CategoryBar } from './components/CategoryBar.tsx';
-import { CatalogFilter } from './components/CatalogFilter.tsx';
+import { CategoryBar } from './components/catalogBar/CategoryBar.tsx';
+import { CatalogFilter } from './components/catalogFilter/CatalogFilter.tsx';
 import { CatalogList } from './components/CatalogList.tsx';
 import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
 import { getProducts } from '../../api/catalog/requestProducts.ts';
@@ -52,7 +52,7 @@ export function CatalogPage() {
         <CategoryBar />
       </div>
       <div className="col-span-1">
-        <CatalogFilter />
+        <CatalogFilter products={products} />
       </div>
       <div className="col-span-4">
         <CatalogList products={products} />

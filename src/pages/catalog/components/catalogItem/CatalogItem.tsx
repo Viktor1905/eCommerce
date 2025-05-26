@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
-import { Attribute, ProductProjection } from '../../../api/catalog/products.types.ts';
-import saleIcon from './assets/sale.svg';
+import { Attribute, ProductProjection } from '../../../../api/catalog/products.types.ts';
+import saleIcon from '../assets/sale.svg';
 import { useNavigate } from 'react-router-dom';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {

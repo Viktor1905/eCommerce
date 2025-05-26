@@ -3,7 +3,7 @@ import {
   ProductProjection,
   ProductProjectionResponse,
 } from '../../../api/catalog/products.types.ts';
-import { CatalogItem } from './CatalogItem.tsx';
+import { CatalogItem } from './catalogItem/CatalogItem.tsx';
 import { ProductsQuantity } from './ProductsQuantity.tsx';
 import { Pagination } from './Pagination.tsx';
 
