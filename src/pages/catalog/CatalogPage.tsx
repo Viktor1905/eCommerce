@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { CategoryBar } from './components/catalogBar/CategoryBar.tsx';
 import { CatalogFilter } from './components/catalogFilter/CatalogFilter.tsx';
 import { CatalogList } from './components/CatalogList.tsx';
 import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
 import { getProducts } from '../../api/catalog/requestProducts.ts';
 
-export function CatalogPage() {
-  useEffect(() => {
+export function CatalogPage(): ReactElement {
+  useEffect((): void => {
     document.title = 'Catalog | Zoo Shop | Pet Supplies';
   }, []);
   const [products, setProducts] = useState<ProductProjectionResponse | null>(null);

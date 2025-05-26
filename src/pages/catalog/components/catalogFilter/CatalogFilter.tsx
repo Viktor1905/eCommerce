@@ -4,20 +4,35 @@ import { ProductProjectionResponse } from '../../../../api/catalog/products.type
 import { PriceSlider } from './PriceSlider.tsx';
 import { BrandFilter } from './BrandFilter.tsx';
 import { usePrices } from './hooks/usePrices.ts';
-import { RenderForWhomFilter } from './renderForWhomFilter.tsx';
+import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
+import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
+import { getProducts } from '../../../../api/catalog/requestProducts.ts';
 
 export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
-  const { register, handleSubmit, control, setValue } = useForm<Filters>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { isDirty },
+  } = useForm<Filters>({
     defaultValues: {
       priceRange: [lowestPrice, highestPrice],
     },
   });
   useEffect((): void => {
-    setValue('priceRange', [lowestPrice, highestPrice]);
-  }, [lowestPrice, highestPrice, setValue]);
+    if (lowestPrice && highestPrice) {
+      reset({
+        priceRange: [lowestPrice, highestPrice],
+        discounted: false,
+        brand: [],
+        for: [],
+      });
+    }
+  }, [lowestPrice, highestPrice, reset]);
   const onSubmit: (data: Filters) => void = (data: Filters): void => {
-    console.log(data);
+    void (isDirty ? requestFilter(data) : getProducts());
   };
   return (
     <form
@@ -40,13 +55,10 @@ export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
   );
 }
 export interface Filters {
-  minPrice: number;
-  maxPrice: number;
-  category: string;
-  brand: string;
+  brand: string[];
   discounted: boolean;
   priceRange: PriceRange;
-  for: string;
+  for: string[];
 }
 interface CatalogFilterProps {
   products: ProductProjectionResponse | null;

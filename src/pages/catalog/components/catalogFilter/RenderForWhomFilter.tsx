@@ -17,7 +17,9 @@ export function RenderForWhomFilter({ products, register }: FilterProps): ReactE
         'key' in product.value &&
         typeof product.value.key === 'string'
       ) {
-        forWhom.add(product.value.key);
+        if (product.value.key !== 'Anyone') {
+          forWhom.add(product.value.key);
+        }
       }
     });
   });

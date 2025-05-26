@@ -55,7 +55,11 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         )}
       </div>
       <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">
-        {description ? description.value : 'No description available'}
+        {description
+          ? typeof description.value !== 'object'
+            ? description.value
+            : 'No description available'
+          : 'No description available'}
       </p>
     </div>
   );
