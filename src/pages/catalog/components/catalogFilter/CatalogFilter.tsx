@@ -2,19 +2,12 @@ import { FormEvent, ReactElement, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
 import { PriceSlider } from './PriceSlider.tsx';
+import { BrandFilter } from './BrandFilter.tsx';
+import { usePrices } from './hooks/usePrices.ts';
+import { RenderForWhomFilter } from './renderForWhomFilter.tsx';
 
 export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
-  const pricesList: number[] =
-    products?.results.map((item) => {
-      const priceObj = item.masterVariant.prices[0];
-      return priceObj.discounted?.value.centAmount
-        ? priceObj.discounted.value.centAmount / 100
-        : priceObj.value.centAmount / 100;
-    }) ?? [];
-
-  const lowestPrice: number = Math.min(...pricesList);
-  const highestPrice: number = Math.max(...pricesList);
-
+  const { pricesList, lowestPrice, highestPrice } = usePrices(products);
   const { register, handleSubmit, control, setValue } = useForm<Filters>({
     defaultValues: {
       priceRange: [lowestPrice, highestPrice],
@@ -23,7 +16,7 @@ export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
   useEffect((): void => {
     setValue('priceRange', [lowestPrice, highestPrice]);
   }, [lowestPrice, highestPrice, setValue]);
-  const onSubmit = (data: Filters) => {
+  const onSubmit: (data: Filters) => void = (data: Filters): void => {
     console.log(data);
   };
   return (
@@ -33,8 +26,10 @@ export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
     >
       <div>
         <input type="checkbox" id="sale" {...register('discounted')} />
-        <label htmlFor="sale">Sale</label>
+        <label htmlFor="sale"> On sale</label>
       </div>
+      {pricesList.length > 0 && <RenderForWhomFilter products={products} register={register} />}
+      {pricesList.length > 0 && <BrandFilter products={products} register={register} />}
       {pricesList.length > 0 && (
         <PriceSlider control={control} lowestPrice={lowestPrice} highestPrice={highestPrice} />
       )}
@@ -48,8 +43,10 @@ export interface Filters {
   minPrice: number;
   maxPrice: number;
   category: string;
+  brand: string;
   discounted: boolean;
   priceRange: PriceRange;
+  for: string;
 }
 interface CatalogFilterProps {
   products: ProductProjectionResponse | null;
