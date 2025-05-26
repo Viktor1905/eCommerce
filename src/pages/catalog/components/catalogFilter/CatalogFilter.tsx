@@ -8,7 +8,7 @@ import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { getProducts } from '../../../../api/catalog/requestProducts.ts';
 
-export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
+export function CatalogFilter({ products, onFilter }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
   const {
     register,
@@ -31,8 +31,13 @@ export function CatalogFilter({ products }: CatalogFilterProps): ReactElement {
       });
     }
   }, [lowestPrice, highestPrice, reset]);
-  const onSubmit: (data: Filters) => void = (data: Filters): void => {
-    void (isDirty ? requestFilter(data) : getProducts());
+  const onSubmit = async (data: Filters): Promise<void> => {
+    try {
+      const result = isDirty ? await requestFilter(data) : await getProducts();
+      onFilter(result);
+    } catch (error) {
+      console.error('Ошибка фильтрации:', error);
+    }
   };
   return (
     <form
@@ -62,5 +67,6 @@ export interface Filters {
 }
 interface CatalogFilterProps {
   products: ProductProjectionResponse | null;
+  onFilter: (products: ProductProjectionResponse) => void;
 }
 type PriceRange = [number, number];

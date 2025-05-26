@@ -10,14 +10,17 @@ export function CatalogPage(): ReactElement {
     document.title = 'Catalog | Zoo Shop | Pet Supplies';
   }, []);
   const [products, setProducts] = useState<ProductProjectionResponse | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<ProductProjectionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-
-  useEffect(() => {
+  const handleFilter = (result: ProductProjectionResponse): void => {
+    setFilteredProducts(result);
+  };
+  useEffect((): (() => void) => {
     let isMounted = true;
-    const fetchData = async () => {
+    const fetchData: () => Promise<void> = async (): Promise<void> => {
       try {
-        const data = await getProducts();
+        const data: ProductProjectionResponse = await getProducts();
         if (isMounted) {
           setProducts(data);
         }
@@ -32,7 +35,7 @@ export function CatalogPage(): ReactElement {
       }
     };
     void fetchData();
-    return () => {
+    return (): void => {
       isMounted = false;
     };
   }, []);
@@ -52,10 +55,10 @@ export function CatalogPage(): ReactElement {
         <CategoryBar />
       </div>
       <div className="col-span-1">
-        <CatalogFilter products={products} />
+        <CatalogFilter products={products} onFilter={handleFilter} />
       </div>
       <div className="col-span-4">
-        <CatalogList products={products} />
+        <CatalogList products={filteredProducts ?? products} />
       </div>
     </section>
   );

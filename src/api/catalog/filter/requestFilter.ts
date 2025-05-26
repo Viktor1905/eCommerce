@@ -1,8 +1,11 @@
 import { getCatalogToken } from '../catalog-token.ts';
 import { API_CONFIG } from '../../login/login.ts';
 import { isProductsResponse } from '../check-response.ts';
+import { ProductProjectionResponse } from '../products.types.ts';
 
-export async function requestFilter(params: RequestFilterParams): Promise<void> {
+export async function requestFilter(
+  params: RequestFilterParams
+): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
   const predicates: string[] = [];
 
@@ -45,6 +48,7 @@ export async function requestFilter(params: RequestFilterParams): Promise<void> 
     if (!isProductsResponse(productsResponse)) {
       throw new Error('Invalid products response format');
     }
+    return productsResponse;
   } catch (error) {
     console.error('Failed to fetch products:', error);
     throw new Error(
