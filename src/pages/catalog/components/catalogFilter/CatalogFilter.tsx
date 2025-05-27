@@ -1,5 +1,5 @@
-import { FormEvent, ReactElement, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormEvent, ReactElement } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
 import { PriceSlider } from './PriceSlider.tsx';
 import { BrandFilter } from './BrandFilter.tsx';
@@ -7,7 +7,7 @@ import { usePrices } from './hooks/usePrices.ts';
 import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { getProducts } from '../../../../api/catalog/requestProducts.ts';
-import { GetFilterResetSvg } from './getFilterResetSvg.tsx';
+import { GetFilterResetSvg } from './components/getFilterResetSvg.tsx';
 import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function CatalogFilter({
@@ -22,21 +22,8 @@ export function CatalogFilter({
     control,
     reset,
     formState: { isDirty },
-  } = useForm<Filters>({
-    defaultValues: {
-      priceRange: [lowestPrice, highestPrice],
-    },
-  });
-  useEffect((): void => {
-    if (lowestPrice && highestPrice) {
-      reset({
-        priceRange: [lowestPrice, highestPrice],
-        discounted: false,
-        brand: [],
-        for: [],
-      });
-    }
-  }, [lowestPrice, highestPrice, reset]);
+  } = useFormContext<Filters>();
+
   const onSubmit = async (data: Filters): Promise<void> => {
     try {
       const result = isDirty ? await requestFilter(data) : await getProducts();
