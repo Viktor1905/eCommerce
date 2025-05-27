@@ -1,0 +1,136 @@
+.product-modal-window {
+  position: fixed;
+  display: flex;
+  min-width: 200px;
+  inset: 60px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 3;
+}
+
+.product-modal-window-hidden {
+  display: none;
+}
+
+.screen-protect-modal {
+  position: fixed;
+  display: flex;
+  inset: 0;
+  background-color: #000000;
+  opacity: 0.7;
+}
+
+.screen-info-modal {
+  position: absolute;
+  display: flex;
+  inset: 20px;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.close-button-modal {
+  position: absolute;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  top: 2px;
+  right: 2px;
+  color: #ffffff;
+  line-height: 36px;
+  background-color: var(--color-coral);
+  justify-content: center;
+  font-size: 3rem;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.close-button-modal:hover {
+  color: var(--color-olive);
+}
+
+.description-modal {
+  display: flex;
+  width: 80%;
+  padding-bottom: 20px;
+  margin: 40px 0;
+  font-weight: bold;
+  justify-content: center;
+  border-bottom: 2px solid var(--color-coral);
+}
+
+.images-modal {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+.main-image-modal {
+  position: relative;
+  max-width: 90%;
+  max-height: 40vh;
+}
+
+.image-modal {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.modal-arrow-left,
+.modal-arrow-right {
+  position: absolute;
+  top: 50%;
+  cursor: pointer;
+}
+
+:is(.modal-arrow-left,
+.modal-arrow-right):hover{
+  color: var(--color-coral);
+}
+
+.modal-arrow-left {
+  left: -10px;
+}
+
+.modal-arrow-right {
+  right: -15px;
+}
+
+.preview-images-modal {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview {
+  opacity: 0.5;
+}
+
+.preview-selected {
+  opacity: 1;
+}
+
+.preview:hover {
+  box-shadow: 0 0 10px #00000021;
+}
+
+.wrapper-preview-image {
+  width: 90px;
+  margin: 40px 0;
+  cursor: pointer;
+}
+
+@media (max-width: 1330px) {
+  .product-modal-window {
+    flex-direction: column;
+}
+}

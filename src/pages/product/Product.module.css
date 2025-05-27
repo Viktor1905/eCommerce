@@ -18,14 +18,19 @@
   font-size: clamp( 1rem, 2.5vw, 4rem);
 }
 
+.products-slider {
+  display: flex;
+  flex-direction: row;
+}
+
 .products-image {
-  width: 360px;
+  width: 90px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .products-image:hover {
-  transform: scale(1.6);
+  transform: scale(1.8);
   box-shadow: 0 0 10px #00000028;
 }
 
@@ -37,7 +42,7 @@
 .products-description {
   text-indent: 2em;
   margin: 0 60px;
-  font-size: clamp( 0.6rem, 1.7vw, 3rem);
+  font-size: clamp( 0.6rem, 1.5vw, 3rem);
 }
 
 .spinner {
