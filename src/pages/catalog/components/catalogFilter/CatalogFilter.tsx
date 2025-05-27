@@ -7,6 +7,7 @@ import { usePrices } from './hooks/usePrices.ts';
 import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { getProducts } from '../../../../api/catalog/requestProducts.ts';
+import { GetFilterSvg } from './getFilterSvg.tsx';
 
 export function CatalogFilter({ products, onFilter }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
@@ -39,12 +40,28 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
       console.error('Ошибка фильтрации:', error);
     }
   };
+  const onReset = (): void => {
+    reset({
+      priceRange: [lowestPrice, highestPrice],
+      discounted: false,
+      brand: [],
+      for: [],
+    });
+  };
   return (
     <form
-      className={'bg-khaki flex flex-col'}
+      className={'p-3 gap-3 flex flex-col relative'}
       onSubmit={(event: FormEvent<HTMLFormElement>): void => void handleSubmit(onSubmit)(event)}
     >
-      <div>
+      <button
+        type="button"
+        className="self-end absolute top-0 right-0 fill-jungle cursor-pointer hover:fill-goldenrod"
+        onClick={onReset}
+      >
+        <GetFilterSvg />
+      </button>
+      <div className="border-b border-jungle p-1 relative">
+        <h2 className="text-center">Sale:</h2>
         <input type="checkbox" id="sale" {...register('discounted')} />
         <label htmlFor="sale"> On sale</label>
       </div>
@@ -53,7 +70,7 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
       {pricesList.length > 0 && (
         <PriceSlider control={control} lowestPrice={lowestPrice} highestPrice={highestPrice} />
       )}
-      <button type="submit" className={'text-nowrap'}>
+      <button type="submit" className={'text-nowrap btn-custom !w-[50%] !mb-2'}>
         Submit
       </button>
     </form>

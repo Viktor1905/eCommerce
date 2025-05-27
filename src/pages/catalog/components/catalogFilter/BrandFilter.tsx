@@ -22,7 +22,7 @@ export function BrandFilter({ products, register }: BrandProps): ReactElement {
     }
   );
   return (
-    <div>
+    <div className="border-b border-jungle p-1">
       <h2 className={'text-center'}>Brand:</h2>
       <fieldset>
         {brandsSorted.map(

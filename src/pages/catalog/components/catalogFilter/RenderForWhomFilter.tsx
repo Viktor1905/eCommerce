@@ -29,7 +29,7 @@ export function RenderForWhomFilter({ products, register }: FilterProps): ReactE
     }
   );
   return (
-    <div>
+    <div className="border-b border-jungle p-1">
       <h2 className={'text-center'}>For whom:</h2>
       <fieldset>
         {forWhomSorted.map(
