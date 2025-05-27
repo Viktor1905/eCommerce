@@ -1,4 +1,4 @@
-export function GetFilterSvg() {
+export function GetFilterResetSvg() {
   return (
     <svg
       width="20px"

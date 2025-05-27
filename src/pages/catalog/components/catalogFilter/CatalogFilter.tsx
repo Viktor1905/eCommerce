@@ -7,10 +7,14 @@ import { usePrices } from './hooks/usePrices.ts';
 import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { getProducts } from '../../../../api/catalog/requestProducts.ts';
-import { GetFilterSvg } from './getFilterSvg.tsx';
+import { GetFilterResetSvg } from './getFilterResetSvg.tsx';
 import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
-export function CatalogFilter({ products, onFilter }: CatalogFilterProps): ReactElement {
+export function CatalogFilter({
+  products,
+  onFilter,
+  closeWrapper,
+}: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
   const {
     register,
@@ -37,6 +41,9 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
     try {
       const result = isDirty ? await requestFilter(data) : await getProducts();
       onFilter(result);
+      if (closeWrapper) {
+        closeWrapper();
+      }
     } catch (error) {
       console.error('Ошибка фильтрации:', error);
     }
@@ -65,7 +72,7 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
         className="self-end absolute top-0 right-0 fill-jungle cursor-pointer hover:fill-goldenrod"
         onClick={(event: React.MouseEvent): void => void handleSubmit(onReset)(event)}
       >
-        <GetFilterSvg />
+        <GetFilterResetSvg />
       </button>
       <div className="border-b border-jungle p-1">
         <h2 className="text-center">Sale:</h2>
@@ -99,5 +106,6 @@ export interface Filters {
 interface CatalogFilterProps {
   products: ProductProjectionResponse | null;
   onFilter: (products: ProductProjectionResponse) => void;
+  closeWrapper?: () => void;
 }
 type PriceRange = [number, number];

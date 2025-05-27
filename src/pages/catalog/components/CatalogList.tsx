@@ -25,7 +25,7 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
   }, [itemsLimit, page, pageQuantity, products]);
 
   return (
-    <section className={'bg-white h-full flex flex-col'}>
+    <section className={'bg-white h-full flex flex-col '}>
       <ProductsQuantity
         onChangeLimit={setItemsLimit}
         setPageQuantity={setPageQuantity}
@@ -36,7 +36,7 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
       ) : products.results.length === 0 ? (
         <div className="text-gray-500 text-center py-4">No products found</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-4 pb-2">
+        <div className="flex flex-wrap sm:grid sm:grid-cols-2  lg:grid-cols-3  gap-3 pr-4 pl-4 pb-2 justify-center">
           {page > 1
             ? products.results
                 .slice(itemsLimit * (page - 1), itemsLimit * page)
