@@ -23,8 +23,7 @@ export async function requestFilter(
     );
     predicates.push(`(${brandPredicates.join(' or ')})`);
   }
-
-  if (params.discounted) {
+  if (Array.isArray(params.discounted) && params.discounted.length > 0) {
     predicates.push(`masterVariant(prices(discounted is defined))`);
   }
 
@@ -35,6 +34,7 @@ export async function requestFilter(
 )`;
   predicates.push(pricePredicate);
   const finalPredicate: string = predicates.join(' and ');
+
   const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections?where=${encodeURI(finalPredicate)}`;
   try {
     const response = await fetch(url, {
