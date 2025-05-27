@@ -6,6 +6,7 @@ import {
   ProductProjection,
   ProductProjectionResponse,
 } from '../../../../api/catalog/products.types.ts';
+import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function BrandFilter({ products, register }: BrandProps): ReactElement {
   const brands = new Set<string>();
@@ -27,18 +28,14 @@ export function BrandFilter({ products, register }: BrandProps): ReactElement {
       <fieldset>
         {brandsSorted.map(
           (item: string): ReactElement => (
-            <div key={item} className="cursor-pointer flex">
-              <input
-                type="checkbox"
-                id={`brand-${item}`}
-                {...register('brand')}
-                className="cursor-pointer"
-                value={item}
-              />
-              <label htmlFor={`brand-${item}`} className="cursor-pointer w-full block">
-                {item}
-              </label>
-            </div>
+            <CustomCheckbox
+              register={register}
+              labelText={item}
+              registerValue={'brand'}
+              value={item}
+              key={item}
+              inputId={`brand-${item}`}
+            />
           )
         )}
       </fieldset>

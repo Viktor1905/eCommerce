@@ -14,15 +14,16 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
   useEffect((): void => {
+    if (products?.results) {
+      setPageQuantity(Math.ceil(products.results.length / itemsLimit));
+    }
+  }, [products, itemsLimit]);
+  useEffect((): void => {
     if (page > pageQuantity) {
       setPage(pageQuantity > 1 ? pageQuantity - 1 : 1);
     }
   }, [itemsLimit, page, pageQuantity, products]);
-  useEffect((): void => {
-    if (products?.results.length) {
-      setPageQuantity(Math.ceil(products.results.length / itemsLimit));
-    }
-  }, [products, itemsLimit]);
+
   return (
     <section className={'bg-white h-full flex flex-col'}>
       <ProductsQuantity
@@ -32,6 +33,8 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
       />
       {!products ? (
         <div className="text-red-500">Just a second please</div>
+      ) : products.results.length === 0 ? (
+        <div className="text-gray-500 text-center py-4">No products found</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-4 pb-2">
           {page > 1

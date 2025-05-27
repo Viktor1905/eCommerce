@@ -8,6 +8,7 @@ import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { getProducts } from '../../../../api/catalog/requestProducts.ts';
 import { GetFilterSvg } from './getFilterSvg.tsx';
+import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function CatalogFilter({ products, onFilter }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
@@ -40,13 +41,19 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
       console.error('Ошибка фильтрации:', error);
     }
   };
-  const onReset = (): void => {
+  const onReset = async (): Promise<void> => {
     reset({
       priceRange: [lowestPrice, highestPrice],
       discounted: false,
       brand: [],
       for: [],
     });
+    try {
+      const result = await getProducts();
+      onFilter(result);
+    } catch (error) {
+      console.error('Ошибка фильтрации:', error);
+    }
   };
   return (
     <form
@@ -56,14 +63,21 @@ export function CatalogFilter({ products, onFilter }: CatalogFilterProps): React
       <button
         type="button"
         className="self-end absolute top-0 right-0 fill-jungle cursor-pointer hover:fill-goldenrod"
-        onClick={onReset}
+        onClick={(event: React.MouseEvent): void => void handleSubmit(onReset)(event)}
       >
         <GetFilterSvg />
       </button>
-      <div className="border-b border-jungle p-1 relative">
+      <div className="border-b border-jungle p-1">
         <h2 className="text-center">Sale:</h2>
-        <input type="checkbox" id="sale" {...register('discounted')} />
-        <label htmlFor="sale"> On sale</label>
+        <fieldset>
+          <CustomCheckbox
+            register={register}
+            labelText={'On sale'}
+            value={'sale'}
+            registerValue={'discounted'}
+            inputId={'sale'}
+          />
+        </fieldset>
       </div>
       {pricesList.length > 0 && <RenderForWhomFilter products={products} register={register} />}
       {pricesList.length > 0 && <BrandFilter products={products} register={register} />}

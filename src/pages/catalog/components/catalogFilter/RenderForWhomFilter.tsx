@@ -6,6 +6,7 @@ import {
 import { ReactElement } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { Filters } from './CatalogFilter.tsx';
+import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function RenderForWhomFilter({ products, register }: FilterProps): ReactElement {
   const forWhom = new Set<string>();
@@ -34,18 +35,14 @@ export function RenderForWhomFilter({ products, register }: FilterProps): ReactE
       <fieldset>
         {forWhomSorted.map(
           (item: string): ReactElement => (
-            <div key={item} className="cursor-pointer flex">
-              <input
-                type="checkbox"
-                id={`for-${item}`}
-                {...register('for')}
-                className="cursor-pointer"
-                value={item}
-              />
-              <label htmlFor={`for-${item}`} className="cursor-pointer w-full block">
-                {item}
-              </label>
-            </div>
+            <CustomCheckbox
+              register={register}
+              labelText={item}
+              registerValue={'for'}
+              value={item}
+              key={item}
+              inputId={`for-${item}`}
+            />
           )
         )}
       </fieldset>
