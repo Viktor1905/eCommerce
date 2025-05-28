@@ -45,23 +45,25 @@ export function ProductDetailsPage() {
   function handleOpenSlider(state: boolean) {
     setIsOpen(state);
   }
-
   return (
     <div className={styles['products-box']}>
       <h2 className={styles['products-title']}>{product.name['en-US']}</h2>
-      <div className={styles['products-slider']}>
-        {product.masterVariant.images.map((img) => (
-          <img
-            key={img.url}
-            className={styles['products-image']}
-            src={img.url}
-            alt={img.label}
-            onClick={() => {
-              setSelectedUrl(img.url);
-              handleOpenSlider(true);
-            }}
-          />
-        ))}
+      <div className={styles['products-info']}>
+        <div className={styles['products-slider']}>
+          {product.masterVariant.images.map((img) => (
+            <img
+              key={img.url}
+              className={styles['products-image']}
+              src={img.url}
+              alt={img.label}
+              onClick={() => {
+                setSelectedUrl(img.url);
+                handleOpenSlider(true);
+              }}
+            />
+          ))}
+        </div>
+        <ShowPrice product={product} />
       </div>
       <h3 className={styles['products-description-title']}>Description</h3>
       <p className={styles['products-description']}>{product.description['en-US']}</p>
@@ -78,4 +80,61 @@ export function ProductDetailsPage() {
 
 function Spinner() {
   return <div className={styles.spinner} />;
+}
+
+function ShowPrice({ product }: { product: ProductProjection }) {
+  const priceCents = product.masterVariant.prices[0].value.centAmount;
+  const discountPriceCents = product.masterVariant.prices[0].discounted?.value.centAmount ?? 0;
+
+  const price = formatMoney(priceCents);
+  const [dollar, cent] = price;
+
+  const discountPrice = formatMoney(discountPriceCents);
+  const [dollarDiscount, centDiscount] = discountPrice;
+
+  const currencyCode = product.masterVariant.prices[0].value.currencyCode;
+  const discountPercent = ((priceCents - discountPriceCents) / priceCents) * 100;
+
+  return (
+    <div className={styles['products-price']}>
+      <div className={styles['main-price']}>
+        {product.masterVariant.key !== 'sale' ? (
+          <>
+            <span className={styles['current-code']}>{currencyCode}</span>
+            <span className={styles['current-dollar']}>{dollar}</span>
+            <span className={styles['current-cent']}>{cent}</span>
+          </>
+        ) : (
+          <>
+            <span className={styles['discount-percent']}>-{discountPercent}%</span>
+            <span className={styles['current-code']}>{currencyCode}</span>
+            <span className={styles['discount-dollar']}>{dollarDiscount}</span>
+            <span className={styles['discount-cent']}>{centDiscount}</span>
+          </>
+        )}
+      </div>
+      <div className={styles['discount-block']}>
+        {product.masterVariant.key !== 'sale' ? (
+          <span className={styles['text-best-prise']}>Best Price</span>
+        ) : (
+          <div className={styles['old-price']}>
+            <span>List Price:</span>
+            <span className={styles['current-code']}>{currencyCode}</span>
+            <span className={styles['current-dollar']}>{dollar}.</span>
+            <span className={styles['current-cent']}>{cent}</span>
+          </div>
+        )}
+        <div className={styles['add-discount']}>
+          <span className={styles['add-discount-title']}>Sign in to redeem.</span> Enjoy an extra
+          10% off in celebration of your pet&rsquo;s birthday. Use code PETBDAY10 at checkout.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function formatMoney(price: number): string[] {
+  const dollars = Math.floor(price / 100).toString();
+  const cents = (price % 100).toString().padStart(2, '0');
+  return [dollars, cents];
 }

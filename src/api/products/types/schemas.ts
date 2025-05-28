@@ -25,6 +25,19 @@ export const AuthTokenResponseSchema = z.object({
 
 export type AuthTokenResponse = z.infer<typeof AuthTokenResponseSchema>;
 
+const DiscountedSchema = z.object({
+  value: z.object({
+    type: z.string(),
+    currencyCode: z.string(),
+    centAmount: z.number(),
+    fractionDigits: z.number(),
+  }),
+  discount: z.object({
+    typeId: z.string(),
+    id: z.string(),
+  }),
+});
+
 export const PriceSchema = z.object({
   id: z.string(),
   value: z.object({
@@ -40,7 +53,7 @@ export const PriceSchema = z.object({
       id: z.string(),
     })
     .optional(),
-  discounted: z.record(z.unknown()).optional(),
+  discounted: DiscountedSchema.optional(),
 });
 
 export const ImageSchema = z.object({

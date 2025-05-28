@@ -27,7 +27,13 @@ export function ProductImageSlider({
   useLayoutEffect(() => {
     if (isOpen) {
       setMainImage(mainImageUrl);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen, mainImageUrl]);
 
   if (!isOpen) return null;
