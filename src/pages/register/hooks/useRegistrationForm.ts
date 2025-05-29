@@ -8,7 +8,7 @@ import {
   setShippingAddress,
   SignUpData,
   signUpUser,
-} from '../../../api/sign-up/api';
+} from '../../../api/sign-up/sign-up';
 
 export function useRegistrationForm(onSuccess: (firstName: string) => void) {
   const {
@@ -110,11 +110,6 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
       const token = await getAccessToken();
       const signUpResult = await signUpUser(apiPayload, token);
       console.log('Sign-up successful:', signUpResult);
-      console.log('def: ', data.allDefaultAddress);
-
-      console.log('ship: ', data.shippingDefaultAddress);
-
-      console.log('bill: ', data.billingDefaultAddress);
       const setAddressesResult = await setShippingAddress({
         successUserResponse: signUpResult,
         token: token,

@@ -91,7 +91,7 @@ const petSchema = z.object({
   }, 'Your pet must be very old... Try applying for Guinness World Records'),
 });
 
-const postalCodeRegex = /^[A-Za-z0-9]+([ -][A-Za-z0-9]+)*$/;
+export const postalCodeRegex = /^[A-Za-z0-9]+([ -][A-Za-z0-9]+)*$/;
 
 const shippingAddressSchema = z.object({
   shippingStreetName: z.string().min(1, 'Street name must be at least 1 character'),
