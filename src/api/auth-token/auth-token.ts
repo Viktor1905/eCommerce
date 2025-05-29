@@ -33,6 +33,9 @@ export async function getAuthToken(): Promise<string> {
     ) {
       throw new Error('Unknown error occurred during getting token');
     }
+    const token = tokenResponse.access_token;
+
+    document.cookie = `ct_token=${token}; path=/; max-age=3600; secure; samesite=strict`;
     return tokenResponse.access_token;
   } catch (error) {
     const errorMessage: string = error instanceof Error ? error.message : 'Unknown error occurred';

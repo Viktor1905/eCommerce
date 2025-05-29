@@ -17,7 +17,17 @@ export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Pro
           grant_type: 'password',
           username: data.email,
           password: data.password,
-          scope: `manage_customers:${apiConfig.projectKey}`,
+          scope: [
+            `view_products:${apiConfig.projectKey}`,
+            `view_categories:${apiConfig.projectKey}`,
+            `view_shipping_methods:${apiConfig.projectKey}`,
+            `view_standalone_prices:${apiConfig.projectKey}`,
+            `manage_my_orders:${apiConfig.projectKey}`,
+            `manage_my_payments:${apiConfig.projectKey}`,
+            `manage_my_profile:${apiConfig.projectKey}`,
+            `manage_customers:${apiConfig.projectKey}`,
+            `manage_my_shopping_lists:${apiConfig.projectKey}`,
+          ].join(' '),
         }).toString(),
       }
     );
@@ -33,6 +43,7 @@ export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Pro
       );
     }
     const tokenResponse: unknown = await response.json();
+
     if (!isUserTokenResponse(tokenResponse)) {
       throw new Error('Unknown error occurred during getting token');
     }
