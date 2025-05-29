@@ -3,11 +3,12 @@ import CountrySelector from '../CountrySelector/CountrySelector';
 import DateInputElement from '../DateInputElement/DateInputElement';
 import InputElement from '../InputElement/InputElement';
 
-interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
+export interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
   required?: boolean;
   id: TFieldName;
   title: string;
   type: string;
+  value?: string;
 }
 
 interface FieldsetBlockProps<TFieldValues extends Record<string, unknown>> {
@@ -34,36 +35,40 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
         {hint && <p className="text-base text-goldenrod">{hint}</p>}
       </legend>
 
-      {content.map((property) => {
-        const id = property.id;
-        const isDateField = String(id).toLowerCase().includes('date');
+      {content
+        .filter((property) => property.id !== 'country')
+        .map((property) => {
+          const id = property.id;
+          const isDateField = String(id).toLowerCase().includes('date');
 
-        return isDateField ? (
-          <DateInputElement
-            key={String(id)}
-            title={property.title}
-            error={errors[id]?.message as string | undefined}
-            id={id}
-            type={property.type}
-            control={control}
-            register={register(id)}
-            required={property.required}
-          />
-        ) : (
-          <InputElement
-            key={String(id)}
-            title={property.title}
-            id={String(id)}
-            type={property.type}
-            register={register(id)}
-            error={errors[id]?.message as string | undefined}
-            required={property.required}
-          />
-        );
-      })}
+          return isDateField ? (
+            <DateInputElement
+              key={String(id)}
+              title={property.title}
+              error={errors[id]?.message as string | undefined}
+              id={id}
+              type={property.type}
+              control={control}
+              register={register(id)}
+              required={property.required}
+            />
+          ) : (
+            <InputElement
+              value={property.value}
+              key={String(id)}
+              title={property.title}
+              id={String(id)}
+              type={property.type}
+              register={register(id)}
+              error={errors[id]?.message as string | undefined}
+              required={property.required}
+            />
+          );
+        })}
 
-      {title.includes('address') && (
+      {title.toLowerCase().includes('address') && (
         <CountrySelector
+          value={content.find((property) => property.id === 'country')?.value}
           id={`${title.split(' ')[0]}Country`}
           register={register(`${title.split(' ')[0]}Country` as Path<TFieldValues>)}
           error={errors[`${title.split(' ')[0]}Country` as Path<TFieldValues>]?.message as string}

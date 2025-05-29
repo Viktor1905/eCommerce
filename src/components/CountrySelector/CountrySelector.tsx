@@ -6,9 +6,16 @@ type CountrySelectorProps = {
   id: string;
   register?: UseFormRegisterReturn;
   required?: boolean;
+  value?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function CountrySelector({ error, id, register, required }: CountrySelectorProps) {
+export default function CountrySelector({
+  error,
+  id,
+  register,
+  required,
+  value,
+}: CountrySelectorProps) {
   return (
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
@@ -20,7 +27,7 @@ export default function CountrySelector({ error, id, register, required }: Count
         </label>
         <select
           className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block hover:cursor-pointer"
-          defaultValue=""
+          defaultValue={value ?? ''}
           id={id}
           name={id}
           {...register}
