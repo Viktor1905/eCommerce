@@ -9,29 +9,34 @@ import { FavoritesPage } from './pages/favorites/Favorites.tsx';
 import { OrdersPage } from './pages/orders/OrdersPage.tsx';
 import { NotFoundPage } from './pages/pageNotFound/Page404.tsx';
 import { AboutUsPage } from './pages/about/AboutPage.tsx';
-import { ProfilePage } from './pages/profile/ProfilePage.tsx';
+import { getTokenFromCookie, ProfilePage } from './pages/profile/ProfilePage.tsx';
 import { TeamPage } from './pages/team/TeamPage.tsx';
+import AddressesPage from './pages/addresses/AddressesPage.tsx';
 import { Navigate } from 'react-router-dom';
 
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function App() {
-  const [firstName, setFirstName] = useState(localStorage.getItem('firstName'));
+  const [token, setToken] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
-    const currentFirstName = localStorage.getItem('firstName');
-    setFirstName(currentFirstName);
+    const currentToken = getTokenFromCookie();
+    if (!currentToken) {
+      setToken(null);
+      return;
+    }
+    setToken(currentToken);
   }, [location.pathname]);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="login" element={<>{!firstName ? <LoginPage /> : <Navigate to="/" />}</>} />
+        <Route path="login" element={<>{!token ? <LoginPage /> : <Navigate to="/" />}</>} />
         <Route
           path="registration"
-          element={<>{!firstName ? <RegistrationPage /> : <Navigate to="/" />}</>}
+          element={<>{!token ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
         {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
@@ -39,6 +44,7 @@ function App() {
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile/addresses" element={<AddressesPage />} />
         <Route path="about" element={<AboutUsPage />} />
         <Route path="team" element={<TeamPage />} />
         <Route path="*" element={<NotFoundPage />} />
