@@ -19,7 +19,6 @@ export function CatalogFilter({
 
   const onSubmit: (data: Filters) => void = (data: Filters): void => {
     try {
-      console.log(data);
       onFilterSubmit(data);
       if (closeWrapper) {
         closeWrapper();

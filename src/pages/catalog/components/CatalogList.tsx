@@ -3,25 +3,19 @@ import { ProductProjection } from '../../../api/catalog/products.types.ts';
 import { CatalogItem } from './catalogItem/CatalogItem.tsx';
 import { ProductsQuantity } from './ProductsQuantity.tsx';
 import { Pagination } from './Pagination.tsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { CatalogState, setSort } from '../slice/catalog-slice.ts';
-import { AppDispatch } from '../../../store/store.ts';
+import { useSelector } from 'react-redux';
+import { CatalogState } from '../slice/catalog-slice.ts';
 import { RootState } from '../../../store/store.ts';
+import { RenderSortList } from './RenderSortList.tsx';
 
 export function CatalogList(): ReactElement {
-  const { products, filteredProducts, sort } = useSelector(
-    (s: RootState): CatalogState => s.catalog
-  );
+  const { products, filteredProducts } = useSelector((s: RootState): CatalogState => s.catalog);
   const [itemsLimit, setItemsLimit] = useState<number>(6);
   const [page, setPage] = useState<number>(1);
   const [pageQuantity, setPageQuantity] = useState<number>(
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
-  const dispatch = useDispatch<AppDispatch>();
-  const onSortPrice = () => dispatch(setSort(sort === 'price asc' ? 'price desc' : 'price asc'));
-  const onSortName = () =>
-    dispatch(setSort(sort === 'name.en-Us asc' ? 'name.en-Us desc' : 'name.en-Us asc'));
-  const onResetSort = () => dispatch(setSort(undefined));
+
   const usedProducts = filteredProducts ?? products;
   useEffect((): void => {
     if (usedProducts?.results) {
@@ -36,17 +30,7 @@ export function CatalogList(): ReactElement {
 
   return (
     <section className={'bg-white h-full flex flex-col '}>
-      <div>
-        <button type="button" onClick={onSortPrice}>
-          Price
-        </button>
-        <button type="button" onClick={onSortName}>
-          Name
-        </button>
-        <button type="button" onClick={onResetSort}>
-          Reset
-        </button>
-      </div>
+      <RenderSortList />
       <ProductsQuantity
         onChangeLimit={setItemsLimit}
         setPageQuantity={setPageQuantity}
