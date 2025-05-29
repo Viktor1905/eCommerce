@@ -1,6 +1,7 @@
 import { ReactElement, useEffect } from 'react';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
 import { CatalogFilter } from './CatalogFilter.tsx';
+import { FieldValues, useFormContext } from 'react-hook-form';
 
 export function BurgerFilter({
   showBurger,
@@ -8,9 +9,12 @@ export function BurgerFilter({
   handleFilter,
   products,
 }: BurgerProps): ReactElement {
+  const { reset, getValues } = useFormContext();
   useEffect(() => {
     if (showBurger) {
       document.body.style.overflow = 'hidden';
+      const currentValues: FieldValues = getValues();
+      reset(currentValues);
     } else {
       document.body.style.overflow = '';
     }
@@ -18,7 +22,7 @@ export function BurgerFilter({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [showBurger]);
+  }, [showBurger, getValues, reset]);
   const closeWrapper = (): void => {
     setShowBurger(!showBurger);
   };

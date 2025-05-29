@@ -4,38 +4,44 @@ import { isProductsResponse } from '../check-response.ts';
 import { ProductProjectionResponse } from '../products.types.ts';
 
 export async function requestFilter(
-  params: RequestFilterParams
+  filterParams: RequestFilterParams,
+  sortParam?: string
 ): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
-  const predicates: string[] = [];
+  const queryParts: string[] = [];
 
-  if (Array.isArray(params.for) && params.for.length > 0) {
-    const forPredicates: string[] = params.for.map(
-      (key: string): string => `masterVariant(attributes(name="for" and value(key="${key}")))`
-    );
-    forPredicates.push(`masterVariant(attributes(name="for" and value(key="Anyone")))`);
-    predicates.push(`(${forPredicates.join(' or ')})`);
+  const [min, max] = filterParams.priceRange;
+  queryParts.push(
+    `filter=variants.price.centAmount:range(${(min * 100).toString()} to ${(max * 100).toString()})`
+  );
+
+  if (Array.isArray(filterParams.discounted) && filterParams.discounted.length > 0) {
+    queryParts.push(`filter=variants.scopedPriceDiscounted:true`);
   }
 
-  if (Array.isArray(params.brand) && params.brand.length > 0) {
-    const brandPredicates: string[] = params.brand.map(
-      (value: string): string => `masterVariant(attributes(name="brand" and value="${value}"))`
-    );
-    predicates.push(`(${brandPredicates.join(' or ')})`);
+  const filterParts: string[] = [];
+  if (Array.isArray(filterParams.for) && filterParams.for.length > 0) {
+    filterParams.for.forEach((key: string) => {
+      filterParts.push(`"${key}"`);
+    });
+    filterParts.push(`"Anyone"`);
+    queryParts.push(`filter=variants.attributes.for.key:${filterParts.join(', ')}`);
   }
-  if (Array.isArray(params.discounted) && params.discounted.length > 0) {
-    predicates.push(`masterVariant(prices(discounted is defined))`);
+  const brandParts: string[] = [];
+  if (Array.isArray(filterParams.brand) && filterParams.brand.length > 0) {
+    filterParams.brand.forEach((value: string) => {
+      brandParts.push(`"${value}"`);
+    });
+    queryParts.push(`filter=variants.attributes.brand:${brandParts.join(', ')}`);
   }
 
-  const [min, max] = params.priceRange;
-  const pricePredicate = `(
-  masterVariant(prices(discounted(value(centAmount >= ${String(min * 100)} and centAmount <= ${String(max * 100)})))) or 
-  masterVariant(prices(discounted is not defined and value(centAmount >= ${String(min * 100)} and centAmount <= ${String(max * 100)})))
-)`;
-  predicates.push(pricePredicate);
-  const finalPredicate: string = predicates.join(' and ');
+  if (sortParam) {
+    queryParts.push(`sort=`);
+  }
+  const queryString = queryParts.join('&');
+  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
+  console.log(url);
 
-  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections?where=${encodeURI(finalPredicate)}`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -44,13 +50,16 @@ export async function requestFilter(
         'Content-Type': 'application/json',
       },
     });
+
     const productsResponse: unknown = await response.json();
+
     if (!isProductsResponse(productsResponse)) {
       throw new Error('Invalid products response format');
     }
+
+    console.log(productsResponse);
     return productsResponse;
   } catch (error) {
-    console.error('Failed to fetch products:', error);
     throw new Error(
       `Product request failed: ${error instanceof Error ? error.message : String(error)}`
     );
@@ -59,7 +68,7 @@ export async function requestFilter(
 
 interface RequestFilterParams {
   brand: boolean | string[];
-  discounted: boolean;
+  discounted: string[];
   for: boolean | string[];
   priceRange: number[];
 }

@@ -16,29 +16,23 @@ export function CatalogFilter({
   closeWrapper,
 }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { isDirty },
-  } = useFormContext<Filters>();
+  const { register, handleSubmit, control, reset } = useFormContext<Filters>();
 
   const onSubmit = async (data: Filters): Promise<void> => {
     try {
-      const result = isDirty ? await requestFilter(data) : await getProducts();
+      const result = await requestFilter(data, 'name.en+asc');
       onFilter(result);
       if (closeWrapper) {
         closeWrapper();
       }
     } catch (error) {
-      console.error('Ошибка фильтрации:', error);
+      console.log('Ошибка фильтрации:', error);
     }
   };
   const onReset = async (): Promise<void> => {
     reset({
       priceRange: [lowestPrice, highestPrice],
-      discounted: false,
+      discounted: [],
       brand: [],
       for: [],
     });
@@ -67,7 +61,7 @@ export function CatalogFilter({
           <CustomCheckbox
             register={register}
             labelText={'On sale'}
-            value={'sale'}
+            value={''}
             registerValue={'discounted'}
             inputId={'sale'}
           />
@@ -86,7 +80,7 @@ export function CatalogFilter({
 }
 export interface Filters {
   brand: string[];
-  discounted: boolean;
+  discounted: string[];
   priceRange: PriceRange;
   for: string[];
 }
