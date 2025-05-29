@@ -28,7 +28,7 @@ export function CatalogPage(): ReactElement {
     if (lowestPrice && highestPrice) {
       formMethods.reset({
         priceRange: [lowestPrice, highestPrice],
-        discounted: false,
+        discounted: [''],
         brand: [],
         for: [],
       });
@@ -84,7 +84,7 @@ export function CatalogPage(): ReactElement {
           >
             <RenderFilterBtn />
           </button>
-          <CatalogList products={filteredProducts ?? products} />
+          <CatalogList products={filteredProducts ?? products} handleFilter={handleFilter} />
         </div>
         <BurgerFilter
           showBurger={showBurger}

@@ -2,7 +2,6 @@ import { getCatalogToken } from '../catalog-token.ts';
 import { API_CONFIG } from '../../login/login.ts';
 import { isProductsResponse } from '../check-response.ts';
 import { ProductProjectionResponse } from '../products.types.ts';
-
 export async function requestFilter(
   filterParams: RequestFilterParams,
   sortParam?: string
@@ -16,7 +15,7 @@ export async function requestFilter(
   );
 
   if (Array.isArray(filterParams.discounted) && filterParams.discounted.length > 0) {
-    queryParts.push(`filter=variants.scopedPriceDiscounted:true`);
+    queryParts.push(`filter=variants.attributes.sale:true`);
   }
 
   const filterParts: string[] = [];
@@ -34,13 +33,11 @@ export async function requestFilter(
     });
     queryParts.push(`filter=variants.attributes.brand:${brandParts.join(', ')}`);
   }
-
   if (sortParam) {
-    queryParts.push(`sort=`);
+    queryParts.push(`sort=${sortParam}`);
   }
   const queryString = queryParts.join('&');
   const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
-  console.log(url);
 
   try {
     const response = await fetch(url, {

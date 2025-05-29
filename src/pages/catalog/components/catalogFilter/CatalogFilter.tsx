@@ -18,9 +18,9 @@ export function CatalogFilter({
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
   const { register, handleSubmit, control, reset } = useFormContext<Filters>();
 
-  const onSubmit = async (data: Filters): Promise<void> => {
+  const onSubmit: (data: Filters) => Promise<void> = async (data: Filters): Promise<void> => {
     try {
-      const result = await requestFilter(data, 'name.en+asc');
+      const result: ProductProjectionResponse = await requestFilter(data);
       onFilter(result);
       if (closeWrapper) {
         closeWrapper();
