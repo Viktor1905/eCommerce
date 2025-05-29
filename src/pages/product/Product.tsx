@@ -98,7 +98,7 @@ function ShowPrice({ product }: { product: ProductProjection }) {
   return (
     <div className={styles['products-price']}>
       <div className={styles['main-price']}>
-        {product.masterVariant.key !== 'sale' ? (
+        {!product.masterVariant.prices[0].discounted ? (
           <>
             <span className={styles['current-code']}>{currencyCode}</span>
             <span className={styles['current-dollar']}>{dollar}</span>
@@ -114,7 +114,7 @@ function ShowPrice({ product }: { product: ProductProjection }) {
         )}
       </div>
       <div className={styles['discount-block']}>
-        {product.masterVariant.key !== 'sale' ? (
+        {!product.masterVariant.prices[0].discounted ? (
           <span className={styles['text-best-prise']}>Best Price</span>
         ) : (
           <div className={styles['old-price']}>

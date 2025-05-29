@@ -21,8 +21,9 @@
 }
 
 .screen-info-modal {
-  position: relative;
+  position: fixed;
   display: flex;
+  max-width: 90%;
   text-align: center;
   flex-direction: column;
   align-items: center;
@@ -71,12 +72,13 @@
 
 .main-image-modal {
   display: flex;
+  justify-content: center;
 }
 
 .image-modal {
   display: block;
-  width: 100%;
-  max-width: 450px;
+  width: 60%;
+  max-height: 450px;
   height: auto;
   object-fit: contain;
   object-position: center;
