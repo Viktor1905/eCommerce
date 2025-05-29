@@ -78,10 +78,16 @@
 .image-modal {
   display: block;
   width: 60%;
-  max-height: 450px;
+  max-height: 650px;
   height: auto;
   object-fit: contain;
   object-position: center;
+  transition: transform 0.2s ease;
+}
+
+.image-modal:hover {
+  transform: scale(1.5);
+  cursor: pointer;
 }
 
 .modal-arrow-left,
