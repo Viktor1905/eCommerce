@@ -1,4 +1,4 @@
-import { Path, UseFormRegister } from 'react-hook-form';
+import { Path, useFormContext, UseFormRegister } from 'react-hook-form';
 import { Filters } from '../CatalogFilter.tsx';
 
 export function CustomCheckbox({
@@ -8,6 +8,21 @@ export function CustomCheckbox({
   registerValue,
   inputId,
 }: CheckboxProps) {
+  const { watch, setValue } = useFormContext<Filters>();
+  const selectedValues = watch(registerValue);
+  const filtered =
+    Array.isArray(selectedValues) && selectedValues.every((item) => typeof item === 'string')
+      ? selectedValues
+      : [];
+  const isChecked = filtered.includes(value);
+
+  const handleChange = () => {
+    const updatedValues = isChecked
+      ? filtered.filter((item) => item !== value)
+      : [...filtered, value];
+
+    setValue(registerValue, updatedValues, { shouldValidate: true });
+  };
   return (
     <label htmlFor={inputId} className="flex justify-between items-center cursor-pointer gap-2">
       <h2 className="block">{labelText}</h2>
@@ -18,6 +33,8 @@ export function CustomCheckbox({
           {...register(registerValue)}
           className="sr-only peer"
           value={value}
+          checked={isChecked}
+          onChange={handleChange}
         />
         <div className="absolute top-0 left-0 w-full h-full rounded-full bg-khaki/30 shadow-[inset_0_0_5px_rgba(0,0,0,0.3)] transition-colors" />
         <div
@@ -38,4 +55,5 @@ interface CheckboxProps {
   registerValue: Path<Filters>;
   value: string;
   inputId: string;
+  checked?: boolean;
 }

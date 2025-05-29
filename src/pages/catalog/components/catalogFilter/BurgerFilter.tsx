@@ -1,36 +1,39 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useRef } from 'react';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
-import { CatalogFilter } from './CatalogFilter.tsx';
-import { FieldValues, useFormContext } from 'react-hook-form';
+import { CatalogFilter, Filters } from './CatalogFilter.tsx';
 
 export function BurgerFilter({
   showBurger,
   setShowBurger,
-  handleFilter,
+  onFilterSubmit,
+  onResetFilters,
   products,
 }: BurgerProps): ReactElement {
-  const { reset, getValues } = useFormContext();
   useEffect(() => {
     if (showBurger) {
       document.body.style.overflow = 'hidden';
-      const currentValues: FieldValues = getValues();
-      reset(currentValues);
     } else {
       document.body.style.overflow = '';
     }
-
     return () => {
       document.body.style.overflow = '';
     };
-  }, [showBurger, getValues, reset]);
+  }, [showBurger]);
   const closeWrapper = (): void => {
     setShowBurger(!showBurger);
   };
+  const sectionRef = useRef<HTMLDivElement>(null);
   return (
     <section
       className={`fixed z-5 w-screen h-screen bg-black/40 top-0 left-0 flex justify-center content-center overflow-auto transition-opacity duration-300 ${
         showBurger ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}
+      ref={sectionRef}
+      onClick={(event) => {
+        if (event.target === sectionRef.current) {
+          closeWrapper();
+        }
+      }}
     >
       <div className="w-[350px] bg-white h-fit mt-5 pt-10 pr-5 pl-5 relative">
         <div
@@ -39,7 +42,12 @@ export function BurgerFilter({
         >
           X
         </div>
-        <CatalogFilter products={products} onFilter={handleFilter} closeWrapper={closeWrapper} />
+        <CatalogFilter
+          products={products}
+          onFilterSubmit={onFilterSubmit}
+          onResetFilters={onResetFilters}
+          closeWrapper={closeWrapper}
+        />
       </div>
     </section>
   );
@@ -48,6 +56,7 @@ export function BurgerFilter({
 interface BurgerProps {
   showBurger: boolean;
   setShowBurger: (showBurger: boolean) => void;
-  handleFilter: (result: ProductProjectionResponse) => void;
+  onFilterSubmit: (data: Filters) => void;
+  onResetFilters: (data: Filters) => void;
   products: ProductProjectionResponse | null;
 }

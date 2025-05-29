@@ -4,43 +4,28 @@ import { ProductProjectionResponse } from '../../../../api/catalog/products.type
 import { PriceSlider } from './PriceSlider.tsx';
 import { BrandFilter } from './BrandFilter.tsx';
 import { usePrices } from './hooks/usePrices.ts';
-import { requestFilter } from '../../../../api/catalog/filter/requestFilter.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
-import { getProducts } from '../../../../api/catalog/requestProducts.ts';
 import { GetFilterResetSvg } from './components/getFilterResetSvg.tsx';
 import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function CatalogFilter({
   products,
-  onFilter,
+  onFilterSubmit,
+  onResetFilters,
   closeWrapper,
 }: CatalogFilterProps): ReactElement {
   const { pricesList, lowestPrice, highestPrice } = usePrices(products);
-  const { register, handleSubmit, control, reset } = useFormContext<Filters>();
+  const { register, handleSubmit, control } = useFormContext<Filters>();
 
-  const onSubmit: (data: Filters) => Promise<void> = async (data: Filters): Promise<void> => {
+  const onSubmit: (data: Filters) => void = (data: Filters): void => {
     try {
-      const result: ProductProjectionResponse = await requestFilter(data);
-      onFilter(result);
+      console.log(data);
+      onFilterSubmit(data);
       if (closeWrapper) {
         closeWrapper();
       }
     } catch (error) {
       console.log('Ошибка фильтрации:', error);
-    }
-  };
-  const onReset = async (): Promise<void> => {
-    reset({
-      priceRange: [lowestPrice, highestPrice],
-      discounted: [],
-      brand: [],
-      for: [],
-    });
-    try {
-      const result = await getProducts();
-      onFilter(result);
-    } catch (error) {
-      console.error('Ошибка фильтрации:', error);
     }
   };
   return (
@@ -51,7 +36,7 @@ export function CatalogFilter({
       <button
         type="button"
         className="self-end absolute top-0 right-0 fill-jungle cursor-pointer hover:fill-goldenrod"
-        onClick={(event: React.MouseEvent): void => void handleSubmit(onReset)(event)}
+        onClick={(event: React.MouseEvent): void => void handleSubmit(onResetFilters)(event)}
       >
         <GetFilterResetSvg />
       </button>
@@ -61,7 +46,7 @@ export function CatalogFilter({
           <CustomCheckbox
             register={register}
             labelText={'On sale'}
-            value={''}
+            value={'sale'}
             registerValue={'discounted'}
             inputId={'sale'}
           />
@@ -86,7 +71,8 @@ export interface Filters {
 }
 interface CatalogFilterProps {
   products: ProductProjectionResponse | null;
-  onFilter: (products: ProductProjectionResponse) => void;
+  onFilterSubmit: (data: Filters) => void;
+  onResetFilters: (data: Filters) => void;
   closeWrapper?: () => void;
 }
-type PriceRange = [number, number];
+type PriceRange = number[];

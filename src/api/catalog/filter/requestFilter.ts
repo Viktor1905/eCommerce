@@ -8,19 +8,17 @@ export async function requestFilter(
 ): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
   const queryParts: string[] = [];
-
   const [min, max] = filterParams.priceRange;
   queryParts.push(
     `filter=variants.price.centAmount:range(${(min * 100).toString()} to ${(max * 100).toString()})`
   );
-
   if (Array.isArray(filterParams.discounted) && filterParams.discounted.length > 0) {
     queryParts.push(`filter=variants.attributes.sale:true`);
   }
 
   const filterParts: string[] = [];
   if (Array.isArray(filterParams.for) && filterParams.for.length > 0) {
-    filterParams.for.forEach((key: string) => {
+    filterParams.for.forEach((key: string): void => {
       filterParts.push(`"${key}"`);
     });
     filterParts.push(`"Anyone"`);
@@ -28,7 +26,7 @@ export async function requestFilter(
   }
   const brandParts: string[] = [];
   if (Array.isArray(filterParams.brand) && filterParams.brand.length > 0) {
-    filterParams.brand.forEach((value: string) => {
+    filterParams.brand.forEach((value: string): void => {
       brandParts.push(`"${value}"`);
     });
     queryParts.push(`filter=variants.attributes.brand:${brandParts.join(', ')}`);
@@ -36,9 +34,10 @@ export async function requestFilter(
   if (sortParam) {
     queryParts.push(`sort=${sortParam}`);
   }
+
   const queryString = queryParts.join('&');
   const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
-
+  console.log(url);
   try {
     const response = await fetch(url, {
       method: 'GET',

@@ -1,69 +1,49 @@
 import { ReactElement, useEffect, useState } from 'react';
-import {
-  ProductProjection,
-  ProductProjectionResponse,
-} from '../../../api/catalog/products.types.ts';
+import { ProductProjection } from '../../../api/catalog/products.types.ts';
 import { CatalogItem } from './catalogItem/CatalogItem.tsx';
 import { ProductsQuantity } from './ProductsQuantity.tsx';
 import { Pagination } from './Pagination.tsx';
-import { useFormContext } from 'react-hook-form';
-import { requestFilter } from '../../../api/catalog/filter/requestFilter.ts';
-import { Filters } from './catalogFilter/CatalogFilter.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { CatalogState, setSort } from '../slice/catalog-slice.ts';
+import { AppDispatch } from '../../../store/store.ts';
+import { RootState } from '../../../store/store.ts';
 
-export function CatalogList({ products, handleFilter }: CatalogListProps): ReactElement {
+export function CatalogList(): ReactElement {
+  const { products, filteredProducts, sort } = useSelector(
+    (s: RootState): CatalogState => s.catalog
+  );
   const [itemsLimit, setItemsLimit] = useState<number>(6);
   const [page, setPage] = useState<number>(1);
   const [pageQuantity, setPageQuantity] = useState<number>(
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
-  const [sortPrice, setSortPrice] = useState(false);
-  const [sortName, setSortName] = useState(false);
-  const { getValues } = useFormContext<Filters>();
-
+  const dispatch = useDispatch<AppDispatch>();
+  const onSortPrice = () => dispatch(setSort(sort === 'price asc' ? 'price desc' : 'price asc'));
+  const onSortName = () =>
+    dispatch(setSort(sort === 'name.en-Us asc' ? 'name.en-Us desc' : 'name.en-Us asc'));
+  const onResetSort = () => dispatch(setSort(undefined));
+  const usedProducts = filteredProducts ?? products;
   useEffect((): void => {
-    if (products?.results) {
-      setPageQuantity(Math.ceil(products.results.length / itemsLimit));
+    if (usedProducts?.results) {
+      setPageQuantity(Math.ceil(usedProducts.results.length / itemsLimit));
     }
-  }, [products, itemsLimit]);
+  }, [usedProducts, itemsLimit]);
   useEffect((): void => {
     if (page > pageQuantity) {
       setPage(pageQuantity > 1 ? pageQuantity - 1 : 1);
     }
   }, [itemsLimit, page, pageQuantity, products]);
-  const onSortPrice = async (): Promise<void> => {
-    if (sortPrice) {
-      const result: ProductProjectionResponse = await requestFilter(getValues(), 'price desc');
-      handleFilter(result);
-    } else {
-      void requestFilter(getValues(), 'price asc');
-    }
-    setSortPrice(!sortPrice);
-  };
-  const onSortName = async (): Promise<void> => {
-    if (sortName) {
-      const result: ProductProjectionResponse = await requestFilter(getValues(), 'name.en-Us desc');
-      handleFilter(result);
-    } else {
-      void requestFilter(getValues(), 'name.en-Us asc');
-    }
-    setSortName(!sortName);
-  };
-  const onResetSort = async (): Promise<void> => {
-    const result: ProductProjectionResponse = await requestFilter(getValues());
-    handleFilter(result);
-    setSortPrice(false);
-    setSortName(false);
-  };
+
   return (
     <section className={'bg-white h-full flex flex-col '}>
       <div>
-        <button type="button" onClick={() => void onSortPrice()}>
+        <button type="button" onClick={onSortPrice}>
           Price
         </button>
-        <button type="button" onClick={() => void onSortName()}>
+        <button type="button" onClick={onSortName}>
           Name
         </button>
-        <button type="button" onClick={() => void onResetSort()}>
+        <button type="button" onClick={onResetSort}>
           Reset
         </button>
       </div>
@@ -74,19 +54,19 @@ export function CatalogList({ products, handleFilter }: CatalogListProps): React
       />
       {!products ? (
         <div className="text-red-500">Just a second please</div>
-      ) : products.results.length === 0 ? (
+      ) : usedProducts?.results.length === 0 ? (
         <div className="text-gray-500 text-center py-4">No products found</div>
       ) : (
         <div className="flex flex-wrap sm:grid sm:grid-cols-2  lg:grid-cols-3  gap-3 pr-4 pl-4 pb-2 justify-center">
           {page > 1
-            ? products.results
+            ? usedProducts?.results
                 .slice(itemsLimit * (page - 1), itemsLimit * page)
                 .map(
                   (item: ProductProjection): ReactElement => (
                     <CatalogItem key={item.id} product={item} />
                   )
                 )
-            : products.results
+            : usedProducts?.results
                 .slice(0, itemsLimit)
                 .map(
                   (item: ProductProjection): ReactElement => (
@@ -97,10 +77,5 @@ export function CatalogList({ products, handleFilter }: CatalogListProps): React
       )}
       <Pagination onChangePage={setPage} pageQuantity={pageQuantity} currentPage={page} />
     </section>
-  ) as React.ReactElement;
-}
-
-interface CatalogListProps {
-  products: ProductProjectionResponse | null;
-  handleFilter: (result: ProductProjectionResponse) => void;
+  );
 }

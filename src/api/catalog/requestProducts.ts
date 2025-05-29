@@ -29,6 +29,7 @@ export async function getProducts(): Promise<ProductProjectionResponse> {
     if (!isProductsResponse(productsResponse)) {
       throw new Error('Invalid products response format');
     }
+    console.log(productsResponse);
     return productsResponse;
   } catch (error) {
     console.error('Failed to fetch products:', error);

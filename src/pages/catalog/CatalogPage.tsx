@@ -2,63 +2,54 @@ import { ReactElement, useEffect, useState } from 'react';
 import { CategoryBar } from './components/catalogBar/CategoryBar.tsx';
 import { CatalogFilter, Filters } from './components/catalogFilter/CatalogFilter.tsx';
 import { CatalogList } from './components/CatalogList.tsx';
-import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
-import { getProducts } from '../../api/catalog/requestProducts.ts';
 import { RenderFilterBtn } from './components/RenderFilterBtn.tsx';
 import { BurgerFilter } from './components/catalogFilter/BurgerFilter.tsx';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store.ts';
+import { CatalogState, loadCatalog, setFilters } from './slice/catalog-slice.ts';
 import { usePrices } from './components/catalogFilter/hooks/usePrices.ts';
 
 export function CatalogPage(): ReactElement {
   useEffect((): void => {
     document.title = 'Catalog | Zoo Shop | Pet Supplies';
   }, []);
-  const [products, setProducts] = useState<ProductProjectionResponse | null>(null);
-  const [filteredProducts, setFilteredProducts] = useState<ProductProjectionResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [showBurger, setShowBurger] = useState(false);
-  const formMethods = useForm<Filters>();
-
-  const handleFilter = (result: ProductProjectionResponse): void => {
-    setFilteredProducts(result);
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const { filters, sort, products } = useSelector((s: RootState): CatalogState => s.catalog);
   const { lowestPrice, highestPrice } = usePrices(products);
-  useEffect((): void => {
-    if (lowestPrice && highestPrice) {
-      formMethods.reset({
-        priceRange: [lowestPrice, highestPrice],
-        discounted: [''],
-        brand: [],
-        for: [],
-      });
-    }
+  const formMethods = useForm<Filters>({
+    defaultValues: {
+      priceRange: [0, 100],
+      brand: [],
+      discounted: [],
+      for: [],
+    },
+  });
+  const [showBurger, setShowBurger] = useState(false);
+  const initialFilterValues: Filters = {
+    brand: [],
+    discounted: [],
+    for: [],
+    priceRange: [lowestPrice, highestPrice],
+  };
+
+  useEffect(() => {
+    void dispatch(loadCatalog());
+  }, [filters, sort]);
+
+  useEffect(() => {
+    formMethods.reset(initialFilterValues);
+    dispatch(setFilters(initialFilterValues));
   }, [lowestPrice, highestPrice]);
-  useEffect((): (() => void) => {
-    let isMounted = true;
-    const fetchData: () => Promise<void> = async (): Promise<void> => {
-      try {
-        const data: ProductProjectionResponse = await getProducts();
-        if (isMounted) {
-          setProducts(data);
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err instanceof Error ? err : new Error('Fetch error'));
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-    void fetchData();
-    return (): void => {
-      isMounted = false;
-    };
-  }, []);
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  const onFilterSubmit = (data: Filters) => {
+    dispatch(setFilters(data));
+  };
+
+  const onResetFilters = () => {
+    formMethods.reset(initialFilterValues);
+    console.log(initialFilterValues);
+    dispatch(setFilters(initialFilterValues));
+  };
   const onBurgerClick = (): void => {
     setShowBurger(!showBurger);
   };
@@ -74,7 +65,13 @@ export function CatalogPage(): ReactElement {
           <CategoryBar />
         </div>
         <div className="col-span-1 max-[900px]:hidden">
-          {!showBurger && <CatalogFilter products={products} onFilter={handleFilter} />}
+          {!showBurger && (
+            <CatalogFilter
+              products={products}
+              onFilterSubmit={onFilterSubmit}
+              onResetFilters={onResetFilters}
+            />
+          )}
         </div>
         <div className="col-span-4 max-[900px]:col-span-5 relative">
           <button
@@ -84,12 +81,13 @@ export function CatalogPage(): ReactElement {
           >
             <RenderFilterBtn />
           </button>
-          <CatalogList products={filteredProducts ?? products} handleFilter={handleFilter} />
+          <CatalogList />
         </div>
         <BurgerFilter
           showBurger={showBurger}
           setShowBurger={setShowBurger}
-          handleFilter={handleFilter}
+          onFilterSubmit={onFilterSubmit}
+          onResetFilters={onResetFilters}
           products={products}
         />
       </section>
