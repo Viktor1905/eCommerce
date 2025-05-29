@@ -1,10 +1,9 @@
 .product-modal-window {
-  position: fixed;
+  position: absolute;
   display: flex;
+  inset: 0;
   min-width: 200px;
-  inset: 60px;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   z-index: 3;
 }
@@ -22,13 +21,14 @@
 }
 
 .screen-info-modal {
-  position: absolute;
+  position: relative;
   display: flex;
-  inset: 20px;
+  text-align: center;
   flex-direction: column;
   align-items: center;
   background-color: #ffffff;
   border-radius: 16px;
+  z-index: 2;
 }
 
 .close-button-modal {
@@ -36,8 +36,8 @@
   display: flex;
   width: 40px;
   height: 40px;
-  top: 2px;
-  right: 2px;
+  top: -10px;
+  right: -10px;
   color: #ffffff;
   line-height: 36px;
   background-color: var(--color-coral);
@@ -65,23 +65,20 @@
 .images-modal {
   display: flex;
   width: 100%;
-  height: 100%;
-  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 }
 
 .main-image-modal {
-  position: relative;
-  max-width: 90%;
-  max-height: 40vh;
+  display: flex;
 }
 
 .image-modal {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 450px;
+  height: auto;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -98,11 +95,11 @@
 }
 
 .modal-arrow-left {
-  left: -10px;
+  left: 5px;
 }
 
 .modal-arrow-right {
-  right: -15px;
+  right: 0;
 }
 
 .preview-images-modal {

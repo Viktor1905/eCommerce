@@ -49,20 +49,20 @@ export function ProductImageSlider({
   return (
     <div className={styles['product-modal-window']}>
       <div
-        className={styles['close-button-modal']}
-        onClick={() => {
-          onClose(false);
-        }}
-      >
-        {'\u00D7'}
-      </div>
-      <div
         className={styles['screen-protect-modal']}
         onClick={() => {
           onClose(false);
         }}
       ></div>
       <div className={styles['screen-info-modal']}>
+        <div
+          className={styles['close-button-modal']}
+          onClick={() => {
+            onClose(false);
+          }}
+        >
+          {'\u00D7'}
+        </div>
         <div className={styles['description-modal']}>{names['en-US']}</div>
         <div className={styles['images-modal']}>
           <div className={styles['main-image-modal']}>

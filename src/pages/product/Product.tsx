@@ -37,7 +37,7 @@ export function ProductDetailsPage() {
     })();
   }, [id]);
 
-  if (!id) return <div>Product Not Fond</div>;
+  if (!id) return <div>Product Not Found</div>;
   if (loading) return <Spinner />;
   if (error) return <div>Error: {error}</div>;
   if (!product) return null;
