@@ -1,10 +1,7 @@
 import styles from './Header.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { createContext, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
 
 const UserContext = createContext<string | null>(null);
@@ -101,13 +98,67 @@ function Logo() {
 }
 
 function SearchPanel() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(true);
+  const [scope, setScope] = useState('Search products… 🔍');
+
+  useLayoutEffect(() => {
+    if (isOpen) inputRef.current?.focus();
+  }, [isOpen, scope]);
   return (
     <div className={styles.search}>
-      <div className={styles['menu-search']}>Search in ▾</div>
+      <div className={isOpen ? styles['search-panel'] : styles['search-panel-visible']}>
+        <div
+          className={styles['search-backside']}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        ></div>
+        <ul
+          className={styles['search-list']}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
+          <li
+            className={styles['scope-search']}
+            onClick={() => {
+              setScope('Search all');
+            }}
+          >
+            Search all
+          </li>
+          <li
+            className={styles['scope-search']}
+            onClick={() => {
+              setScope('Search by product name');
+            }}
+          >
+            Search by product name
+          </li>
+          <li
+            className={styles['scope-search']}
+            onClick={() => {
+              setScope('Search by description');
+            }}
+          >
+            Search by description
+          </li>
+        </ul>
+      </div>
+      <div
+        className={styles['menu-search']}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        Search in ▾
+      </div>
       <input
+        ref={inputRef}
         type="search"
         className={styles['input-search']}
-        placeholder="Search products… 🔍"
+        placeholder={scope}
       ></input>
     </div>
   );
