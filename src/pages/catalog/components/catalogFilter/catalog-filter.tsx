@@ -1,12 +1,12 @@
 import { FormEvent, ReactElement } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
-import { PriceSlider } from './PriceSlider.tsx';
-import { BrandFilter } from './BrandFilter.tsx';
+import { PriceSlider } from './price-slider.tsx';
+import { BrandFilter } from './brand-filter.tsx';
 import { usePrices } from './hooks/usePrices.ts';
-import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
-import { GetFilterResetSvg } from './components/getFilterResetSvg.tsx';
-import { CustomCheckbox } from './components/CustomCheckbox.tsx';
+import { RenderForWhomFilter } from './render-for-whom-filter.tsx';
+import { GetFilterResetSvg } from './components/get-filter-reset-svg.tsx';
+import { CustomCheckbox } from './components/custom-checkbox.tsx';
 
 export function CatalogFilter({
   products,

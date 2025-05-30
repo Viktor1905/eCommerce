@@ -1,5 +1,5 @@
 import { Path, useFormContext, UseFormRegister } from 'react-hook-form';
-import { Filters } from '../CatalogFilter.tsx';
+import { Filters } from '../catalog-filter.tsx';
 
 export function CustomCheckbox({
   register,

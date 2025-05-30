@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction, AsyncThunk } from '@reduxjs/toolkit';
-import { Filters } from '../components/catalogFilter/CatalogFilter.tsx';
+import { Filters } from '../components/catalogFilter/catalog-filter.tsx';
 import { ProductProjectionResponse } from '../../../api/catalog/products.types.ts';
-import { requestFilter } from '../../../api/catalog/filter/requestFilter.ts';
-import { getProducts } from '../../../api/catalog/requestProducts.ts';
+import { requestFilter } from '../../../api/catalog/filter/request-filter.ts';
+import { getProducts } from '../../../api/catalog/request-products.ts';
 
 export interface CatalogState {
   filters: Filters;

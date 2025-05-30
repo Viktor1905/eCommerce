@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 import { UseFormRegister } from 'react-hook-form';
-import { Filters } from './CatalogFilter.tsx';
+import { Filters } from './catalog-filter.tsx';
 import {
   Attribute,
   ProductProjection,
   ProductProjectionResponse,
 } from '../../../../api/catalog/products.types.ts';
-import { CustomCheckbox } from './components/CustomCheckbox.tsx';
+import { CustomCheckbox } from './components/custom-checkbox.tsx';
 
 export function BrandFilter({ products, register }: BrandProps): ReactElement {
   const brands = new Set<string>();
