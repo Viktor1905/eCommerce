@@ -20,7 +20,7 @@ export default function CountrySelector({
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
         <label
-          className="p-1 capitalize text-goldenrod font-medium w-[300px] font-main"
+          className="p-1 capitalize text-goldenrod font-medium w-[300px] font-main flex flex-row gap-1"
           htmlFor={id}
         >
           {required && <span className="text-red-700">* </span>}Country

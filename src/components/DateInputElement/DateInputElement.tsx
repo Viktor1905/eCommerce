@@ -55,7 +55,10 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
   return (
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
-        <label htmlFor={id} className={`font-medium text-goldenrod capitalize p-1 font-main `}>
+        <label
+          htmlFor={id}
+          className={`font-medium text-goldenrod capitalize p-1 font-main flex flex-row gap-1`}
+        >
           {required && <span className="text-red-700">* </span>}
           {title}
         </label>
