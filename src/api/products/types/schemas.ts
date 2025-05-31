@@ -113,6 +113,16 @@ export const ProductProjectionSchema = z
   })
   .passthrough();
 
+export const ProductProjectionResponseSchema = z.object({
+  limit: z.number(),
+  offset: z.number(),
+  count: z.number(),
+  total: z.number(),
+  results: z.array(ProductProjectionSchema),
+  facets: z.record(z.unknown()).optional(),
+});
+
+export type ProductProjectionResponse = z.infer<typeof ProductProjectionResponseSchema>;
 export type Price = z.infer<typeof PriceSchema>;
 export type Image = z.infer<typeof ImageSchema>;
 export type Attribute = z.infer<typeof AttributeSchema>;

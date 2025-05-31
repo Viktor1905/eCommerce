@@ -5,6 +5,11 @@ import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext
 import { logoutUser } from '../../api/logout/logout';
 import { fetchProductsByQuery } from '../../api/products/search';
 
+// import { useDispatch } from 'react-redux';
+// import { setFilteredProducts } from '../../store/slices/catalog-slice';
+import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
+// import type { AppDispatch } from '../../store/store';
+
 const UserContext = createContext<string | null>(null);
 
 interface AllMenuProps {
@@ -100,12 +105,26 @@ function Logo() {
 
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
+  // const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(true);
 
-  function handleSearch(): void {
+  async function handleSearch(): Promise<void> {
     const value = inputRef.current?.value.trim();
-    if (value) {
-      void fetchProductsByQuery(value);
+    if (!value) return;
+
+    try {
+      const raw = await fetchProductsByQuery(value);
+      console.log(raw);
+      const parsed = ProductProjectionResponseSchema.safeParse(raw);
+
+      if (!parsed.success) {
+        console.error('Error', parsed.error);
+        return;
+      }
+
+      // dispatch(setFilteredProducts(parsed.data));
+    } catch (error) {
+      console.error('Search failed:', error);
     }
   }
 
@@ -118,7 +137,7 @@ function SearchPanel() {
         className={styles['menu-search']}
         onClick={() => {
           setIsOpen(!isOpen);
-          handleSearch();
+          void handleSearch();
         }}
       >
         <span className="material-symbols-outlined">search</span>
@@ -131,7 +150,7 @@ function SearchPanel() {
         placeholder="Search pet food, toys, or brands…"
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            handleSearch();
+            void handleSearch();
           }
         }}
       ></input>
