@@ -52,7 +52,6 @@ export async function requestFilter(
     if (!isProductsResponse(productsResponse)) {
       throw new Error('Invalid products response format');
     }
-
     return productsResponse;
   } catch (error) {
     throw new Error(

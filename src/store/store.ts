@@ -1,6 +1,6 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-import catalogReducer from '../pages/catalog/slice/catalog-slice.ts';
+import catalogReducer from './slice/catalog-slice.ts';
 
 export const store = configureStore({
   reducer: {

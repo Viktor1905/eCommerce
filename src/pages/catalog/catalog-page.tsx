@@ -7,7 +7,7 @@ import { BurgerFilter } from './components/catalogFilter/burger-filter.tsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store.ts';
-import { CatalogState, loadCatalog, setFilters } from './slice/catalog-slice.ts';
+import { CatalogState, loadCatalog, setFilters } from '../../store/slice/catalog-slice.ts';
 import { usePrices } from './components/catalogFilter/hooks/usePrices.ts';
 
 export function CatalogPage(): ReactElement {
@@ -47,7 +47,6 @@ export function CatalogPage(): ReactElement {
 
   const onResetFilters = () => {
     formMethods.reset(initialFilterValues);
-    console.log(initialFilterValues);
     dispatch(setFilters(initialFilterValues));
   };
   const onBurgerClick = (): void => {

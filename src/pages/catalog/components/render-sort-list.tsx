@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store.ts';
-import { CatalogState, setSort } from '../slice/catalog-slice.ts';
+import { CatalogState, setSort } from '../../../store/slice/catalog-slice.ts';
 
 export function RenderSortList() {
   const { sort } = useSelector((s: RootState): CatalogState => s.catalog);

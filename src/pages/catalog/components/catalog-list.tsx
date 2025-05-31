@@ -4,7 +4,7 @@ import { CatalogItem } from './catalog-item/catalog-item.tsx';
 import { ProductsQuantity } from './products-quantity.tsx';
 import { Pagination } from './pagination.tsx';
 import { useSelector } from 'react-redux';
-import { CatalogState } from '../slice/catalog-slice.ts';
+import { CatalogState } from '../../../store/slice/catalog-slice.ts';
 import { RootState } from '../../../store/store.ts';
 import { RenderSortList } from './render-sort-list.tsx';
 
@@ -15,7 +15,6 @@ export function CatalogList(): ReactElement {
   const [pageQuantity, setPageQuantity] = useState<number>(
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
-
   const usedProducts = filteredProducts ?? products;
   useEffect((): void => {
     if (usedProducts?.results) {

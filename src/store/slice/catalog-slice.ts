@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction, AsyncThunk } from '@reduxjs/toolkit';
-import { Filters } from '../components/catalogFilter/catalog-filter.tsx';
-import { ProductProjectionResponse } from '../../../api/catalog/products.types.ts';
-import { requestFilter } from '../../../api/catalog/filter/request-filter.ts';
-import { getProducts } from '../../../api/catalog/request-products.ts';
+import { Filters } from '../../pages/catalog/components/catalogFilter/catalog-filter.tsx';
+import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
+import { requestFilter } from '../../api/catalog/filter/request-filter.ts';
+import { getProducts } from '../../api/catalog/request-products.ts';
 
 export interface CatalogState {
   filters: Filters;
@@ -56,6 +56,9 @@ const slice = createSlice({
     setSort(state, action: PayloadAction<string | undefined>) {
       state.sort = action.payload;
     },
+    setFilteredProducts(state, action: PayloadAction<ProductProjectionResponse>) {
+      state.filteredProducts = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -77,5 +80,5 @@ const slice = createSlice({
   },
 });
 
-export const { setFilters, setSort } = slice.actions;
+export const { setFilters, setSort, setFilteredProducts } = slice.actions;
 export default slice.reducer;
