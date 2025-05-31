@@ -56,7 +56,7 @@ export async function updatePetInfo({
   petName: string;
 }): Promise<customerResponse> {
   const parsedCustomer = CustomerResponseSchema.safeParse(customer);
-  const customerVersion = parsedCustomer.data?.version;
+  const version = parsedCustomer.data?.version;
   const customerId = parsedCustomer.data?.id;
 
   const actions = {
@@ -72,7 +72,7 @@ export async function updatePetInfo({
   };
 
   const body = {
-    version: customerVersion ?? 1,
+    version: version,
     actions: [actions],
   };
   console.log(body);
@@ -91,6 +91,74 @@ export async function updatePetInfo({
     console.error('Invalid response structure:', parsed.error);
     console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //Sign-up failed: Invalid response structure
+  }
+
+  return parsed.data;
+}
+
+export async function updateUserInfo({
+  customer,
+  token,
+  firstName,
+  lastName,
+  dateOfBirth,
+  email,
+}: {
+  customer: customerResponse;
+  token: string;
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  email?: string;
+}): Promise<customerResponse> {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const actions = [];
+  if (firstName) {
+    actions.push({ action: 'setFirstName', firstName });
+  }
+
+  if (lastName) {
+    actions.push({ action: 'setLastName', lastName });
+  }
+
+  if (dateOfBirth) {
+    actions.push({ action: 'setDateOfBirth', dateOfBirth });
+  }
+
+  if (email) {
+    actions.push({
+      action: 'changeEmail',
+      email,
+    });
+  }
+
+  if (actions.length === 0) {
+    throw new Error('No updates provided');
+  }
+
+  const body = {
+    version,
+    actions,
+  };
+
+  const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.error('Invalid response structure:', parsed.error);
+    console.log('Raw response:', raw);
+    throw new Error('Something went wrong, please try again later');
   }
 
   return parsed.data;
