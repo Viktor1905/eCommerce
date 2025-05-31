@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
+import { fetchProductsByQuery } from '../../api/products/search';
 
 const UserContext = createContext<string | null>(null);
 
@@ -100,65 +101,39 @@ function Logo() {
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(true);
-  const [scope, setScope] = useState('Search products… 🔍');
+
+  function handleSearch(): void {
+    const value = inputRef.current?.value.trim();
+    if (value) {
+      void fetchProductsByQuery(value);
+    }
+  }
 
   useLayoutEffect(() => {
     if (isOpen) inputRef.current?.focus();
-  }, [isOpen, scope]);
+  }, [isOpen]);
   return (
     <div className={styles.search}>
-      <div className={isOpen ? styles['search-panel'] : styles['search-panel-visible']}>
-        <div
-          className={styles['search-backside']}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        ></div>
-        <ul
-          className={styles['search-list']}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
-          <li
-            className={styles['scope-search']}
-            onClick={() => {
-              setScope('Search all');
-            }}
-          >
-            Search all
-          </li>
-          <li
-            className={styles['scope-search']}
-            onClick={() => {
-              setScope('Search by product name');
-            }}
-          >
-            Search by product name
-          </li>
-          <li
-            className={styles['scope-search']}
-            onClick={() => {
-              setScope('Search by description');
-            }}
-          >
-            Search by description
-          </li>
-        </ul>
-      </div>
       <div
         className={styles['menu-search']}
         onClick={() => {
           setIsOpen(!isOpen);
+          handleSearch();
         }}
       >
-        Search in ▾
+        <span className="material-symbols-outlined">search</span>
+        Search
       </div>
       <input
         ref={inputRef}
         type="search"
         className={styles['input-search']}
-        placeholder={scope}
+        placeholder="Search pet food, toys, or brands…"
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            handleSearch();
+          }
+        }}
       ></input>
     </div>
   );

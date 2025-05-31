@@ -7,7 +7,7 @@ import {
   ProductProjectionSchema,
 } from './types/schemas';
 
-async function checkStatus(response: Response): Promise<void> {
+export async function checkStatus(response: Response): Promise<void> {
   if (!response.ok) {
     const rawData: unknown = await response.json();
     const result = ApiErrorSchema.safeParse(rawData);
@@ -44,13 +44,13 @@ export async function fetchProductDetails(id: string): Promise<ProductProjection
     return result.data;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(`Request error: : ${error.name}, ${error.message}`);
+      throw new Error(`Request error: ${error.name}, ${error.message}`);
     }
     throw new Error(String(error));
   }
 }
 
-async function getClientCredentialsToken(): Promise<AuthTokenResponse> {
+export async function getClientCredentialsToken(): Promise<AuthTokenResponse> {
   const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
 
