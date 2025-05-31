@@ -51,6 +51,7 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
               control={control}
               register={register(id)}
               required={property.required}
+              value={property.value}
             />
           ) : (
             <InputElement

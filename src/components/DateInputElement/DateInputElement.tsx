@@ -1,6 +1,6 @@
 import { Control, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,6 +11,7 @@ type DateInputElementProps<TFieldValues extends Record<string, unknown>> = {
   error?: string;
   register?: UseFormRegisterReturn;
   control?: Control<TFieldValues>;
+  value?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function DateInputElement<TFieldValues extends Record<string, unknown>>({
@@ -21,8 +22,10 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
   register,
   control,
   required,
+  value,
 }: DateInputElementProps<TFieldValues>) {
-  const [selected, setSelected] = useState<Date | undefined>(undefined);
+  const parsedValue = value ? parse(value, 'yyyy-MM-dd', new Date()) : undefined;
+  const [selected, setSelected] = useState<Date | undefined>(parsedValue);
   const defaultClassNames = getDefaultClassNames();
   const [open, setOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -38,6 +41,17 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (value) {
+      const parsed = parse(value, 'yyyy-MM-dd', new Date());
+      if (!isNaN(parsed.getTime())) {
+        setSelected(parsed);
+      }
+    } else {
+      setSelected(undefined);
+    }
+  }, [value]);
   return (
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
@@ -50,7 +64,7 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
           name={id}
           type={type}
           id={id}
-          value={selected ? format(selected, 'yyyy-MM-dd') : ''}
+          value={value}
           readOnly
           className="hidden"
         />
@@ -81,9 +95,10 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
                     disabled={{ before: new Date(1930, 1, 1), after: new Date() }}
                     selected={selected}
                     onSelect={(day) => {
-                      setSelected(day);
                       if (day) {
-                        field.onChange(format(day, 'yyyy-MM-dd'));
+                        const formatted = format(day, 'yyyy-MM-dd');
+                        setSelected(day);
+                        field.onChange(formatted); // this triggers update to value
                       }
                       setOpen(false);
                     }}
