@@ -1,9 +1,11 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchProfile } from '../../api/profile/profile';
 import { customerResponse, userAddress } from '../../api/sign-up/sign-up';
 import { COUNTRIES_DATA } from '../../components/CountrySelector/countries-data/countries-data';
 import { format } from 'date-fns';
+import UserModalDialog from './components/UserModalDialog/UserModalDialog';
+import PetModalDialog from './components/PetModalDialog/PetModalDialog';
 
 export function getTokenFromCookie(): string | null {
   const match = /(?:^|;\s*)access_token=([^;]+)/.exec(document.cookie);
@@ -14,6 +16,13 @@ export function ProfilePage() {
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<customerResponse | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+  function closeModal() {
+    setIsUserModalOpen(false);
+    setIsPetModalOpen(false);
+  }
 
   const [billingAddress, setBillingAddress] = useState<{
     isDefault: boolean;
@@ -30,61 +39,68 @@ export function ProfilePage() {
     address: undefined,
   });
 
-  useEffect(() => {
-    document.title = 'Profile | Zoo Shop | Pet Supplies';
-
+  const refreshCustomer = useCallback(async () => {
     const token = getTokenFromCookie();
     if (!token) {
       void navigate('/login', { replace: true });
       return;
     }
 
-    const fetchCustomer = async () => {
-      try {
-        const customerInfo = await fetchProfile(token);
-        // Set billing address
-        if (customerInfo.defaultBillingAddressId) {
-          const billing = customerInfo.addresses.find(
-            (address) => address.id === customerInfo.defaultBillingAddressId
-          );
-          setBillingAddress({ isDefault: true, address: billing });
-        } else {
-          const billing = customerInfo.addresses.find(
-            (address) => address.id === customerInfo.billingAddressIds[0]
-          );
-          setBillingAddress({ isDefault: false, address: billing });
-        }
+    try {
+      const customerInfo = await fetchProfile(token);
 
-        // Set shipping address (similar logic)
-        if (customerInfo.defaultShippingAddressId) {
-          const shipping = customerInfo.addresses.find(
-            (address) => address.id === customerInfo.defaultShippingAddressId
-          );
-          setShippingAddress({ isDefault: true, address: shipping });
-        } else {
-          const shipping = customerInfo.addresses.find(
-            (address) => address.id === customerInfo.shippingAddressIds[0]
-          );
-          setShippingAddress({ isDefault: false, address: shipping });
-        }
-
-        setCustomer(customerInfo);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        void navigate('/login', { replace: true });
-      } finally {
-        setLoading(false);
+      if (customerInfo.defaultBillingAddressId) {
+        const billing = customerInfo.addresses.find(
+          (address) => address.id === customerInfo.defaultBillingAddressId
+        );
+        setBillingAddress({ isDefault: true, address: billing });
+      } else {
+        const billing = customerInfo.addresses.find(
+          (address) => address.id === customerInfo.billingAddressIds[0]
+        );
+        setBillingAddress({ isDefault: false, address: billing });
       }
-    };
 
-    void fetchCustomer();
+      if (customerInfo.defaultShippingAddressId) {
+        const shipping = customerInfo.addresses.find(
+          (address) => address.id === customerInfo.defaultShippingAddressId
+        );
+        setShippingAddress({ isDefault: true, address: shipping });
+      } else {
+        const shipping = customerInfo.addresses.find(
+          (address) => address.id === customerInfo.shippingAddressIds[0]
+        );
+        setShippingAddress({ isDefault: false, address: shipping });
+      }
+
+      setCustomer(customerInfo);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      void navigate('/login', { replace: true });
+    } finally {
+      setLoading(false);
+    }
   }, [navigate]);
+
+  useEffect(() => {
+    void refreshCustomer();
+  }, [refreshCustomer]);
   useEffect(() => {
     document.title = 'Profile | Zoo Shop | Pet Supplies';
   }, []);
   return (
     <section className="w-fit m-auto flex flex-col justify-center items-center rounded-2xl bg-white">
       <h2 className="text-2xl pt-4 text-center text-jungle font-main-bd">Profile</h2>
+      {isUserModalOpen && !isPetModalOpen && customer && (
+        <UserModalDialog
+          user={customer}
+          closeModal={closeModal}
+          refreshCustomer={refreshCustomer}
+        />
+      )}
+      {isPetModalOpen && !isUserModalOpen && customer && (
+        <PetModalDialog user={customer} closeModal={closeModal} refreshCustomer={refreshCustomer} />
+      )}
       {loading ? (
         <div className="text-jungle p-2 m-2">Loading...</div>
       ) : customer ? (
@@ -93,7 +109,14 @@ export function ProfilePage() {
           <div className="flex flex-col gap-2 m-2 bg-light-gray pt-2 pb-2 pl-4 pr-4 rounded-3xl">
             <p className="text-lg font-bold flex justify-between">
               {customer.firstName} {customer.lastName}
-              <button className="p-1 text-sm hover:cursor-pointer justify-self-end">edit</button>
+              <button
+                className="p-1 text-sm hover:cursor-pointer justify-self-end"
+                onClick={() => {
+                  setIsUserModalOpen(true);
+                }}
+              >
+                edit
+              </button>
             </p>
             <p>{format(customer.dateOfBirth, 'dd MMMM, yyyy')}</p>
             <p>{customer.email}</p>
@@ -118,7 +141,12 @@ export function ProfilePage() {
           <div className="flex flex-col gap-2 m-2 bg-light-gray pt-2 pb-2 pl-4 pr-4 rounded-3xl">
             <p className="text-lg font-bold flex justify-between">
               Pet
-              <button className="p-1 text-sm text-olive hover:cursor-pointer justify-self-end">
+              <button
+                className="p-1 text-sm text-olive hover:cursor-pointer justify-self-end"
+                onClick={() => {
+                  setIsPetModalOpen(true);
+                }}
+              >
                 edit
               </button>
             </p>
