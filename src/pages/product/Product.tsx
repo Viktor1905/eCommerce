@@ -52,6 +52,19 @@ export function ProductDetailsPage() {
     setIsOpen(state);
   }
 
+  function slideImage(index: number) {
+    const arrayImages = product?.masterVariant.images;
+    const findMainImage = arrayImages?.findIndex((img) => img.url === mainImage);
+    let currentIndex;
+    if (arrayImages && findMainImage !== undefined && findMainImage !== -1) {
+      currentIndex = findMainImage + index;
+      if (currentIndex >= 0 && currentIndex < arrayImages.length)
+        setMainImage(arrayImages[currentIndex].url);
+      if (currentIndex < 0) setMainImage(arrayImages[arrayImages.length - 1].url);
+      if (currentIndex >= arrayImages.length) setMainImage(arrayImages[0].url);
+    }
+  }
+
   return (
     <div className={styles['products-box']}>
       <h2 className={styles['products-title']}>{product.name['en-US']}</h2>
@@ -78,6 +91,24 @@ export function ProductDetailsPage() {
               handleOpenSlider(true);
             }}
           />
+          <div className={styles.arrows}>
+            <span
+              className={`material-symbols-outlined ${styles['left-arrow']}`}
+              onClick={() => {
+                slideImage(1);
+              }}
+            >
+              arrow_circle_left
+            </span>
+            <span
+              className={`material-symbols-outlined ${styles['right-arrow']}`}
+              onClick={() => {
+                slideImage(-1);
+              }}
+            >
+              arrow_circle_right
+            </span>
+          </div>
         </div>
         <ShowPrice product={product} />
       </div>

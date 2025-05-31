@@ -40,11 +40,34 @@
 }
 
 .products-slider-main-image {
+  position: relative;
   display: flex;
+  flex-direction: column;
   width: 35%;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   z-index: 1;
+}
+
+.arrows {
+  display: flex;
+  width: 100%;
+  color: var(--color-coral);
+  justify-content: center;
+  gap: 20px;
+}
+
+.right-arrow,
+.left-arrow {
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+:is(.right-arrow,
+.left-arrow):hover {
+  opacity: 1;
+  transform: scale(1.2);
 }
 
 .products-image {

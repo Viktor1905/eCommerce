@@ -114,7 +114,6 @@ function SearchPanel() {
 
     try {
       const raw = await fetchProductsByQuery(value);
-      console.log(raw);
       const parsed = ProductProjectionResponseSchema.safeParse(raw);
 
       if (!parsed.success) {
