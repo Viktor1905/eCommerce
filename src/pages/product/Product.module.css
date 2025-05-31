@@ -26,30 +26,33 @@
   display: flex;
   width: 100%;
   justify-content: space-around;
+  gap: 10px
 }
 
 .products-slider {
   display: flex;
-  width: 50%;
-  padding-right: 10%;
+  width: 15%;
+  padding-left: 20px;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
   z-index: 1;
 }
 
-.products-image {
-  width: 190px;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  border-radius: 16px;
+.products-slider-main-image {
+  display: flex;
+  width: 35%;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1;
 }
 
-.products-image:hover {
-  transform: scale(2) translateX(25px);
-  box-shadow: 0 0 10px #00000028;
+.products-image {
+  cursor: pointer;
+  transition:
+  box-shadow 0.2s ease;
+  border-radius: 5px;
+  object-fit: contain;
 }
 
 .products-price {

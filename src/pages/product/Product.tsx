@@ -15,7 +15,7 @@ export function ProductDetailsPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedUrl, setSelectedUrl] = useState<string>('');
+  const [mainImage, setMainImage] = useState(' ');
 
   useEffect(() => {
     if (!id) return;
@@ -37,6 +37,12 @@ export function ProductDetailsPage() {
     })();
   }, [id]);
 
+  useEffect(() => {
+    if (product?.masterVariant.images.length) {
+      setMainImage(product.masterVariant.images[0].url);
+    }
+  }, [product]);
+
   if (!id) return <div>Product Not Found</div>;
   if (loading) return <Spinner />;
   if (error) return <div>Error: {error}</div>;
@@ -45,6 +51,7 @@ export function ProductDetailsPage() {
   function handleOpenSlider(state: boolean) {
     setIsOpen(state);
   }
+
   return (
     <div className={styles['products-box']}>
       <h2 className={styles['products-title']}>{product.name['en-US']}</h2>
@@ -57,11 +64,20 @@ export function ProductDetailsPage() {
               src={img.url}
               alt={img.label}
               onClick={() => {
-                setSelectedUrl(img.url);
-                handleOpenSlider(true);
+                setMainImage(img.url);
               }}
             />
           ))}
+        </div>
+        <div className={styles['products-slider-main-image']}>
+          <img
+            className={styles['products-image']}
+            src={mainImage}
+            alt={product.masterVariant.images[0].label}
+            onClick={() => {
+              handleOpenSlider(true);
+            }}
+          />
         </div>
         <ShowPrice product={product} />
       </div>
@@ -71,7 +87,7 @@ export function ProductDetailsPage() {
         images={product.masterVariant.images}
         names={product.name}
         isOpen={isOpen}
-        mainImageUrl={selectedUrl}
+        mainImageUrl={mainImage}
         onClose={handleOpenSlider}
       />
     </div>
