@@ -114,7 +114,7 @@ const SECRET_ID = 'CV6y3lEHvhTtkY4a-8wFxZ9d4hVzfIOw';
 const PROJECT_KEY = 'ecommerce2v';
 const REGION = 'europe-west1.gcp';
 export const API_URL = `https://api.${REGION}.commercetools.com/${PROJECT_KEY}`;
-const CUSTOMER_ENDPOINT = `${API_URL}/customers`;
+export const CUSTOMER_ENDPOINT = `${API_URL}/customers`;
 
 const OAuthErrorSchema = z.object({
   error: z.string(),
