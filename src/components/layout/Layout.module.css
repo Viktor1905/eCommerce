@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  width: 100%;
+  min-height: calc(100dvh - 280px);
+  margin:  auto;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .wrapper {
+    min-height: calc(100dvh - 330px);
+  }
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    min-height: calc(100dvh - 447px);
+  }
+}

@@ -11,8 +11,8 @@ import { NotFoundPage } from './pages/pageNotFound/Page404.tsx';
 import { AboutUsPage } from './pages/about/AboutPage.tsx';
 import { ProfilePage } from './pages/profile/ProfilePage.tsx';
 import { TeamPage } from './pages/team/TeamPage.tsx';
+import { ProductDetailsPage } from './pages/product/Product.tsx';
 import { Navigate } from 'react-router-dom';
-
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ function App() {
           element={<>{!firstName ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
-        {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
