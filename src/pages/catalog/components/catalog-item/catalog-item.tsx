@@ -1,26 +1,28 @@
 import { ReactElement } from 'react';
-import { Attribute, ProductProjection } from '../../../api/catalog/products.types.ts';
-import saleIcon from './assets/sale.svg';
-import { useNavigate } from 'react-router-dom';
+import { Attribute, ProductProjection } from '../../../../api/catalog/products.types.ts';
+import saleIcon from '../assets/sale.svg';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {
-  const description = product.masterVariant.attributes?.find((obj: Attribute): boolean => {
-    return obj.name === 'small-description';
-  });
+  const description: Attribute | undefined = product.masterVariant.attributes?.find(
+    (obj: Attribute): boolean => {
+      return obj.name === 'small-description';
+    }
+  );
   const isDiscount: number | false =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.discounted?.value
       .centAmount ?? false;
   const discountPrice: number | false = isDiscount ? isDiscount / 100 : false;
   const price: number =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.value.centAmount / 100;
-  const navigate = useNavigate();
-  const onClick = async (): Promise<void> => {
+  const navigate: NavigateFunction = useNavigate();
+  const onClick: () => Promise<void> = async (): Promise<void> => {
     await navigate(`/product/${product.id}`);
   };
   return (
     <div
       key={product.id}
-      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 duration-300 origin-top transition-transform min-h-[400px] "
+      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
       onClick={(): void => {
         void onClick();
       }}
@@ -53,10 +55,14 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         )}
       </div>
       <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">
-        {description ? description.value : 'No description available'}
+        {description
+          ? typeof description.value !== 'object'
+            ? description.value
+            : 'No description available'
+          : 'No description available'}
       </p>
     </div>
-  ) as React.ReactElement;
+  );
 }
 interface ProductListProps {
   product: ProductProjection;

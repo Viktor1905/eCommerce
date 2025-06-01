@@ -1,6 +1,6 @@
 import { API_CONFIG } from '../login/login.ts';
 
-export async function getCatalogToken() {
+export async function getCatalogToken(): Promise<string> {
   const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
   try {

@@ -10,7 +10,7 @@ export function ProductsQuantity({
     setPageQuantity(Math.ceil(ProductsLength / Number(event.target.value)));
   };
   return (
-    <fieldset className="flex p-4 self-end ">
+    <fieldset className="flex pr-4 self-end ">
       <div className="flex items-center gap-2 ">
         <label
           htmlFor="six"

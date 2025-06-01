@@ -1,30 +1,35 @@
 import { ReactElement, useEffect, useState } from 'react';
-import {
-  ProductProjection,
-  ProductProjectionResponse,
-} from '../../../api/catalog/products.types.ts';
-import { CatalogItem } from './CatalogItem.tsx';
-import { ProductsQuantity } from './ProductsQuantity.tsx';
-import { Pagination } from './Pagination.tsx';
+import { ProductProjection } from '../../../api/catalog/products.types.ts';
+import { CatalogItem } from './catalog-item/catalog-item.tsx';
+import { ProductsQuantity } from './products-quantity.tsx';
+import { Pagination } from './pagination.tsx';
+import { useSelector } from 'react-redux';
+import { CatalogState } from '../../../store/slice/catalog-slice.ts';
+import { RootState } from '../../../store/store.ts';
+import { RenderSortList } from './render-sort-list.tsx';
 
-export function CatalogList({ products }: CatalogListProps): ReactElement {
+export function CatalogList(): ReactElement {
+  const { products, filteredProducts } = useSelector((s: RootState): CatalogState => s.catalog);
   const [itemsLimit, setItemsLimit] = useState<number>(6);
   const [page, setPage] = useState<number>(1);
   const [pageQuantity, setPageQuantity] = useState<number>(
     products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
   );
+  const usedProducts = filteredProducts ?? products;
+  useEffect((): void => {
+    if (usedProducts?.results) {
+      setPageQuantity(Math.ceil(usedProducts.results.length / itemsLimit));
+    }
+  }, [usedProducts, itemsLimit]);
   useEffect((): void => {
     if (page > pageQuantity) {
       setPage(pageQuantity > 1 ? pageQuantity - 1 : 1);
     }
   }, [itemsLimit, page, pageQuantity, products]);
-  useEffect((): void => {
-    if (products?.results.length) {
-      setPageQuantity(Math.ceil(products.results.length / itemsLimit));
-    }
-  }, [products, itemsLimit]);
+
   return (
-    <section className={'bg-white h-full flex flex-col'}>
+    <section className={'bg-white h-full flex flex-col '}>
+      <RenderSortList />
       <ProductsQuantity
         onChangeLimit={setItemsLimit}
         setPageQuantity={setPageQuantity}
@@ -32,17 +37,19 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
       />
       {!products ? (
         <div className="text-red-500">Just a second please</div>
+      ) : usedProducts?.results.length === 0 ? (
+        <div className="text-gray-500 text-center py-4">No products found</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-4 pb-2">
+        <div className="flex flex-wrap sm:grid sm:grid-cols-2  lg:grid-cols-3  gap-3 pr-4 pl-4 pb-2 justify-center">
           {page > 1
-            ? products.results
+            ? usedProducts?.results
                 .slice(itemsLimit * (page - 1), itemsLimit * page)
                 .map(
                   (item: ProductProjection): ReactElement => (
                     <CatalogItem key={item.id} product={item} />
                   )
                 )
-            : products.results
+            : usedProducts?.results
                 .slice(0, itemsLimit)
                 .map(
                   (item: ProductProjection): ReactElement => (
@@ -54,8 +61,4 @@ export function CatalogList({ products }: CatalogListProps): ReactElement {
       <Pagination onChangePage={setPage} pageQuantity={pageQuantity} currentPage={page} />
     </section>
   );
-}
-
-interface CatalogListProps {
-  products: ProductProjectionResponse | null;
 }
