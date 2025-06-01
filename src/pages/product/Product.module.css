@@ -31,12 +31,11 @@
 
 .products-slider {
   display: flex;
-  width: 15%;
+  width: clamp(40px, 8%, 100px);
   padding-left: 20px;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
   z-index: 1;
+  gap: 3px;
 }
 
 .products-slider-main-image {
@@ -59,9 +58,11 @@
 
 .right-arrow,
 .left-arrow {
-  font-size: 2rem;
+  margin-top: 10px;
+  font-size: clamp(0.8rem, 2vw, 2rem);
   cursor: pointer;
   opacity: 0.6;
+  transition: opacity 0.4s ease-in, transform 0.4s ease-in;
 }
 
 :is(.right-arrow,
@@ -146,7 +147,7 @@
 }
 
 .add-discount-title {
-  font-size: clamp(0.7rem, 1.3vw, 1.5rem);
+  font-size: clamp(0.4rem, 0.8vw, 0.9rem);
 }
 
 .spinner {
