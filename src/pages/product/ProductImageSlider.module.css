@@ -57,7 +57,7 @@
   display: flex;
   width: 80%;
   padding-bottom: 15px;
-  margin: 20px 0 40px 0;
+  margin: 20px 0 10px 0;
   font-weight: bold;
   justify-content: center;
   border-bottom: 2px solid var(--color-coral);
@@ -116,6 +116,7 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+  gap: 5px;
 }
 
 .preview {
@@ -133,7 +134,7 @@
 
 .wrapper-preview-image {
   width: 90px;
-  margin: 40px 0 25px 0;
+  margin: 10px 0 15px 0;
   cursor: pointer;
 }
 

@@ -107,6 +107,7 @@ function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
 
   async function handleSearch(): Promise<void> {
     const value = inputRef.current?.value.trim();
@@ -144,6 +145,7 @@ function SearchPanel() {
         placeholder="Search pet food, toys, or brands…"
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
+            void navigate('/catalog');
             void handleSearch();
           }
         }}
