@@ -1,11 +1,12 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchProfile } from '../../api/profile/profile';
-import { customerResponse, userAddress } from '../../api/sign-up/sign-up';
-import { COUNTRIES_DATA } from '../../components/CountrySelector/countries-data/countries-data';
+import { customerResponse } from '../../api/sign-up/sign-up';
 import { format } from 'date-fns';
 import UserModalDialog from './components/UserModalDialog/UserModalDialog';
 import PetModalDialog from './components/PetModalDialog/PetModalDialog';
+import PasswordModalDialog from './components/PasswordModalDialog/PasswordModalDialog';
+import { renderAddress } from '../addresses/AddressesPage';
 
 export function getTokenFromCookie(): string | null {
   const match = /(?:^|;\s*)access_token=([^;]+)/.exec(document.cookie);
@@ -19,25 +20,13 @@ export function ProfilePage() {
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   function closeModal() {
     setIsUserModalOpen(false);
     setIsPetModalOpen(false);
+    setIsPasswordModalOpen(false);
   }
-
-  const [billingAddress, setBillingAddress] = useState<{
-    isDefault: boolean;
-    address?: userAddress;
-  }>({
-    isDefault: false,
-    address: undefined,
-  });
-  const [shippingAddress, setShippingAddress] = useState<{
-    isDefault: boolean;
-    address?: userAddress;
-  }>({
-    isDefault: false,
-    address: undefined,
-  });
 
   const refreshCustomer = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -48,31 +37,6 @@ export function ProfilePage() {
 
     try {
       const customerInfo = await fetchProfile(token);
-
-      if (customerInfo.defaultBillingAddressId) {
-        const billing = customerInfo.addresses.find(
-          (address) => address.id === customerInfo.defaultBillingAddressId
-        );
-        setBillingAddress({ isDefault: true, address: billing });
-      } else {
-        const billing = customerInfo.addresses.find(
-          (address) => address.id === customerInfo.billingAddressIds[0]
-        );
-        setBillingAddress({ isDefault: false, address: billing });
-      }
-
-      if (customerInfo.defaultShippingAddressId) {
-        const shipping = customerInfo.addresses.find(
-          (address) => address.id === customerInfo.defaultShippingAddressId
-        );
-        setShippingAddress({ isDefault: true, address: shipping });
-      } else {
-        const shipping = customerInfo.addresses.find(
-          (address) => address.id === customerInfo.shippingAddressIds[0]
-        );
-        setShippingAddress({ isDefault: false, address: shipping });
-      }
-
       setCustomer(customerInfo);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -81,6 +45,7 @@ export function ProfilePage() {
       setLoading(false);
     }
   }, [navigate]);
+  console.log(customer);
 
   useEffect(() => {
     void refreshCustomer();
@@ -91,15 +56,22 @@ export function ProfilePage() {
   return (
     <section className="w-fit m-auto flex flex-col justify-center items-center rounded-2xl bg-white">
       <h2 className="text-2xl pt-4 text-center text-jungle font-main-bd">Profile</h2>
-      {isUserModalOpen && !isPetModalOpen && customer && (
+      {isUserModalOpen && !isPetModalOpen && !isPasswordModalOpen && customer && (
         <UserModalDialog
           user={customer}
           closeModal={closeModal}
           refreshCustomer={refreshCustomer}
         />
       )}
-      {isPetModalOpen && !isUserModalOpen && customer && (
+      {isPetModalOpen && !isUserModalOpen && !isPasswordModalOpen && customer && (
         <PetModalDialog user={customer} closeModal={closeModal} refreshCustomer={refreshCustomer} />
+      )}
+      {isPasswordModalOpen && !isPetModalOpen && !isUserModalOpen && customer && (
+        <PasswordModalDialog
+          user={customer}
+          closeModal={closeModal}
+          refreshCustomer={refreshCustomer}
+        />
       )}
       {loading ? (
         <div className="text-jungle p-2 m-2">Loading...</div>
@@ -110,7 +82,7 @@ export function ProfilePage() {
             <p className="text-lg font-bold flex justify-between">
               {customer.firstName} {customer.lastName}
               <button
-                className="p-1 text-sm hover:cursor-pointer justify-self-end"
+                className="p-1 font-bold text-sm hover:cursor-pointer hover:text-gray-500"
                 onClick={() => {
                   setIsUserModalOpen(true);
                 }}
@@ -121,22 +93,14 @@ export function ProfilePage() {
             <p>{format(customer.dateOfBirth, 'dd MMMM, yyyy')}</p>
             <p>{customer.email}</p>
           </div>
-          {/*addresses block*/}
-          <div className="flex flex-col gap-2 m-2  pt-2 pb-2 pl-4 pr-4 rounded-3xl">
-            <p className="text-lg font-bold">Addresses</p>
-            <div className="flex flex-col gap-4">
-              {renderAddress('Billing', billingAddress)}
-              {renderAddress('Shipping', shippingAddress)}
-            </div>
-            <button
-              className="w-fit p-1 ml-auto mr-auto px-3 min-w-3xs bg-light-gray rounded-xl m-2 text-lg font-main font-medium hover:cursor-pointer"
-              onClick={() => {
-                void navigate('addresses');
-              }}
-            >
-              Manage addresses ➔
-            </button>
-          </div>
+          <button
+            className="w-fit p-1 ml-auto mr-auto px-3 min-w-3xs bg-light-gray rounded-xl m-2 text-lg font-main font-medium hover:cursor-pointer hover:bg-gray-300"
+            onClick={() => {
+              setIsPasswordModalOpen(true);
+            }}
+          >
+            Change password
+          </button>
           {/*pet info block*/}
           <div className="flex flex-col gap-2 m-2 bg-light-gray pt-2 pb-2 pl-4 pr-4 rounded-3xl">
             <p className="text-lg font-bold flex justify-between">
@@ -153,41 +117,43 @@ export function ProfilePage() {
             <p>{customer.custom.fields.petName}</p>
             <p>{format(customer.custom.fields.petBirthDate, 'dd MMMM, yyyy')}</p>
           </div>
+          {/*addresses block*/}
+          <div className="flex flex-col gap-2 m-2  pt-2 pb-2 pl-4 pr-4 rounded-3xl">
+            <p className="text-lg font-bold">Addresses</p>
+            <div className="flex flex-col gap-8">
+              {customer.addresses.map((address) => {
+                const isDefaultShipping = address.id === customer.defaultShippingAddressId;
+                const isDefaultBilling = address.id === customer.defaultBillingAddressId;
+                const isShipping =
+                  customer.shippingAddressIds.findIndex((id) => id === address.id) >= 0
+                    ? true
+                    : false;
+                const isBilling =
+                  customer.billingAddressIds.findIndex((id) => id === address.id) >= 0
+                    ? true
+                    : false;
+                return renderAddress({
+                  address,
+                  isDefaultShipping,
+                  isDefaultBilling,
+                  isShipping,
+                  isBilling,
+                });
+              })}
+            </div>
+            <button
+              className="w-fit p-1 ml-auto mr-auto px-3 min-w-3xs bg-light-gray rounded-xl m-2 text-lg font-main font-medium hover:cursor-pointer hover:bg-gray-300"
+              onClick={() => {
+                void navigate('addresses');
+              }}
+            >
+              Manage addresses ➔
+            </button>
+          </div>
         </div>
       ) : (
         <div>Something went wrong</div>
       )}
     </section>
-  );
-}
-
-function addressToString({
-  streetName,
-  city,
-  country,
-  postalCode,
-}: {
-  streetName: string;
-  city: string;
-  country: string;
-  postalCode: string;
-}): string {
-  const countryName = COUNTRIES_DATA.find((c) => c.code === country)?.name ?? country;
-  return `${streetName}, ${city}, ${countryName}, ${postalCode}`;
-}
-
-export function renderAddress(
-  label: string,
-  addressInfo: { isDefault: boolean; address?: userAddress }
-): ReactElement {
-  if (!addressInfo.address) return <div>{`Missing ${label} address`}</div>;
-  return (
-    <div id={addressInfo.address.id}>
-      <span className="font-bold">{label}:</span>
-      {addressInfo.isDefault && (
-        <span className="bg-light-gray ml-2 p-1 pl-2 pr-2 rounded-full text-sm">default</span>
-      )}
-      <p className="text-lg w-fit break-words">{addressToString(addressInfo.address)}</p>
-    </div>
   );
 }

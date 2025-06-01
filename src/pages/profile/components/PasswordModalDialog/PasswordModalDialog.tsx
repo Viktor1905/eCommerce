@@ -3,35 +3,27 @@ import { z } from 'zod';
 import { Path, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { customerResponse } from '../../../../api/sign-up/sign-up';
-import { userSchema } from '../../../register/registration-page-data/registrationSchema';
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import { getTokenFromCookie } from '../../ProfilePage';
-import { updateUserInfo } from '../../../../api/profile/profile';
+import { changePassword } from '../../../../api/profile/profile';
 
-type UserModalDialogProps = {
+type PasswordModalDialogProps = {
   user: customerResponse;
   closeModal: () => void;
   refreshCustomer: () => Promise<void>;
 } & React.DialogHTMLAttributes<HTMLDialogElement>;
 
-export default function UserModalDialog({
+export default function PasswordModalDialog({
   user,
   closeModal,
   refreshCustomer,
-}: UserModalDialogProps) {
-  const userInfo = [
-    { title: 'first name', id: 'firstName', type: 'text', required: false, value: user.firstName },
-    { title: 'last name', id: 'lastName', type: 'text', required: false, value: user.lastName },
-    {
-      title: 'date of birth',
-      id: 'dateOfBirth',
-      type: 'date',
-      required: false,
-      value: user.dateOfBirth,
-    },
-    { title: 'email', id: 'email', type: 'text', required: false, value: user.email },
+}: PasswordModalDialogProps) {
+  const userPassword = [
+    { title: 'current password', id: 'currentPassword', type: 'password', required: true },
+    { title: 'new password', id: 'newPassword', type: 'password', required: true },
+    { title: 'confirm new password', id: 'confirmPassword', type: 'password', required: true },
   ] satisfies {
-    id: Path<UserFields>;
+    id: Path<PasswordFields>;
     title: string;
     type: string;
     required?: boolean;
@@ -54,12 +46,8 @@ export default function UserModalDialog({
 
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleValidSubmit = async (data: UserFields) => {
-    const hasChanges =
-      data.firstName !== user.firstName ||
-      data.lastName !== user.lastName ||
-      data.dateOfBirth !== user.dateOfBirth ||
-      data.email !== user.email;
+  const handleValidSubmit = async (data: PasswordFields) => {
+    const hasChanges = data.newPassword !== '' && data.currentPassword !== '';
     if (!hasChanges) {
       closeModal();
       return;
@@ -67,19 +55,14 @@ export default function UserModalDialog({
 
     try {
       setSubmitError('');
-      const updates: Partial<UserFields> = {};
-
-      if (data.firstName !== user.firstName) updates.firstName = data.firstName;
-      if (data.lastName !== user.lastName) updates.lastName = data.lastName;
-      if (data.dateOfBirth !== user.dateOfBirth) updates.dateOfBirth = data.dateOfBirth;
-      if (data.email !== user.email) updates.email = data.email;
 
       const token = getTokenFromCookie();
       if (!token) throw new Error('Something went wrong, please try again later'); // no token
-      const updatePetResult = await updateUserInfo({
+      const updatePetResult = await changePassword({
         customer: user,
         token: token,
-        ...updates,
+        newPassword: data.newPassword,
+        currentPassword: data.currentPassword,
       });
       console.log('ok:', updatePetResult);
       await refreshCustomer();
@@ -96,9 +79,9 @@ export default function UserModalDialog({
     handleSubmit,
     control,
     formState: { errors, isValid, isSubmitting },
-  } = useForm<UserFields>({
+  } = useForm<PasswordFields>({
     mode: 'all',
-    resolver: zodResolver(fullUserSchema),
+    resolver: zodResolver(newPasswordSchema),
   });
   return (
     <div
@@ -120,20 +103,19 @@ export default function UserModalDialog({
           &times;
         </button>
         <form
-          className="flex flex-col gap-2 p-2 items-center"
           onSubmit={(e) => {
             e.preventDefault();
             void handleSubmit(handleValidSubmit)(e);
           }}
         >
           <FieldsetBlock
-            title={'Edit user information'}
-            content={userInfo}
+            title={'Change password'}
+            content={userPassword}
             register={register}
             control={control}
             errors={errors}
+            hint={'please enter your current password'}
           />
-
           <button
             disabled={!isValid || isSubmitting}
             type="submit"
@@ -142,7 +124,7 @@ export default function UserModalDialog({
               ' hover:cursor-pointer hover:bg-jungle/90 disabled:opacity-60 disabled:cursor-not-allowed'
             }
           >
-            {isSubmitting ? 'Loading...' : 'Save Changes'}
+            {isSubmitting ? 'Loading...' : 'Change password'}
           </button>
           <p className="text-coral text-sm w-full text-center">{submitError ?? '\u00A0'}</p>
         </form>
@@ -151,32 +133,35 @@ export default function UserModalDialog({
   );
 }
 
-const newLoginSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email is required')
-    .superRefine((val, ctx) => {
-      if (val !== val.trim()) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Email must not have leading or trailing spaces',
-        });
-      }
-      if (!val.includes('@')) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Email must contain an '@' symbol",
-        });
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Email must contain a domain name (e.g., example.com)',
-        });
-      }
-    }),
-});
+export const newPasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .refine((val) => !val || !/\s/.test(val), 'Please remove all spaces'),
+    newPassword: z
+      .string()
+      .refine((val) => !val || val.length >= 8, 'New password must be at least 8 characters')
+      .refine((val) => !val || /[A-Z]/.test(val), 'New password must include an uppercase letter')
+      .refine((val) => !val || /[a-z]/.test(val), 'New password must include a lowercase letter')
+      .refine((val) => !val || /[0-9]/.test(val), 'New password must include a number')
+      .refine((val) => !val || !/\s/.test(val), 'New password must not contain spaces'),
+    confirmPassword: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.newPassword && !data.currentPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['currentPassword'],
+        message: 'Current password is required to set a new password',
+      });
+    }
+    if (data.newPassword && data.confirmPassword !== data.newPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['confirmPassword'],
+        message: 'Passwords do not match',
+      });
+    }
+  });
 
-const fullUserSchema = userSchema.merge(newLoginSchema);
-
-type UserFields = z.infer<typeof fullUserSchema>;
+type PasswordFields = z.infer<typeof newPasswordSchema>;

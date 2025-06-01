@@ -107,6 +107,7 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
           &times;
         </button>
         <form
+          className="relative"
           onSubmit={(e) => {
             e.preventDefault();
             void handleSubmit(handleValidSubmit)(e);
@@ -123,13 +124,14 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
           <button
             disabled={!isValid || isSubmitting}
             type="submit"
-            className="w-fit min-w-3xs bg-jungle text-white px-4 py-2 rounded-xl text-lg font-main hover:cursor-pointer hover:bg-jungle/90"
+            className={
+              'w-fit min-w-3xs bg-jungle text-white px-4 p-2 m-4 rounded-xl text-lg font-main' +
+              ' hover:cursor-pointer hover:bg-jungle/90 disabled:opacity-60 disabled:cursor-not-allowed'
+            }
           >
-            {isSubmitting ? 'Loading...' : 'Submit!'}
+            {isSubmitting ? 'Loading...' : 'Save Changes'}
           </button>
-          {submitError && (
-            <p className="text-coral text-sm p-1 w-[300px] text-center">{submitError}</p>
-          )}
+          <p className="text-coral text-sm w-full text-center">{submitError ?? '\u00A0'}</p>
         </form>
       </div>
     </div>
