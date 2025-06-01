@@ -9,28 +9,11 @@ import { useForm } from 'react-hook-form';
 import FieldsetBlock, { FieldDescriptor } from '../../../components/FieldsetBlock/FieldsetBlock';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-export function getRefreshTokenFromCookie(): string | null {
-  const match = /(?:^|;\s*)refresh_token=([^;]+)/.exec(document.cookie);
-  return match ? match[1] : null;
-}
-
 type AddressModalDialogProps = {
-  address?: userAddress | null;
+  address?: userAddress;
   customer: customerResponse;
   closeModal: () => void;
 } & React.DialogHTMLAttributes<HTMLDialogElement>;
-
-//const addressInfo = [
-//  { title: 'Street', id: 'streetName', type: 'text', required: true },
-//  { title: 'City', id: 'city', type: 'text', required: true },
-//  { title: 'Postal Code', id: 'postalCode', type: 'text', required: true },
-//] satisfies {
-//  id: Path<AddressFields>;
-//  title: string;
-//  type: string;
-//  required?: boolean;
-//  value?: string;
-//}[];
 
 const addressSchema = z.object({
   streetName: z.string().min(1, 'Street name must be at least 1 character'),
@@ -48,7 +31,6 @@ export default function AddressModalDialog({
   customer,
   closeModal,
 }: AddressModalDialogProps) {
-  console.log(address);
   useEffect(() => {
     // Disable scroll
     document.body.style.overflow = 'hidden';
@@ -65,7 +47,13 @@ export default function AddressModalDialog({
   }
 
   const addressContent = [
-    { id: 'streetName', title: 'Street', type: 'text', required: true, value: address?.streetName },
+    {
+      id: 'streetName',
+      title: 'Street',
+      type: 'text',
+      required: true,
+      value: address?.streetName,
+    },
     { id: 'city', title: 'City', type: 'text', required: true, value: address?.city },
     {
       id: 'postalCode',
@@ -82,7 +70,6 @@ export default function AddressModalDialog({
       value: address?.country,
     },
   ] satisfies FieldDescriptor<keyof AddressFields, AddressFields>[];
-  console.log(addressContent);
 
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -142,18 +129,15 @@ export default function AddressModalDialog({
             control={control}
             errors={errors}
           />
-
           <button
             disabled={!isValid || isSubmitting}
             type="submit"
             onClick={closeModal}
-            className="w-fit min-w-3xs bg-jungle text-white px-4 py-2 rounded-xl text-lg font-main hover:cursor-pointer hover:bg-jungle/90"
+            className="w-fit min-w-3xs bg-jungle text-white px-4 p-2 m-4  rounded-xl text-lg font-main hover:cursor-pointer hover:bg-jungle/90"
           >
-            {isSubmitting ? 'Loading...' : 'Submit!'}
+            {isSubmitting ? 'Loading...' : address ? 'Submit changes' : 'Save new address'}
           </button>
-          {submitError && (
-            <p className="text-coral text-sm p-1 w-[300px] text-center">{submitError}</p>
-          )}
+          <p className="text-coral text-sm w-full text-center">{submitError ?? '\u00A0'}</p>{' '}
         </form>
       </div>
     </div>
