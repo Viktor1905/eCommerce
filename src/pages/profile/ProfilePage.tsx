@@ -45,7 +45,6 @@ export function ProfilePage() {
       setLoading(false);
     }
   }, [navigate]);
-  console.log(customer);
 
   useEffect(() => {
     void refreshCustomer();

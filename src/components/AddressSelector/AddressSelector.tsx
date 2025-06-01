@@ -10,6 +10,7 @@ interface CustomDropdownProps {
   addresses: userAddress[];
   validAddressesID: string[];
   label: string;
+  onSubmit?: (address: userAddress) => Promise<void>;
 }
 
 export default function CustomAddressDropdown({
@@ -20,6 +21,7 @@ export default function CustomAddressDropdown({
   addresses,
   validAddressesID,
   label,
+  onSubmit,
 }: CustomDropdownProps) {
   const selectedAddress = addresses.find((a) => a.id === selectedAddressID);
   const [open, setOpen] = useState(false);
@@ -44,22 +46,27 @@ export default function CustomAddressDropdown({
   return (
     <div className="relative flex flex-col max-w-full w-full">
       <label
-        htmlFor={id}
         className="p-1 capitalize text-goldenrod font-medium font-main flex flex-row "
+        htmlFor={id}
       >
         {required && <span className="text-red-700">*</span>}
         {label}
       </label>
-
-      <div
+      <input
         id={id}
+        className="hidden disabled"
+        readOnly
+        value={pickedAddress ? pickedAddress.id : ''}
+      />
+      <div
         role="button"
         onClick={() => {
           setOpen(!open);
         }}
-        className="p-2 bg-khaki text-olive rounded-lg font-main text-left hover:cursor-pointer w-full max-w-full truncate whitespace-nowrap"
+        className="p-2 relative bg-khaki text-olive rounded-lg font-main text-left hover:cursor-pointer w-full max-w-full truncate whitespace-nowrap"
       >
         {pickedAddress ? addressToString(pickedAddress) : 'Select an address'}
+        <div className="absolute right-2 top-2 text-olive">{!open ? '▼' : '▲'}</div>
       </div>
 
       {open && (
@@ -72,7 +79,7 @@ export default function CustomAddressDropdown({
             .map((address) => (
               <li
                 key={address.id}
-                className="py-2 px-2 hover:bg-light-gray cursor-pointer"
+                className="py-2 px-2 hover:bg-gray-400 cursor-pointer  rounded-lg"
                 onClick={() => {
                   setPickedAddress(address);
                   setOpen(false);
@@ -89,7 +96,17 @@ export default function CustomAddressDropdown({
       <button
         disabled={isSubmitting}
         onClick={() => {
-          setIsSubmitting(true);
+          void (async () => {
+            if (!pickedAddress || !onSubmit) return;
+            setIsSubmitting(true);
+            try {
+              await onSubmit(pickedAddress);
+            } catch (e) {
+              console.error('Failed to set default address:', e);
+            } finally {
+              setIsSubmitting(false);
+            }
+          })();
         }}
         className={
           'w-fit p-1 ml-auto mr-auto px-3 text-olive min-w-3xs bg-light-gray ' +

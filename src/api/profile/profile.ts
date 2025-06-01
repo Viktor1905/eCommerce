@@ -220,3 +220,48 @@ const ErrorResponseSchema = z.object({
     })
   ),
 });
+
+export async function setDefaultAddress({
+  addressID,
+  defaultAddressType,
+  customer,
+  token,
+}: {
+  addressID: string;
+  defaultAddressType: string;
+  customer: customerResponse;
+  token: string;
+}) {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const body = {
+    version,
+    actions: [
+      {
+        action: defaultAddressType,
+        addressId: addressID,
+      },
+    ],
+  };
+
+  const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.log('Raw response:', raw);
+    const rawJSON = ErrorResponseSchema.safeParse(raw);
+    throw new Error(rawJSON.data?.message);
+  }
+
+  return parsed.data;
+}
