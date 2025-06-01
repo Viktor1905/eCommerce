@@ -125,7 +125,7 @@ export function ImageZoom({ src }: { src: string }) {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    container.style.backgroundPosition = `${x.toString()}% ${y.toString()}%`;
+    container.style.backgroundPosition = `${String(x)}% ${String(y)}%`;
   };
 
   const resetPosition = () => {
