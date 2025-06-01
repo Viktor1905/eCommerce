@@ -11,7 +11,7 @@ export const CountryCodeSchema = z
   });
 
 const nameRegex = /^[A-Za-z]+(?: [A-Za-z]+)*$/;
-const userSchema = z.object({
+export const userSchema = z.object({
   firstName: z
     .string()
     .min(1, 'First name must be at least 1 character')
@@ -38,7 +38,7 @@ const userSchema = z.object({
   }, 'You must be at least 13 years old'),
 });
 
-const loginSchema = z.object({
+export const loginSchema = z.object({
   email: z
     .string()
     .min(1, 'Email is required')
@@ -74,7 +74,7 @@ const loginSchema = z.object({
     }),
 });
 
-const petSchema = z.object({
+export const petSchema = z.object({
   petName: z
     .string()
     .min(1, 'First name must be at least 1 character')

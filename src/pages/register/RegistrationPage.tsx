@@ -8,8 +8,8 @@ export default function RegistrationPage() {
   const navigate = useNavigate();
   useEffect(() => {
     const token = getTokenFromCookie();
-    if (!token) {
-      void navigate('/login', { replace: true });
+    if (token) {
+      void navigate('/', { replace: true });
       return;
     }
   }, [navigate]);

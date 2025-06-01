@@ -91,12 +91,13 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
                 <div
                   tabIndex={0}
                   ref={pickerRef}
-                  className="absolute z-10 w-fit h-fit outline-none mt-1 -translate-y-1"
+                  className="absolute -top-24 z-10 w-fit h-fit outline-none mt-1 -translate-y-1"
                 >
                   <DayPicker
                     mode="single"
                     disabled={{ before: new Date(1930, 1, 1), after: new Date() }}
                     selected={selected}
+                    defaultMonth={selected}
                     onSelect={(day) => {
                       if (day) {
                         const formatted = format(day, 'yyyy-MM-dd');
