@@ -9,9 +9,9 @@ export interface userAddress {
   streetName: string;
   postalCode: string;
   city: string;
-  id?: string | undefined;
-  firstName?: string | undefined;
-  lastName?: string | undefined;
+  id: string;
+  firstName?: string;
+  lastName?: string;
   country: string;
 }
 
@@ -232,7 +232,7 @@ export const CustomerResponseSchema = z
     dateOfBirth: z.string(),
     addresses: z.array(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         streetName: z.string(),

@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { API_CONFIG } from '../login/login';
+import { getUserTokens, UsersToken } from '../login/user-tokens';
 import {
   API_URL,
   CUSTOMER_ENDPOINT,
@@ -88,7 +91,6 @@ export async function updatePetInfo({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.error('Invalid response structure:', parsed.error);
     console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //Sign-up failed: Invalid response structure
   }
@@ -156,10 +158,65 @@ export async function updateUserInfo({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.error('Invalid response structure:', parsed.error);
     console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later');
   }
 
   return parsed.data;
 }
+
+export async function changePassword({
+  customer,
+  token,
+  currentPassword,
+  newPassword,
+}: {
+  customer: customerResponse;
+  token: string;
+  currentPassword: string;
+  newPassword: string;
+}): Promise<customerResponse> {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const response = await fetch(`${CUSTOMER_ENDPOINT}/password`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: customerId,
+      version: version,
+      currentPassword,
+      newPassword,
+    }),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    const rawJSON = ErrorResponseSchema.safeParse(raw);
+    throw new Error(rawJSON.data?.message);
+  }
+
+  const loginData = { email: customer.email, password: newPassword };
+  const usersToken: UsersToken = await getUserTokens(API_CONFIG, loginData);
+  document.cookie = `refresh_token=${usersToken.refresh_token}; path=/; max-age=3600; secure; samesite=strict`;
+  document.cookie = `access_token=${usersToken.access_token}; path=/; max-age=3600; secure; samesite=strict`;
+
+  return parsed.data;
+}
+
+const ErrorResponseSchema = z.object({
+  statusCode: z.number(),
+  message: z.string(),
+  errors: z.array(
+    z.object({
+      code: z.string(),
+      message: z.string(),
+    })
+  ),
+});
