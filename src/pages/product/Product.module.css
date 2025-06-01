@@ -72,6 +72,7 @@
 }
 
 .products-image {
+  max-height: 500px;
   cursor: pointer;
   transition:
   box-shadow 0.2s ease;

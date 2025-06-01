@@ -71,25 +71,24 @@
 }
 
 .main-image-modal {
+  position: relative;
+  width: 100%;
+  height: 500px;
   display: flex;
   justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .image-modal {
   display: block;
   width: 70%;
   max-height: 700px;
-  height: auto;
   border-radius: 16px;
   object-fit: contain;
   object-position: center;
   transition: transform 0.2s ease;
   z-index: 2;
-}
-
-.image-modal:hover {
-  transform: scale(1.15);
-  cursor: pointer;
 }
 
 .modal-arrow-left,
@@ -136,6 +135,23 @@
   width: 90px;
   margin: 40px 0 25px 0;
   cursor: pointer;
+}
+
+.zoom-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: background-position 0.1s ease;
+  border-radius: 8px;
+  cursor: zoom-in;
+}
+
+.zoom-container:hover {
+  background-size: 200%;
 }
 
 @media (max-width: 1330px) {
