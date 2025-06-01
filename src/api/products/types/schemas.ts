@@ -59,12 +59,10 @@ export const PriceSchema = z.object({
 export const ImageSchema = z.object({
   url: z.string(),
   label: z.string().optional(),
-  dimensions: z
-    .object({
-      w: z.number(),
-      h: z.number(),
-    })
-    .optional(),
+  dimensions: z.object({
+    w: z.number(),
+    h: z.number(),
+  }),
 });
 
 export const AttributeSchema = z.object({
@@ -79,6 +77,10 @@ export const MasterVariantSchema = z.object({
   prices: z.array(PriceSchema),
   assets: z.array(z.unknown()),
   images: z.array(ImageSchema),
+});
+
+const SearchKeywordSchema = z.object({
+  text: z.string(),
 });
 
 export const ProductProjectionSchema = z
@@ -101,7 +103,7 @@ export const ProductProjectionSchema = z
     categoryOrderHints: z.record(z.unknown()).optional(),
     masterVariant: MasterVariantSchema,
     variants: z.array(MasterVariantSchema),
-    searchKeywords: z.record(z.unknown()).optional(),
+    searchKeywords: z.record(z.array(SearchKeywordSchema)),
     hasStagedChanges: z.boolean(),
     published: z.boolean(),
     createdAt: z.string(),

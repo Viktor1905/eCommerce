@@ -5,10 +5,10 @@ import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext
 import { logoutUser } from '../../api/logout/logout';
 import { fetchProductsByQuery } from '../../api/products/search';
 
-// import { useDispatch } from 'react-redux';
-// import { setFilteredProducts } from '../../store/slices/catalog-slice';
+import { useDispatch } from 'react-redux';
+import { setFilteredProducts } from '../../store/slice/catalog-slice';
 import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
-// import type { AppDispatch } from '../../store/store';
+import type { AppDispatch } from '../../store/store';
 
 const UserContext = createContext<string | null>(null);
 
@@ -105,7 +105,7 @@ function Logo() {
 
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
-  // const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
   const [isOpen, setIsOpen] = useState(true);
 
   async function handleSearch(): Promise<void> {
@@ -114,14 +114,9 @@ function SearchPanel() {
 
     try {
       const raw = await fetchProductsByQuery(value);
-      const parsed = ProductProjectionResponseSchema.safeParse(raw);
+      const parsed = ProductProjectionResponseSchema.parse(raw);
 
-      if (!parsed.success) {
-        console.error('Error', parsed.error);
-        return;
-      }
-
-      // dispatch(setFilteredProducts(parsed.data));
+      dispatch(setFilteredProducts(parsed));
     } catch (error) {
       console.error('Search failed:', error);
     }
