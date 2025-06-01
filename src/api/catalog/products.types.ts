@@ -72,7 +72,7 @@ export interface Image {
 
 export interface Attribute {
   name: string;
-  value: boolean | number | string;
+  value: boolean | number | string | { key: string; label: string };
 }
 
 export type SearchKeywords = Record<string, SearchKeyword[]>;
