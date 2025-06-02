@@ -164,15 +164,26 @@ export function renderAddresses(
     const isDefaultBilling = customer.defaultBillingAddressId === address.id;
     const isDefaultShipping = customer.defaultShippingAddressId === address.id;
     return (
-      <div key={address.id} className="flex no-wrap gap-2 justify-between text-olive">
-        {renderAddress({
-          isShipping,
-          isBilling,
-          isDefaultBilling,
-          isDefaultShipping,
-          address,
-        })}
-        <div className="flex flex-col  justify-between">
+      <div key={address.id} className="flex no-wrap gap-2 justify-between text-olive max-w-full">
+        <div className="w-4/5">
+          {renderAddress({
+            isShipping,
+            isBilling,
+            isDefaultBilling,
+            isDefaultShipping,
+            address,
+          })}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <button
+            onClick={() => {
+              void removeAddressCallback(address);
+            }}
+            className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
+          >
+            ✖️
+          </button>
           <button
             onClick={() => {
               editAddressCallback(address);
@@ -180,14 +191,6 @@ export function renderAddresses(
             className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
           >
             edit
-          </button>
-          <button
-            onClick={() => {
-              void removeAddressCallback(address);
-            }}
-            className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
-          >
-            delete
           </button>
         </div>
       </div>
@@ -203,9 +206,9 @@ export function renderAddress(addressInfo: {
   address: userAddress;
 }): ReactElement {
   return (
-    <div key={addressInfo.address.id}>
-      <p className="text-lg w-fit break-words">{addressToString(addressInfo.address)}</p>
-      <div className="flex flex-row flex-wrap gap-2">
+    <div key={addressInfo.address.id} className="max-w-full">
+      <p className="text-lg break-words max-w-full">{addressToString(addressInfo.address)}</p>
+      <div className="flex flex-row flex-wrap gap-2 w-full">
         {addressInfo.isShipping && (
           <div className="bg-light-gray p-1 pl-2 pr-2 rounded-full text-sm w-fit">shipping</div>
         )}
