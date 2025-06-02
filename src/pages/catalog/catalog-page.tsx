@@ -62,7 +62,7 @@ export function CatalogPage(): ReactElement {
         }
       >
         <div className="col-span-5">
-          <CategoryBar />
+          <CategoryBar onFilterSubmit={onFilterSubmit} onResetFilters={onResetFilters} />
         </div>
         <div className="col-span-1 max-[900px]:hidden">
           {!showBurger && (
