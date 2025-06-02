@@ -15,7 +15,6 @@ export default function InputElement<TFieldName extends string>({
   title,
   id,
   type,
-  value,
   error,
   register,
   required,
@@ -41,7 +40,6 @@ export default function InputElement<TFieldName extends string>({
         <input
           type={inputType}
           id={id}
-          defaultValue={value}
           placeholder="Start typing..."
           className={
             `rounded-lg text-olive font-main ` +

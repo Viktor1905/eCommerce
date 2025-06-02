@@ -1,21 +1,16 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
 import { COUNTRIES_DATA } from './countries-data/countries-data';
+import { CountryCode } from '../../api/sign-up/sign-up';
 
 type CountrySelectorProps = {
   error?: string;
   id: string;
   register?: UseFormRegisterReturn;
   required?: boolean;
-  value?: string;
+  value?: CountryCode;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
-export default function CountrySelector({
-  error,
-  id,
-  register,
-  required,
-  value,
-}: CountrySelectorProps) {
+export default function CountrySelector({ error, id, register, required }: CountrySelectorProps) {
   return (
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
@@ -27,7 +22,6 @@ export default function CountrySelector({
         </label>
         <select
           className="capitalize p-1 bg-khaki rounded-lg text-olive min-w-[300px] inline-block hover:cursor-pointer"
-          defaultValue={value ?? ''}
           id={id}
           name={id}
           {...register}

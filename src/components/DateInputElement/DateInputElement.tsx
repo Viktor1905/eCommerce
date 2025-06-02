@@ -78,7 +78,7 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
             <>
               <div
                 className={
-                  `rounded-lg text-olive font-main ` +
+                  `rounded-lg text-olive font-main text-left ` +
                   'p-1 w-[300px] hover:cursor-pointer focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
                 }
                 onClick={() => {

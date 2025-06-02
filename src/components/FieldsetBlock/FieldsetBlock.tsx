@@ -35,47 +35,49 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
         {hint && <p className="text-base text-goldenrod">{hint}</p>}
       </legend>
 
-      {content
-        .filter((property) => property.id !== 'country')
-        .map((property) => {
-          const id = property.id;
-          const isDateField = String(id).toLowerCase().includes('date');
+      {content.map((property) => {
+        const { id, type, title, required, value } = property;
+        const error = errors[id]?.message as string | undefined;
 
-          return isDateField ? (
-            <DateInputElement
-              key={String(id)}
-              title={property.title}
-              error={errors[id]?.message as string | undefined}
+        if (type === 'country') {
+          return (
+            <CountrySelector
+              key={id}
               id={id}
-              type={property.type}
-              control={control}
               register={register(id)}
-              required={property.required}
-              value={property.value}
-            />
-          ) : (
-            <InputElement
-              value={property.value}
-              key={String(id)}
-              title={property.title}
-              id={String(id)}
-              type={property.type}
-              register={register(id)}
-              error={errors[id]?.message as string | undefined}
-              required={property.required}
+              error={error}
+              required={required}
             />
           );
-        })}
+        }
 
-      {title.toLowerCase().includes('address') && (
-        <CountrySelector
-          value={content.find((property) => property.id === 'country')?.value}
-          id={`${title.split(' ')[0]}Country`}
-          register={register(`${title.split(' ')[0]}Country` as Path<TFieldValues>)}
-          error={errors[`${title.split(' ')[0]}Country` as Path<TFieldValues>]?.message as string}
-          required={true}
-        />
-      )}
+        const isDateField = String(id).toLowerCase().includes('date');
+
+        return isDateField ? (
+          <DateInputElement
+            key={id}
+            title={title}
+            error={error}
+            id={id}
+            type={type}
+            control={control}
+            register={register(id)}
+            required={required}
+            value={value}
+          />
+        ) : (
+          <InputElement
+            value={value}
+            key={id}
+            title={title}
+            id={id}
+            type={type}
+            register={register(id)}
+            error={error}
+            required={required}
+          />
+        );
+      })}
     </fieldset>
   );
 }
