@@ -34,7 +34,7 @@ export function CatalogPage(): ReactElement {
   };
 
   useEffect(() => {
-    void dispatch(loadCatalog());
+    if (!products) void dispatch(loadCatalog());
   }, [filters, sort]);
 
   useEffect(() => {

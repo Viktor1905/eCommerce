@@ -5,10 +5,10 @@ import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext
 import { logoutUser } from '../../api/logout/logout';
 import { fetchProductsByQuery } from '../../api/products/search';
 
-import { useDispatch } from 'react-redux';
-import { setFilteredProducts } from '../../store/slice/catalog-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CatalogState, loadCatalog, setFilteredProducts } from '../../store/slice/catalog-slice';
 import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
-import type { AppDispatch } from '../../store/store';
+import type { AppDispatch, RootState } from '../../store/store';
 
 const UserContext = createContext<string | null>(null);
 
@@ -106,13 +106,16 @@ function Logo() {
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const { products } = useSelector((s: RootState): CatalogState => s.catalog);
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
 
   async function handleSearch(): Promise<void> {
     const value = inputRef.current?.value.trim();
     if (!value) return;
 
     try {
+      if (!products) await dispatch(loadCatalog());
       const raw = await fetchProductsByQuery(value);
       const parsed = ProductProjectionResponseSchema.parse(raw);
 
@@ -131,6 +134,7 @@ function SearchPanel() {
         className={styles['menu-search']}
         onClick={() => {
           setIsOpen(!isOpen);
+          void navigate('/catalog');
           void handleSearch();
         }}
       >
@@ -145,6 +149,7 @@ function SearchPanel() {
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
             void handleSearch();
+            void navigate('/catalog');
           }
         }}
       ></input>
