@@ -1,5 +1,6 @@
 import styles from './ProductImageSlider.module.css';
 import { useLayoutEffect, useState } from 'react';
+import { useRef } from 'react';
 
 interface ImageItem {
   url: string;
@@ -66,11 +67,7 @@ export function ProductImageSlider({
         <div className={styles['description-modal']}>{names['en-US']}</div>
         <div className={styles['images-modal']}>
           <div className={styles['main-image-modal']}>
-            <img
-              className={styles['image-modal']}
-              src={mainImage || images[0].url}
-              alt={images[0].label}
-            ></img>
+            <ImageZoom src={mainImage || mainImageUrl} />
             <span
               className={`material-symbols-outlined ${styles['modal-arrow-left']}`}
               onClick={() => {
@@ -114,5 +111,37 @@ export function ProductImageSlider({
         </div>
       </div>
     </div>
+  );
+}
+
+export function ImageZoom({ src }: { src: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    container.style.backgroundPosition = `${String(x)}% ${String(y)}%`;
+  };
+
+  const resetPosition = () => {
+    const container = containerRef.current;
+    if (container) {
+      container.style.backgroundPosition = 'center';
+    }
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className={styles['zoom-container']}
+      style={{ backgroundImage: `url(${src})` }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={resetPosition}
+    />
   );
 }
