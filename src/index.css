@@ -26,8 +26,8 @@
   --font-additional: 'Marmelad', 'sans-serif';
   --font-main-bd: 'Rubik-bold', 'sans-serif';
   color-scheme: light dark;
-  color: #ffffffde;
-  background-color: #242424;
+  color: black;
+  background-color: #ffffffde;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
