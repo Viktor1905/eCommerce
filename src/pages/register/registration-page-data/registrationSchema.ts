@@ -92,10 +92,14 @@ export const petSchema = z.object({
 });
 
 export const postalCodeRegex = /^[A-Za-z0-9]+([ -][A-Za-z0-9]+)*$/;
+export const cityRegex = /^\p{L}+(?:[ \-]\p{L}+)*$/u;
 
 const shippingAddressSchema = z.object({
   shippingStreetName: z.string().min(1, 'Street name must be at least 1 character'),
-  shippingCity: z.string().min(1, 'City name must be at least 1 character'),
+  shippingCity: z
+    .string()
+    .min(1, 'City name must be at least 1 character')
+    .regex(cityRegex, 'Please enter city in valid format (ex. Riga, New York, Rostov-na-Donu'),
   shippingPostalCode: z
     .string()
     .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)'),
@@ -104,7 +108,11 @@ const shippingAddressSchema = z.object({
 
 const billingAddressSchema = z.object({
   billingStreetName: z.string().min(1, 'Street name must be at least 1 character').optional(),
-  billingCity: z.string().min(1, 'City name must be at least 1 character').optional(),
+  billingCity: z
+    .string()
+    .min(1, 'City name must be at least 1 character')
+    .regex(cityRegex, 'Please enter city in valid format (ex. Riga, New York, Rostov-na-Donu')
+    .optional(),
   billingPostalCode: z
     .string()
     .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)')

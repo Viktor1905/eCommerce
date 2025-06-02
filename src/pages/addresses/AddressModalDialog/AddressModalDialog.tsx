@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { CountryCode, customerResponse, userAddress } from '../../../api/sign-up/sign-up';
 import { z } from 'zod';
 import {
+  cityRegex,
   CountryCodeSchema,
   postalCodeRegex,
 } from '../../register/registration-page-data/registrationSchema';
@@ -25,7 +26,10 @@ type AddressModalDialogProps = {
 const addressSchema = z
   .object({
     streetName: z.string().min(1, 'Street name must be at least 1 character'),
-    city: z.string().min(1, 'City name must be at least 1 character'),
+    city: z
+      .string()
+      .min(1, 'City name must be at least 1 character')
+      .regex(cityRegex, 'Please enter city in valid format (ex. Riga, New York, Rostov-na-Donu'),
     postalCode: z
       .string()
       .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)'),
