@@ -25,5 +25,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "vite.config.ts", "vitest.setup.ts", "vitest.config.ts", "src/i18n.ts"],
+  "include": ["src", "vite.config.ts", "vitest.setup.ts", "vitest.config.ts",
+    "src/pattern-units/i18n.ts"
+  ],
 }
