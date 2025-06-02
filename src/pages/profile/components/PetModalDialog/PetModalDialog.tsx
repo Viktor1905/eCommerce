@@ -7,6 +7,7 @@ import { petSchema } from '../../../register/registration-page-data/registration
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import { updatePetInfo } from '../../../../api/profile/profile';
 import { getTokenFromCookie } from '../../ProfilePage';
+import { toast } from 'react-toastify';
 
 type PetModalDialogProps = {
   user: customerResponse;
@@ -72,6 +73,9 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
         });
         console.log('ok: ', updatePetResult);
         await refreshCustomer();
+        toast.success('Pet updated!', {
+          position: 'top-right',
+        });
         closeModal();
       } catch (error) {
         const message =

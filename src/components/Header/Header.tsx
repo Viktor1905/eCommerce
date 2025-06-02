@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { logoutUser } from '../../api/logout/logout';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { fetchProfile } from '../../api/profile/profile';
+import { toast, ToastContainer } from 'react-toastify';
 
 const UserContext = createContext<string | null>(null);
 
@@ -149,6 +150,7 @@ function MenuHeader() {
         <Favorite />
         <Cart />
       </ul>
+      <ToastContainer className={'w-0 h-0'} />
     </nav>
   );
 }
@@ -164,6 +166,9 @@ function Login() {
 
       document.cookie = 'refresh_token=; Max-Age=0; path=/';
       document.cookie = 'access_token=; Max-Age=0; path=/';
+      toast.success('Logged out!', {
+        position: 'top-right',
+      });
       void navigate('/login');
       window.dispatchEvent(new CustomEvent('auth-update'));
     } else {

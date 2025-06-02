@@ -7,6 +7,7 @@ import { userSchema } from '../../../register/registration-page-data/registratio
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import { getTokenFromCookie } from '../../ProfilePage';
 import { updateUserInfo } from '../../../../api/profile/profile';
+import { toast } from 'react-toastify';
 
 type UserModalDialogProps = {
   user: customerResponse;
@@ -76,13 +77,17 @@ export default function UserModalDialog({
 
       const token = getTokenFromCookie();
       if (!token) throw new Error('Something went wrong, please try again later'); // no token
-      const updatePetResult = await updateUserInfo({
+      await updateUserInfo({
         customer: user,
         token: token,
         ...updates,
       });
-      console.log('ok:', updatePetResult);
       await refreshCustomer();
+      toast.success('Information updated!', {
+        position: 'top-right',
+      });
+
+      window.dispatchEvent(new CustomEvent('auth-update'));
       closeModal();
     } catch (error) {
       const message =

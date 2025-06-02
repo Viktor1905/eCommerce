@@ -5,6 +5,7 @@ import { fetchProfile, removeAddress, setDefaultAddress } from '../../api/profil
 import { customerResponse, userAddress } from '../../api/sign-up/sign-up';
 import AddressModalDialog from './AddressModalDialog/AddressModalDialog';
 import AddressSelector, { addressToString } from '../../components/AddressSelector/AddressSelector';
+import { toast } from 'react-toastify';
 
 export default function AddressesPage() {
   const navigate = useNavigate();
@@ -75,6 +76,9 @@ export default function AddressesPage() {
         token,
       });
       await refreshCustomer();
+      toast.success('Changes saved!', {
+        position: 'top-right',
+      });
     } catch (err) {
       console.error(err);
       // optionally show toast or inline error

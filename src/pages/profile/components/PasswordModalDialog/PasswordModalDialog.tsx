@@ -6,6 +6,7 @@ import { customerResponse } from '../../../../api/sign-up/sign-up';
 import FieldsetBlock from '../../../../components/FieldsetBlock/FieldsetBlock';
 import { getTokenFromCookie } from '../../ProfilePage';
 import { changePassword } from '../../../../api/profile/profile';
+import { toast } from 'react-toastify';
 
 type PasswordModalDialogProps = {
   user: customerResponse;
@@ -66,6 +67,9 @@ export default function PasswordModalDialog({
       });
       console.log('ok:', updatePetResult);
       await refreshCustomer();
+      toast.success('Password changed!', {
+        position: 'top-right',
+      });
       closeModal();
     } catch (error) {
       const message =

@@ -13,6 +13,7 @@ import { addAddress, changeAddress } from '../../../api/profile/profile';
 import PostalCodes from 'postal-codes-js';
 import InputElement from '../../../components/InputElement/InputElement';
 import OKModalDialog from '../../../components/OKModalDialog/OKModalDialog';
+import { toast } from 'react-toastify';
 
 type AddressModalDialogProps = {
   address?: userAddress;
@@ -119,6 +120,9 @@ export default function AddressModalDialog({
       });
       console.log('ok: ', changeAddressResult);
       await refreshCustomer();
+      toast.success('Address updated!', {
+        position: 'top-right',
+      });
       closeModal();
     } catch (error) {
       const message =
@@ -149,15 +153,17 @@ export default function AddressModalDialog({
     try {
       const token = getTokenFromCookie();
       if (!token) throw new Error('Something went wrong, please try again later'); // no token
-      const changeAddressResult = await addAddress({
+      await addAddress({
         customer: customer,
         token: token,
         address: newAddress,
         isShipping: data.isShipping ?? false,
         isBilling: data.isBilling ?? false,
       });
-      console.log('ok: ', changeAddressResult);
       await refreshCustomer();
+      toast.success('Address added!', {
+        position: 'top-right',
+      });
       closeModal();
     } catch (error) {
       const message =
