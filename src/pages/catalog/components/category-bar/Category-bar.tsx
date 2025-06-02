@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store/store';
 import { setType } from '../../../../store/slice/catalog-slice';
 
-export function CategoryBar({ onFilterSubmit, onResetFilters }: CategoryFilterProps): ReactElement {
+export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactElement {
   const filters = useSelector((state: RootState) => state.catalog.filters);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +21,10 @@ export function CategoryBar({ onFilterSubmit, onResetFilters }: CategoryFilterPr
   const handleClick = (item: { id: string; name: string; description: string }) => {
     if (selected && selected.id === item.id) {
       setSelected(null);
-      onResetFilters(filters);
+      onFilterSubmit({
+        ...filters,
+      });
+      console.log('empty');
       dispatch(setType(''));
     } else {
       setSelected(item);
@@ -29,6 +32,8 @@ export function CategoryBar({ onFilterSubmit, onResetFilters }: CategoryFilterPr
         ...filters,
       });
       dispatch(setType(item.id));
+
+      console.log(item.name);
     }
   };
 
@@ -82,30 +87,4 @@ export function CategoryBar({ onFilterSubmit, onResetFilters }: CategoryFilterPr
 
 interface CategoryFilterProps {
   onFilterSubmit: (data: Filters) => void;
-  onResetFilters: (data: Filters) => void;
 }
-
-/*
-https://api.europe-west1.gcp.commercetools.com/ecommerce2v/
-product-projections/search
-?filter=variants.price.centAmount:range(900%20to%209270)
-&filter=productType.id:%2274827b34-8b16-4454-9456-1a9cb46d1b99%22
-&filter=variants.attributes.brand:%22Purina%22,%20%22Purina%22
-
-https://api.europe-west1.gcp.commercetools.com/ecommerce2v/product-projections/search
-?filter=variants.price.centAmount:range(900%20to%209270)
-&filter=productType.id:%2278b324ce-0f28-4b7e-b287-bd88e537929e%22
-
-https://api.europe-west1.gcp.commercetools.com/ecommerce2v/product-projections/search
-?filter=variants.price.centAmount:range(900%20to%209270)
-&filter=productType.id:%2274827b34-8b16-4454-9456-1a9cb46d1b99%22
-&filter=variants.attributes.brand:%22Grandorf%22,%20%22Grandorf%22
-
-https://api.europe-west1.gcp.commercetools.com/ecommerce2v/product-projections/search
-?filter=variants.price.centAmount:range(900%20to%209270)
-&filter=productType.id:%22518f5128-8f2d-4d7e-9147-b0de1d850890%22
-&filter=variants.attributes.brand:%22Grandorf%22,%20%22Grandorf%22
-
-https://api.europe-west1.gcp.commercetools.com/ecommerce2v/product-projections/search
-?filter=variants.price.centAmount:range(900%20to%209270
-*/

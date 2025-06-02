@@ -7,7 +7,7 @@ import { BurgerFilter } from './components/catalogFilter/burger-filter.tsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store.ts';
-import { CatalogState, loadCatalog, setFilters, setType } from '../../store/slice/catalog-slice.ts';
+import { CatalogState, loadCatalog, setFilters } from '../../store/slice/catalog-slice.ts';
 import { usePrices } from './components/catalogFilter/hooks/usePrices.ts';
 
 export function CatalogPage(): ReactElement {
@@ -43,7 +43,6 @@ export function CatalogPage(): ReactElement {
   }, [lowestPrice, highestPrice]);
   const onFilterSubmit = (data: Filters) => {
     dispatch(setFilters(data));
-    dispatch(setType('74827b34-8b16-4454-9456-1a9cb46d1b99'));
   };
 
   const onResetFilters = () => {
@@ -62,7 +61,7 @@ export function CatalogPage(): ReactElement {
         }
       >
         <div className="col-span-5">
-          <CategoryBar onFilterSubmit={onFilterSubmit} onResetFilters={onResetFilters} />
+          <CategoryBar onFilterSubmit={onFilterSubmit} />
         </div>
         <div className="col-span-1 max-[900px]:hidden">
           {!showBurger && (
