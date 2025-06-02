@@ -11,6 +11,7 @@ export interface CatalogState {
   filteredProducts: ProductProjectionResponse | null;
   isLoading: boolean;
   error?: string;
+  type?: string;
 }
 const initialState: CatalogState = {
   filters: { brand: [], discounted: [], for: [], priceRange: [0, 0] },
@@ -32,13 +33,15 @@ export const loadCatalog: AsyncThunk<ProductProjectionResponse, undefined, state
       rejectValue: string;
     }
   >('catalog/load', async (_, thunkAPI) => {
-    const { products, filters, sort } = thunkAPI.getState().catalog;
+    const { products, filters, sort, type } = thunkAPI.getState().catalog;
+
     try {
       if (!products) {
         return await getProducts();
       }
-      return await requestFilter(filters, sort);
+      return await requestFilter(filters, sort, type);
     } catch (error) {
+      console.error(error);
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(`Failed to load catalog: ${error.message}`);
       }
@@ -55,6 +58,9 @@ const slice = createSlice({
     },
     setSort(state, action: PayloadAction<string | undefined>) {
       state.sort = action.payload;
+    },
+    setType(state, action: PayloadAction<string | undefined>) {
+      state.type = action.payload;
     },
     setFilteredProducts(state, action: PayloadAction<ProductProjectionResponse>) {
       state.filteredProducts = action.payload;
@@ -80,5 +86,5 @@ const slice = createSlice({
   },
 });
 
-export const { setFilters, setSort, setFilteredProducts } = slice.actions;
+export const { setFilters, setSort, setFilteredProducts, setType } = slice.actions;
 export default slice.reducer;

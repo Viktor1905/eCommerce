@@ -4,7 +4,8 @@ import { isProductsResponse } from '../check-response.ts';
 import { ProductProjectionResponse } from '../products.types.ts';
 export async function requestFilter(
   filterParams: RequestFilterParams,
-  sortParam?: string
+  sortParam?: string,
+  type?: string
 ): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
   const queryParts: string[] = [];
@@ -12,6 +13,9 @@ export async function requestFilter(
   queryParts.push(
     `filter=variants.price.centAmount:range(${(min * 100).toString()} to ${(max * 100).toString()})`
   );
+  if (type && typeof type === 'string' && type.length > 3) {
+    queryParts.push(`filter=productType.id:"${type}"`);
+  }
   if (Array.isArray(filterParams.discounted) && filterParams.discounted.length > 0) {
     queryParts.push(`filter=variants.attributes.sale:true`);
   }
@@ -31,13 +35,14 @@ export async function requestFilter(
     });
     queryParts.push(`filter=variants.attributes.brand:${brandParts.join(', ')}`);
   }
+
   if (sortParam) {
     queryParts.push(`sort=${sortParam}`);
   }
 
   const queryString = queryParts.join('&');
   const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
-
+  console.log(url);
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -46,7 +51,6 @@ export async function requestFilter(
         'Content-Type': 'application/json',
       },
     });
-
     const productsResponse: unknown = await response.json();
 
     if (!isProductsResponse(productsResponse)) {
