@@ -95,19 +95,23 @@
   align-items: center;
   border-radius: 5px;
   box-shadow: 0 0 3px #000000;
+  gap: 3px;
 }
 
-.menu-search {
+.menu-search,
+.back-search {
   display: flex;
   height: 80%;
   padding: 0 5px;
   align-items: center;
   border-radius: 5px;
   cursor: pointer;
-  transition: color 0.2s ease-in, background-color 0.2s ease-in ;
+  transition:
+  color 0.2s ease-in,
+  background-color 0.2s ease-in;
 }
 
-.menu-search:hover {
+:is(.menu-search, .back-search):hover {
   color: var(--color-olive);
   background-color: var(--color-goldenrod);
 }

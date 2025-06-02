@@ -31,7 +31,6 @@ export async function fetchProductsByQuery(query: string): Promise<unknown> {
     }
 
     const searchResult: unknown = await response.json();
-    console.log(searchResult);
     return searchResult;
   } catch (error) {
     if (error instanceof Error) {

@@ -111,14 +111,20 @@ function SearchPanel() {
   const navigate = useNavigate();
 
   async function handleSearch(): Promise<void> {
-    const value = inputRef.current?.value.trim();
-    if (!value) return;
+    const rawValue = inputRef.current?.value ?? '';
+    const value = rawValue.trim();
+
+    if (value === '' && products) {
+      dispatch(setFilteredProducts(products));
+    }
 
     try {
-      if (!products) await dispatch(loadCatalog());
+      if (!products) {
+        await dispatch(loadCatalog());
+      }
+
       const raw = await fetchProductsByQuery(value);
       const parsed = ProductProjectionResponseSchema.parse(raw);
-
       dispatch(setFilteredProducts(parsed));
     } catch (error) {
       console.error('Search failed:', error);
@@ -128,6 +134,7 @@ function SearchPanel() {
   useLayoutEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+
   return (
     <div className={styles.search}>
       <div
@@ -153,6 +160,15 @@ function SearchPanel() {
           }
         }}
       ></input>
+      <span
+        className={`material-symbols-outlined ${styles['back-search']}`}
+        onClick={() => {
+          if (inputRef.current) inputRef.current.value = '';
+          void handleSearch();
+        }}
+      >
+        backspace
+      </span>
     </div>
   );
 }
