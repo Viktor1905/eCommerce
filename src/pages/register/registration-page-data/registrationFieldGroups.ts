@@ -20,15 +20,15 @@ const petInfo = [
 const shippingAddressInfo = [
   { title: 'Street', id: 'shippingStreetName', type: 'text', required: true },
   { title: 'City', id: 'shippingCity', type: 'text', required: true },
-  { title: 'Postal Code', id: 'shippingPostalCode', type: 'text', required: true },
   { title: 'Country', id: 'shippingCountry', type: 'country', required: true },
+  { title: 'Postal Code', id: 'shippingPostalCode', type: 'text', required: true },
 ] satisfies { id: Path<FormFields>; title: string; type: string; required?: boolean }[];
 
 export const billingAddressInfo = [
   { title: 'Street', id: 'billingStreetName', type: 'text', required: true },
   { title: 'City', id: 'billingCity', type: 'text', required: true },
-  { title: 'Postal Code', id: 'billingPostalCode', type: 'text', required: true },
   { title: 'Country', id: 'billingCountry', type: 'country', required: true },
+  { title: 'Postal Code', id: 'billingPostalCode', type: 'text', required: true },
 ] satisfies { id: Path<FormFields>; title: string; type: string; required?: boolean }[];
 
 export const registrationFormSections = [
