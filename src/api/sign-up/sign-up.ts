@@ -10,6 +10,7 @@ export interface userAddress {
   postalCode: string;
   city: string;
   id: string;
+  key?: string;
   firstName?: string;
   lastName?: string;
   country: string;

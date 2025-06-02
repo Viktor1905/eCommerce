@@ -6,6 +6,7 @@ import {
   CUSTOMER_ENDPOINT,
   customerResponse,
   CustomerResponseSchema,
+  userAddress,
 } from '../sign-up/sign-up';
 
 export function getRefreshTokenFromCookie(): string {
@@ -244,6 +245,201 @@ export async function setDefaultAddress({
         addressId: addressID,
       },
     ],
+  };
+
+  const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.log('Raw response:', raw);
+    const rawJSON = ErrorResponseSchema.safeParse(raw);
+    throw new Error(rawJSON.data?.message);
+  }
+
+  return parsed.data;
+}
+
+export async function changeAddress({
+  addressID,
+  address,
+  customer,
+  token,
+  isBilling,
+  isShipping,
+}: {
+  addressID: string;
+  address: userAddress;
+  customer: customerResponse;
+  token: string;
+  isBilling: boolean;
+  isShipping: boolean;
+}) {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const actions: {
+    action: string;
+    addressId?: string;
+    addressKey?: string;
+    address?: userAddress;
+  }[] = [];
+  actions.push({
+    action: 'changeAddress',
+    addressId: addressID,
+    address: address,
+  });
+
+  if (isBilling) {
+    actions.push({
+      action: 'addBillingAddressId',
+      addressKey: address.key,
+    });
+  } else {
+    actions.push({
+      action: 'removeBillingAddressId',
+      addressKey: address.key,
+    });
+  }
+
+  if (isShipping) {
+    actions.push({
+      action: 'addShippingAddressId',
+      addressKey: address.key,
+    });
+  } else {
+    actions.push({
+      action: 'removeShippingAddressId',
+      addressKey: address.key,
+    });
+  }
+
+  const body = {
+    version,
+    actions: actions,
+  };
+
+  const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.log('Raw response:', raw);
+    const rawJSON = ErrorResponseSchema.safeParse(raw);
+    throw new Error(rawJSON.data?.message);
+  }
+  console.log(parsed.data);
+  return parsed.data;
+}
+
+export async function addAddress({
+  address,
+  customer,
+  token,
+  isBilling,
+  isShipping,
+}: {
+  address: userAddress;
+  customer: customerResponse;
+  token: string;
+  isBilling: boolean;
+  isShipping: boolean;
+}) {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const actions: {
+    action: string;
+    addressId?: string;
+    addressKey?: string;
+    address?: userAddress;
+  }[] = [];
+  actions.push({
+    action: 'addAddress',
+    address: address,
+  });
+
+  if (isBilling) {
+    actions.push({
+      action: 'addBillingAddressId',
+      addressKey: address.key,
+    });
+  }
+
+  if (isShipping) {
+    actions.push({
+      action: 'addShippingAddressId',
+      addressKey: address.key,
+    });
+  }
+  const body = {
+    version,
+    actions: actions,
+  };
+
+  const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const raw: unknown = await response.json();
+  const parsed = CustomerResponseSchema.safeParse(raw);
+  if (!parsed.success) {
+    console.log('Raw response:', raw);
+    const rawJSON = ErrorResponseSchema.safeParse(raw);
+    throw new Error(rawJSON.data?.message);
+  }
+
+  return parsed.data;
+}
+
+export async function removeAddress({
+  address,
+  customer,
+  token,
+}: {
+  address: userAddress;
+  customer: customerResponse;
+  token: string;
+}) {
+  const parsedCustomer = CustomerResponseSchema.safeParse(customer);
+  const version = parsedCustomer.data?.version;
+  const customerId = parsedCustomer.data?.id;
+
+  const actions: {
+    action: string;
+    addressId?: string;
+    addressKey?: string;
+    address?: userAddress;
+  }[] = [];
+  actions.push({
+    action: 'removeAddress',
+    addressId: address.id,
+  });
+
+  const body = {
+    version,
+    actions: actions,
   };
 
   const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {

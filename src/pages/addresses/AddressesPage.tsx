@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTokenFromCookie } from '../profile/ProfilePage';
-import { fetchProfile, setDefaultAddress } from '../../api/profile/profile';
+import { fetchProfile, removeAddress, setDefaultAddress } from '../../api/profile/profile';
 import { customerResponse, userAddress } from '../../api/sign-up/sign-up';
 import AddressModalDialog from './AddressModalDialog/AddressModalDialog';
 import AddressSelector, { addressToString } from '../../components/AddressSelector/AddressSelector';
@@ -11,29 +11,27 @@ export default function AddressesPage() {
   const [loading, setLoading] = useState(true);
   const [customer, setCustomer] = useState<customerResponse | null>(null);
   const [address, setAddress] = useState<userAddress | undefined>(undefined);
-  useEffect(() => {
-    document.title = 'Profile | Zoo Shop | Pet Supplies';
-
+  const refreshCustomer = useCallback(async () => {
     const token = getTokenFromCookie();
     if (!token) {
       void navigate('/login', { replace: true });
       return;
     }
 
-    const fetchCustomer = async () => {
-      try {
-        const customerInfo = await fetchProfile(token);
-        setCustomer(customerInfo);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        void navigate('/login', { replace: true });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void fetchCustomer();
+    try {
+      const customerInfo = await fetchProfile(token);
+      setCustomer(customerInfo);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      void navigate('/login', { replace: true });
+    } finally {
+      setLoading(false);
+    }
   }, [navigate]);
+
+  useEffect(() => {
+    void refreshCustomer();
+  }, [refreshCustomer]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -51,18 +49,32 @@ export default function AddressesPage() {
     }
   }
 
+  async function removeSelectedAddress(addressToRemove: userAddress) {
+    const token = getTokenFromCookie();
+    if (!token) {
+      return;
+    }
+    if (customer) {
+      const selected = customer.addresses.find((a) => a.id === addressToRemove.id);
+      if (selected) {
+        await removeAddress({ address: selected, customer, token });
+        await refreshCustomer();
+      }
+    }
+  }
+
   async function handleSetDefaultAddress(addressID: string, defaultAddressType: string) {
     const token = getTokenFromCookie();
     if (!token || !customer) return;
 
     try {
-      const updatedCustomer = await setDefaultAddress({
+      await setDefaultAddress({
         addressID,
         defaultAddressType,
         customer,
         token,
       });
-      setCustomer(updatedCustomer); // update UI with fresh data
+      await refreshCustomer();
     } catch (err) {
       console.error(err);
       // optionally show toast or inline error
@@ -70,7 +82,12 @@ export default function AddressesPage() {
   }
 
   return (
-    <section className="m-auto relative flex flex-col justify-center items-center rounded-2xl bg-white min-w-[300px] max-w-[450px]">
+    <section
+      className={
+        'm-auto relative flex flex-col justify-center items-center ' +
+        'rounded-2xl bg-white min-w-[300px] max-w-[500px]'
+      }
+    >
       <button
         type="button"
         onClick={() => {
@@ -83,7 +100,12 @@ export default function AddressesPage() {
       </button>
       <h2 className="text-2xl pt-4 text-center text-jungle font-main-bd">Addresses</h2>
       {isModalOpen && customer && (
-        <AddressModalDialog address={address} customer={customer} closeModal={closeModal} />
+        <AddressModalDialog
+          address={address}
+          customer={customer}
+          closeModal={closeModal}
+          refreshCustomer={refreshCustomer}
+        />
       )}
       {loading ? (
         <div className="text-jungle p-2 ml-auto mr-auto">Loading...</div>
@@ -106,7 +128,9 @@ export default function AddressesPage() {
             onSubmit={(address) => handleSetDefaultAddress(address.id, 'setDefaultBillingAddress')}
           />
           {/**existing addresses to edit*/}
-          <div className="flex flex-col gap-8">{renderAddresses(customer, setAddressToEdit)}</div>
+          <div className="flex flex-col gap-8">
+            {renderAddresses(customer, setAddressToEdit, removeSelectedAddress)}
+          </div>
           {/**add new address*/}
           <button
             className="w-fit p-1 ml-auto mr-auto px-3 text-olive min-w-3xs bg-light-gray rounded-xl m-2 text-lg font-main font-medium hover:cursor-pointer hover:bg-gray-300"
@@ -127,13 +151,14 @@ export default function AddressesPage() {
 
 export function renderAddresses(
   customer: customerResponse,
-  callback: (address: userAddress) => void
+  editAddressCallback: (address: userAddress) => void,
+  removeAddressCallback: (address: userAddress) => Promise<void>
 ) {
   return customer.addresses.map((address) => {
     const isShipping = customer.shippingAddressIds.find((id) => id === address.id) !== undefined;
     const isBilling = customer.billingAddressIds.find((id) => id === address.id) !== undefined;
-    const isDefaultBilling = customer.defaultShippingAddressId === address.id;
-    const isDefaultShipping = customer.defaultBillingAddressId === address.id;
+    const isDefaultBilling = customer.defaultBillingAddressId === address.id;
+    const isDefaultShipping = customer.defaultShippingAddressId === address.id;
     return (
       <div key={address.id} className="flex no-wrap gap-2 justify-between text-olive">
         {renderAddress({
@@ -143,14 +168,24 @@ export function renderAddresses(
           isDefaultShipping,
           address,
         })}
-        <button
-          onClick={() => {
-            callback(address);
-          }}
-          className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
-        >
-          edit
-        </button>
+        <div className="flex flex-col  justify-between">
+          <button
+            onClick={() => {
+              editAddressCallback(address);
+            }}
+            className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
+          >
+            edit
+          </button>
+          <button
+            onClick={() => {
+              void removeAddressCallback(address);
+            }}
+            className="text-olive font-bold hover:text-gray-500 focus:outline-none p-1 text-sm hover:cursor-pointer"
+          >
+            delete
+          </button>
+        </div>
       </div>
     );
   });
@@ -165,6 +200,7 @@ export function renderAddress(addressInfo: {
 }): ReactElement {
   return (
     <div key={addressInfo.address.id}>
+      <p className="text-lg w-fit break-words">{addressToString(addressInfo.address)}</p>
       <div className="flex flex-row flex-wrap gap-2">
         {addressInfo.isShipping && (
           <div className="bg-light-gray p-1 pl-2 pr-2 rounded-full text-sm w-fit">shipping</div>
@@ -183,8 +219,6 @@ export function renderAddress(addressInfo: {
           </div>
         )}
       </div>
-
-      <p className="text-lg w-fit break-words">{addressToString(addressInfo.address)}</p>
     </div>
   );
 }

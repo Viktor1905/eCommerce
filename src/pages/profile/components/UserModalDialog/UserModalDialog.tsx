@@ -20,8 +20,8 @@ export default function UserModalDialog({
   refreshCustomer,
 }: UserModalDialogProps) {
   const userInfo = [
-    { title: 'first name', id: 'firstName', type: 'text', required: false, value: user.firstName },
-    { title: 'last name', id: 'lastName', type: 'text', required: false, value: user.lastName },
+    { title: 'first name', id: 'firstName', type: 'text', required: false },
+    { title: 'last name', id: 'lastName', type: 'text', required: false },
     {
       title: 'date of birth',
       id: 'dateOfBirth',
@@ -29,7 +29,7 @@ export default function UserModalDialog({
       required: false,
       value: user.dateOfBirth,
     },
-    { title: 'email', id: 'email', type: 'text', required: false, value: user.email },
+    { title: 'email', id: 'email', type: 'text', required: false },
   ] satisfies {
     id: Path<UserFields>;
     title: string;
@@ -99,6 +99,12 @@ export default function UserModalDialog({
   } = useForm<UserFields>({
     mode: 'all',
     resolver: zodResolver(fullUserSchema),
+    defaultValues: {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateOfBirth: user.dateOfBirth,
+      email: user.email,
+    },
   });
   return (
     <div

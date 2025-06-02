@@ -21,6 +21,10 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
   } = useForm<FormFields>({
     mode: 'all',
     resolver: zodResolver(optionalSchema),
+    defaultValues: {
+      billingCountry: '',
+      shippingCountry: '',
+    },
   });
 
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -61,6 +65,7 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
 
   const handleValidSubmit = async (data: FormFields) => {
     const shippingAddress = {
+      id: '',
       firstName: data.firstName,
       lastName: data.lastName,
       streetName: data.shippingStreetName,
@@ -72,6 +77,7 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
     const billingAddress = data.sameAsShipping
       ? shippingAddress
       : {
+          id: '',
           firstName: data.firstName,
           lastName: data.lastName,
           streetName: data.billingStreetName ?? '',

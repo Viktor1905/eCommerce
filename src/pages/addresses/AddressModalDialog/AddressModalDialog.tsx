@@ -5,24 +5,44 @@ import {
   CountryCodeSchema,
   postalCodeRegex,
 } from '../../register/registration-page-data/registrationSchema';
-import { useForm } from 'react-hook-form';
-import FieldsetBlock, { FieldDescriptor } from '../../../components/FieldsetBlock/FieldsetBlock';
+import { Path, useForm } from 'react-hook-form';
+import FieldsetBlock from '../../../components/FieldsetBlock/FieldsetBlock';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getTokenFromCookie } from '../../profile/ProfilePage';
+import { addAddress, changeAddress } from '../../../api/profile/profile';
+import PostalCodes from 'postal-codes-js';
+import InputElement from '../../../components/InputElement/InputElement';
+import OKModalDialog from '../../../components/OKModalDialog/OKModalDialog';
 
 type AddressModalDialogProps = {
   address?: userAddress;
   customer: customerResponse;
   closeModal: () => void;
+  refreshCustomer: () => Promise<void>;
 } & React.DialogHTMLAttributes<HTMLDialogElement>;
 
-const addressSchema = z.object({
-  streetName: z.string().min(1, 'Street name must be at least 1 character'),
-  city: z.string().min(1, 'City name must be at least 1 character'),
-  postalCode: z
-    .string()
-    .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)'),
-  country: CountryCodeSchema,
-});
+const addressSchema = z
+  .object({
+    streetName: z.string().min(1, 'Street name must be at least 1 character'),
+    city: z.string().min(1, 'City name must be at least 1 character'),
+    postalCode: z
+      .string()
+      .regex(postalCodeRegex, 'Please enter postal code in valid format (ex. 123-456, ME12 123)'),
+    country: CountryCodeSchema,
+    isBilling: z.boolean().optional(),
+    isShipping: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.country) return;
+    const result = PostalCodes.validate(data.country, data.postalCode);
+    if (result !== true) {
+      ctx.addIssue({
+        path: ['postalCode'],
+        message: 'Invalid postal code for selected country',
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 type AddressFields = z.infer<typeof addressSchema>;
 
@@ -30,16 +50,8 @@ export default function AddressModalDialog({
   address,
   customer,
   closeModal,
+  refreshCustomer,
 }: AddressModalDialogProps) {
-  useEffect(() => {
-    // Disable scroll
-    document.body.style.overflow = 'hidden';
-    return () => {
-      // Re-enable scroll on unmount
-      document.body.style.overflow = '';
-    };
-  }, []);
-
   function handleBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
     if (e.target === e.currentTarget) {
       closeModal();
@@ -52,29 +64,40 @@ export default function AddressModalDialog({
       title: 'Street',
       type: 'text',
       required: true,
-      value: address?.streetName,
     },
-    { id: 'city', title: 'City', type: 'text', required: true, value: address?.city },
+    { id: 'city', title: 'City', type: 'text', required: true },
     {
       id: 'postalCode',
       title: 'Postal Code',
       type: 'text',
       required: true,
-      value: address?.postalCode,
     },
     {
       id: 'country',
       title: 'Country',
-      type: 'select',
+      type: 'country',
       required: true,
-      value: address?.country,
     },
-  ] satisfies FieldDescriptor<keyof AddressFields, AddressFields>[];
+  ] satisfies {
+    id: Path<AddressFields>;
+    title: string;
+    type: string;
+    required?: boolean;
+    value?: string;
+  }[];
 
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleValidSubmit = (data: AddressFields) => {
+  const handleAddressChange = async (data: AddressFields) => {
+    setSubmitError('');
+    if (!data.isBilling && !data.isShipping) {
+      setIsModalOpen(true);
+      return;
+    }
+    if (!address) throw new Error('Something went wrong, please try again later');
     const newAddress = {
+      id: address.id,
+      key: new Date().toString(),
       firstName: customer.firstName,
       lastName: customer.lastName,
       streetName: data.streetName,
@@ -84,12 +107,71 @@ export default function AddressModalDialog({
     };
 
     try {
-      console.log('Addresses successful:', newAddress);
+      const token = getTokenFromCookie();
+      if (!token) throw new Error('Something went wrong, please try again later'); // no token
+      const changeAddressResult = await changeAddress({
+        customer: customer,
+        token: token,
+        address: newAddress,
+        addressID: address.id,
+        isShipping: data.isShipping ?? false,
+        isBilling: data.isBilling ?? false,
+      });
+      console.log('ok: ', changeAddressResult);
+      await refreshCustomer();
+      closeModal();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Something went wrong. Please try again.';
       console.log(error);
       setSubmitError(message);
+    }
+  };
+
+  const handleNewAddress = async (data: AddressFields) => {
+    setSubmitError('');
+    if (!data.isBilling && !data.isShipping) {
+      setIsModalOpen(true);
+      return;
+    }
+    if (address) throw new Error('Something went wrong, please try again later');
+    const newAddress = {
+      id: '',
+      key: new Date().toString(),
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+      streetName: data.streetName,
+      city: data.city,
+      postalCode: data.postalCode,
+      country: data.country as CountryCode,
+    };
+
+    try {
+      const token = getTokenFromCookie();
+      if (!token) throw new Error('Something went wrong, please try again later'); // no token
+      const changeAddressResult = await addAddress({
+        customer: customer,
+        token: token,
+        address: newAddress,
+        isShipping: data.isShipping ?? false,
+        isBilling: data.isBilling ?? false,
+      });
+      console.log('ok: ', changeAddressResult);
+      await refreshCustomer();
+      closeModal();
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      console.log(error);
+      setSubmitError(message);
+    }
+  };
+
+  const onValidSubmit = async (data: AddressFields) => {
+    if (address) {
+      await handleAddressChange(data);
+    } else {
+      await handleNewAddress(data);
     }
   };
 
@@ -101,7 +183,28 @@ export default function AddressModalDialog({
   } = useForm<AddressFields>({
     mode: 'all',
     resolver: zodResolver(addressSchema),
+    defaultValues: {
+      streetName: address?.streetName,
+      city: address?.city,
+      postalCode: address?.postalCode,
+      country: address ? (address.country as CountryCode) : '',
+      isBilling: customer.billingAddressIds.find((id) => id === address?.id) !== undefined,
+      isShipping: customer.shippingAddressIds.find((id) => id === address?.id) !== undefined,
+    },
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  function closeOkModal() {
+    setIsModalOpen(false);
+  }
+  useEffect(() => {
+    // Disable scroll
+    document.body.style.overflow = 'hidden';
+    return () => {
+      // Re-enable scroll on unmount
+      document.body.style.overflow = '';
+    };
+  }, []);
   return (
     <div
       className="fixed backdrop-blur-[2px] inset-0 backdrop-brightness-[.7] flex items-center justify-center z-50"
@@ -116,10 +219,18 @@ export default function AddressModalDialog({
         >
           &times;
         </button>
+        {isModalOpen && (
+          <OKModalDialog
+            title="Insufficient input"
+            message={<>Please set the address as Billing or/and Shipping</>}
+            buttonText="Confirm"
+            closeModal={closeOkModal}
+          />
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            void handleSubmit(handleValidSubmit)(e);
+            void handleSubmit(onValidSubmit)(e);
           }}
         >
           <FieldsetBlock
@@ -129,11 +240,27 @@ export default function AddressModalDialog({
             control={control}
             errors={errors}
           />
+          <InputElement
+            type="checkbox"
+            title="Use as Shipping Address"
+            id="isShipping"
+            register={register('isShipping')}
+            error={errors.isShipping?.message}
+          />
+          <InputElement
+            type="checkbox"
+            title="Use as Billing Address"
+            id="isBilling"
+            register={register('isBilling')}
+            error={errors.isBilling?.message}
+          />
           <button
             disabled={!isValid || isSubmitting}
             type="submit"
-            onClick={closeModal}
-            className="w-fit min-w-3xs bg-jungle text-white px-4 p-2 m-4  rounded-xl text-lg font-main hover:cursor-pointer hover:bg-jungle/90"
+            className={
+              'w-fit min-w-3xs bg-jungle text-white px-4 p-2 m-4 rounded-xl text-lg font-main' +
+              ' hover:cursor-pointer hover:bg-jungle/90 disabled:opacity-60 disabled:cursor-not-allowed'
+            }
           >
             {isSubmitting ? 'Loading...' : address ? 'Submit changes' : 'Save new address'}
           </button>

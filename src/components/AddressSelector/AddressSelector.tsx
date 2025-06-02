@@ -43,6 +43,11 @@ export default function CustomAddressDropdown({
     };
   }, []);
 
+  useEffect(() => {
+    const newSelected = addresses.find((a) => a.id === selectedAddressID);
+    setPickedAddress(newSelected);
+  }, [selectedAddressID, addresses]);
+
   return (
     <div className="relative flex flex-col max-w-full w-full">
       <label
@@ -74,22 +79,36 @@ export default function CustomAddressDropdown({
           ref={dropdownRef}
           className="absolute top-18 z-50 bg-khaki text-olive rounded-lg shadow-lg max-h-60 w-full"
         >
-          {addresses
-            .filter((address) => validAddressesID.includes(address.id))
-            .map((address) => (
-              <li
-                key={address.id}
-                className="py-2 px-2 hover:bg-gray-400 cursor-pointer  rounded-lg"
-                onClick={() => {
-                  setPickedAddress(address);
-                  setOpen(false);
-                }}
-              >
-                <div className=" truncate whitespace-nowrap overflow-hidden">
-                  {addressToString(address)}
-                </div>
-              </li>
-            ))}
+          {addresses.length > 0 ? (
+            addresses
+              .filter((address) => validAddressesID.includes(address.id))
+              .map((address) => (
+                <li
+                  key={address.id}
+                  className="py-2 px-2 hover:bg-gray-400 cursor-pointer  rounded-lg"
+                  onClick={() => {
+                    setPickedAddress(address);
+                    setOpen(false);
+                  }}
+                >
+                  <div className=" truncate whitespace-nowrap overflow-hidden">
+                    {addressToString(address)}
+                  </div>
+                </li>
+              ))
+          ) : (
+            <li
+              key={'empty'}
+              className="py-2 px-2 hover:bg-gray-400 cursor-pointer  rounded-lg"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <div className=" truncate whitespace-nowrap overflow-hidden">
+                {'No addresses available'}
+              </div>
+            </li>
+          )}
         </ul>
       )}
 

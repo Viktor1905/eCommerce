@@ -21,7 +21,6 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
       id: 'petName',
       type: 'text',
       required: true,
-      value: user.custom.fields.petName,
     },
     {
       title: "pet's date of birth",
@@ -91,6 +90,10 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
   } = useForm<PetFields>({
     mode: 'all',
     resolver: zodResolver(petSchema),
+    defaultValues: {
+      petName: user.custom.fields.petName,
+      petBirthDate: user.custom.fields.petBirthDate,
+    },
   });
   return (
     <div
