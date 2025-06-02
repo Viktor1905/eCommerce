@@ -5,7 +5,7 @@
 // import { FavoritesPage } from '../../pages/favorites/Favorites';
 // import { OrdersPage } from '../../pages/orders/OrdersPage';
 // import { CatalogPage } from '../../pages/catalog/CatalogPage';
-// import { LoginPage } from '../../pages/authorization/Login-page.tsx';
+// import { LoginPage } from '../../pages/authorization/LoginPage.tsx';
 // import RegistrationPage from '../../pages/register/RegistrationPage.tsx';
 // import { NotFoundPage } from '../../pages/pageNotFound/Page404.tsx';
 

@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useRef } from 'react';
 import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
-import { CatalogFilter, Filters } from './catalog-filter.tsx';
+import { CatalogFilter, Filters } from './CatalogFilter.tsx';
 
 export function BurgerFilter({
   showBurger,

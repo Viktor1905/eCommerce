@@ -9,6 +9,9 @@ import { useDispatch } from 'react-redux';
 import { setFilteredProducts } from '../../store/slice/catalog-slice';
 import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
 import type { AppDispatch } from '../../store/store';
+import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
+import { fetchProfile } from '../../api/profile/profile';
+import { toast, ToastContainer } from 'react-toastify';
 
 const UserContext = createContext<string | null>(null);
 
@@ -27,31 +30,52 @@ export function Header() {
   const [userName, setUserName] = useState('Guest');
 
   useEffect(() => {
-    const updateUser = () => {
-      const name = localStorage.getItem('firstName') ?? 'Guest';
-      setUserName(name);
+    const fetchUser = async () => {
+      const token = getTokenFromCookie();
+      if (!token) {
+        setUserName('Guest');
+        return;
+      }
+
+      try {
+        const customerInfo = await fetchProfile(token);
+        setUserName(customerInfo.firstName || 'Guest');
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setUserName('Guest');
+      }
     };
 
-    updateUser();
-
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'firstName') updateUser();
-    };
-
-    window.addEventListener('storage', handleStorage);
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-    };
+    void fetchUser();
   }, [location.pathname]);
 
   useEffect(() => {
-    const handleGlobalUpdate = () => {
-      setUserName(localStorage.getItem('firstName') ?? 'Guest');
+    const clearAuthCookies = () => {
+      document.cookie = 'refresh_token=; Max-Age=0; path=/';
+      document.cookie = 'access_token=; Max-Age=0; path=/';
     };
 
-    window.addEventListener('auth-update', handleGlobalUpdate);
+    const handleAuthUpdate = () => {
+      const token = getTokenFromCookie();
+      if (!token) {
+        clearAuthCookies();
+        setUserName('Guest');
+        return;
+      }
+
+      void fetchProfile(token)
+        .then((customerInfo) => {
+          setUserName(customerInfo.firstName || 'Guest');
+        })
+        .catch(() => {
+          clearAuthCookies();
+          setUserName('Guest');
+        });
+    };
+
+    window.addEventListener('auth-update', handleAuthUpdate);
     return () => {
-      window.removeEventListener('auth-update', handleGlobalUpdate);
+      window.removeEventListener('auth-update', handleAuthUpdate);
     };
   }, []);
 
@@ -167,6 +191,7 @@ function MenuHeader() {
         <Favorite />
         <Cart />
       </ul>
+      <ToastContainer className={'w-0 h-0'} />
     </nav>
   );
 }
@@ -179,6 +204,12 @@ function Login() {
   const handleAuth = () => {
     if (!isGuest) {
       logoutUser();
+
+      document.cookie = 'refresh_token=; Max-Age=0; path=/';
+      document.cookie = 'access_token=; Max-Age=0; path=/';
+      toast.success('Logged out!', {
+        position: 'top-right',
+      });
       void navigate('/login');
       window.dispatchEvent(new CustomEvent('auth-update'));
     } else {

@@ -1,16 +1,19 @@
 import { z } from 'zod';
 import { COUNTRIES_DATA } from '../../components/CountrySelector/countries-data/countries-data';
 import { CountryCodeSchema } from '../../pages/register/registration-page-data/registrationSchema';
+import { getUserTokens, UsersToken } from '../login/user-tokens';
+import { API_CONFIG } from '../login/login';
 export type CountryCode = (typeof COUNTRIES_DATA)[number]['code'];
 
-interface address {
-  id?: string;
-  firstName: string;
-  lastName: string;
+export interface userAddress {
   streetName: string;
-  city: string;
   postalCode: string;
-  country: CountryCode;
+  city: string;
+  id: string;
+  key?: string;
+  firstName?: string;
+  lastName?: string;
+  country: string;
 }
 
 export interface SignUpData {
@@ -28,7 +31,7 @@ export interface SignUpData {
       petBirthDate: string;
     };
   };
-  addresses: address[];
+  addresses: userAddress[];
   shippingAddressIds: string[];
   billingAddressIds: string[];
 }
@@ -83,8 +86,6 @@ export async function setShippingAddress({
     });
   }
 
-  console.log(defaultActions);
-
   const body = {
     version: customerVersion ?? 1,
     actions: [...baseActions, ...defaultActions],
@@ -113,8 +114,8 @@ const CLIENT_ID = 'QMdMW3dn2QFBIFpoFRm_yfE0';
 const SECRET_ID = 'CV6y3lEHvhTtkY4a-8wFxZ9d4hVzfIOw';
 const PROJECT_KEY = 'ecommerce2v';
 const REGION = 'europe-west1.gcp';
-const API_URL = `https://api.${REGION}.commercetools.com/${PROJECT_KEY}`;
-const CUSTOMER_ENDPOINT = `${API_URL}/customers`;
+export const API_URL = `https://api.${REGION}.commercetools.com/${PROJECT_KEY}`;
+export const CUSTOMER_ENDPOINT = `${API_URL}/customers`;
 
 const OAuthErrorSchema = z.object({
   error: z.string(),
@@ -127,6 +128,42 @@ const TokenResponseSchema = z.object({
   expires_in: z.number(),
   token_type: z.string(),
 });
+
+export async function getCustomerAccessToken(email: string, password: string): Promise<void> {
+  const authUrl = `https://auth.${REGION}.commercetools.com/oauth/${PROJECT_KEY}/customers/token`;
+  const basicAuth = btoa(`${CLIENT_ID}:${SECRET_ID}`);
+
+  const response = await fetch(authUrl, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${basicAuth}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+      grant_type: 'password',
+      username: email,
+      password: password,
+      scope: [
+        `view_products:${PROJECT_KEY}`,
+        `view_categories:${PROJECT_KEY}`,
+        `view_shipping_methods:${PROJECT_KEY}`,
+        `view_standalone_prices:${PROJECT_KEY}`,
+        `manage_my_orders:${PROJECT_KEY}`,
+        `manage_my_payments:${PROJECT_KEY}`,
+        `manage_my_profile:${PROJECT_KEY}`,
+        `manage_my_shopping_lists:${PROJECT_KEY}`,
+      ].join(' '),
+    }),
+  });
+
+  const raw: unknown = await response.json();
+  console.log(raw);
+  //if (!response.ok) {
+  //  throw new Error(raw.message ?? 'Login failed: Invalid credentials or scopes');
+  //}
+  //
+  //return raw.access_token;
+}
 
 export async function getAccessToken(): Promise<string> {
   const clientId = CLIENT_ID;
@@ -141,11 +178,10 @@ export async function getAccessToken(): Promise<string> {
       Authorization: `Basic ${basicAuth}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: 'grant_type=client_credentials',
+    body: `grant_type=client_credentials&scope=manage_customers:${PROJECT_KEY}`,
   });
 
   const raw: unknown = await response.json();
-
   if (!response.ok) {
     const parsedError = OAuthErrorSchema.safeParse(raw);
     if (parsedError.success) {
@@ -160,8 +196,9 @@ export async function getAccessToken(): Promise<string> {
   if (!parsedToken.success) {
     throw new Error('Something went wrong, please try again later'); //Token fetch failed: Unknown error response
   }
-  console.log(parsedToken.data.access_token);
-  return parsedToken.data.access_token;
+  const token = parsedToken.data.access_token;
+
+  return token;
 }
 
 const CreatedBySchema = z.object({
@@ -180,7 +217,7 @@ const LastModifiedBySchema = z.object({
     .optional(),
 });
 
-const CustomerResponseSchema = z
+export const CustomerResponseSchema = z
   .object({
     id: z.string(),
     version: z.number(),
@@ -196,7 +233,7 @@ const CustomerResponseSchema = z
     dateOfBirth: z.string(),
     addresses: z.array(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
         firstName: z.string().optional(),
         lastName: z.string().optional(),
         streetName: z.string(),
@@ -226,7 +263,7 @@ const CustomerResponseSchema = z
   })
   .passthrough();
 
-const UserResponseSchema = z.object({
+export const UserResponseSchema = z.object({
   customer: CustomerResponseSchema,
 });
 
@@ -243,10 +280,11 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
     body: JSON.stringify(data),
   });
   const raw: unknown = await response.json();
-
-  console.log(raw);
   if (!response.ok) {
     const message = (raw as { message?: string }).message ?? response.statusText;
+    console.log(message);
+    if (message.indexOf('token'))
+      throw new Error(`Sign-up failed: Something went wrong, please try again later`);
     throw new Error(`Sign-up failed: ${message}`);
   }
   const parsed = UserResponseSchema.safeParse(raw);
@@ -256,6 +294,11 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
     console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //'Sign-up failed: Invalid response structure'
   }
+
+  const loginData = { email: data.email, password: data.password };
+  const usersToken: UsersToken = await getUserTokens(API_CONFIG, loginData);
+  document.cookie = `refresh_token=${usersToken.refresh_token}; path=/; max-age=3600; secure; samesite=strict`;
+  document.cookie = `access_token=${usersToken.access_token}; path=/; max-age=3600; secure; samesite=strict`;
 
   return parsed.data;
 }

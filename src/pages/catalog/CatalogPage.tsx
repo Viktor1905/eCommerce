@@ -1,9 +1,9 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { CategoryBar } from './components/category-bar/Category-bar.tsx';
-import { CatalogFilter, Filters } from './components/catalogFilter/catalog-filter.tsx';
-import { CatalogList } from './components/catalog-list.tsx';
-import { RenderFilterBtn } from './components/render-filter-btn.tsx';
-import { BurgerFilter } from './components/catalogFilter/burger-filter.tsx';
+import { CategoryBar } from './components/CategoryBar/CategoryBar.tsx';
+import { CatalogFilter, Filters } from './components/catalogFilter/CatalogFilter.tsx';
+import { CatalogList } from './components/CatalogList.tsx';
+import { RenderFilterBtn } from './components/RenderFilterBtn.tsx';
+import { BurgerFilter } from './components/catalogFilter/BurgerFilter.tsx';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store.ts';

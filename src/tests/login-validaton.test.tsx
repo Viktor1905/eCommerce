@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { LoginInput } from '../pages/authorization/components/Login-input.tsx';
-import type { LoginInputProps } from '../pages/authorization/components/Login-input.tsx';
+import { LoginInput } from '../pages/authorization/components/LoginInput.tsx';
+import type { LoginInputProps } from '../pages/authorization/components/LoginInput.tsx';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { LoginForm } from '../pages/authorization/components/Login-form.tsx';
+import { LoginForm } from '../pages/authorization/components/LoginForm.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 vi.mock('./assets/eye.svg', (): string => 'eye-icon');

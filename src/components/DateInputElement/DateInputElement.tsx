@@ -1,6 +1,6 @@
 import { Control, Path, UseFormRegisterReturn } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,6 +11,7 @@ type DateInputElementProps<TFieldValues extends Record<string, unknown>> = {
   error?: string;
   register?: UseFormRegisterReturn;
   control?: Control<TFieldValues>;
+  value?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function DateInputElement<TFieldValues extends Record<string, unknown>>({
@@ -21,8 +22,10 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
   register,
   control,
   required,
+  value,
 }: DateInputElementProps<TFieldValues>) {
-  const [selected, setSelected] = useState<Date | undefined>(undefined);
+  const parsedValue = value ? parse(value, 'yyyy-MM-dd', new Date()) : undefined;
+  const [selected, setSelected] = useState<Date | undefined>(parsedValue);
   const defaultClassNames = getDefaultClassNames();
   const [open, setOpen] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -38,10 +41,24 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (value) {
+      const parsed = parse(value, 'yyyy-MM-dd', new Date());
+      if (!isNaN(parsed.getTime())) {
+        setSelected(parsed);
+      }
+    } else {
+      setSelected(undefined);
+    }
+  }, [value]);
   return (
     <div className={`relative flex flex-col`}>
       <div className={'flex flex-col'}>
-        <label htmlFor={id} className={`font-medium text-goldenrod capitalize p-1 font-main `}>
+        <label
+          htmlFor={id}
+          className={`font-medium text-goldenrod capitalize p-1 font-main flex flex-row gap-1`}
+        >
           {required && <span className="text-red-700">* </span>}
           {title}
         </label>
@@ -50,7 +67,7 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
           name={id}
           type={type}
           id={id}
-          value={selected ? format(selected, 'yyyy-MM-dd') : ''}
+          value={value}
           readOnly
           className="hidden"
         />
@@ -61,7 +78,7 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
             <>
               <div
                 className={
-                  `rounded-lg text-olive font-main ` +
+                  `rounded-lg text-olive font-main text-left ` +
                   'p-1 w-[300px] hover:cursor-pointer focus:ring-goldenrod focus:outline-none focus:ring-2 bg-khaki'
                 }
                 onClick={() => {
@@ -74,16 +91,18 @@ export default function DateInputElement<TFieldValues extends Record<string, unk
                 <div
                   tabIndex={0}
                   ref={pickerRef}
-                  className="absolute z-10 w-fit h-fit outline-none mt-1 -translate-y-1"
+                  className="absolute -top-24 z-10 w-fit h-fit outline-none mt-1 -translate-y-1"
                 >
                   <DayPicker
                     mode="single"
                     disabled={{ before: new Date(1930, 1, 1), after: new Date() }}
                     selected={selected}
+                    defaultMonth={selected}
                     onSelect={(day) => {
-                      setSelected(day);
                       if (day) {
-                        field.onChange(format(day, 'yyyy-MM-dd'));
+                        const formatted = format(day, 'yyyy-MM-dd');
+                        setSelected(day);
+                        field.onChange(formatted); // this triggers update to value
                       }
                       setOpen(false);
                     }}

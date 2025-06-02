@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction, AsyncThunk } from '@reduxjs/toolkit';
-import { Filters } from '../../pages/catalog/components/catalogFilter/catalog-filter.tsx';
+import { Filters } from '../../pages/catalog/components/catalogFilter/CatalogFilter.tsx';
 import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
 import { requestFilter } from '../../api/catalog/filter/request-filter.ts';
 import { getProducts } from '../../api/catalog/request-products.ts';

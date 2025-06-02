@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LoginForm } from './components/Login-form.tsx';
+import { LoginForm } from './components/LoginForm.tsx';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import RoutingLink from '../../components/RoutingLink/RoutingLink.tsx';

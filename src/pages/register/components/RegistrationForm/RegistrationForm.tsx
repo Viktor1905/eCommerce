@@ -10,8 +10,6 @@ import OKModalDialog from '../../../../components/OKModalDialog/OKModalDialog';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const firstNameLocalstorageKey = 'firstName';
-
 export default function RegistrationForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -33,7 +31,6 @@ export default function RegistrationForm() {
 
   function closeModal() {
     setIsModalOpen(false);
-    localStorage.setItem(firstNameLocalstorageKey, firstName);
     toast.success('Account created!', {
       position: 'top-right',
     });
