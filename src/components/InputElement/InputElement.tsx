@@ -6,6 +6,7 @@ type InputElementProps<TFieldName extends string> = {
   id: string;
   type: string;
   error?: string;
+  value?: string;
   register?: UseFormRegisterReturn<TFieldName>;
   required?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>;
@@ -29,7 +30,7 @@ export default function InputElement<TFieldName extends string>({
         <label
           htmlFor={id}
           className={`font-medium text-goldenrod capitalize p-1 font-main ${
-            isCheckbox ? 'w-fit' : ''
+            isCheckbox ? 'w-fit' : ' flex flex-row gap-1'
           }`}
         >
           {required && <span className="text-red-700">* </span>}

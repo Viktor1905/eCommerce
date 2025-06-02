@@ -1,11 +1,17 @@
 import styles from './Header.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { createContext, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
+import { fetchProductsByQuery } from '../../api/products/search';
+
+import { useDispatch } from 'react-redux';
+import { setFilteredProducts } from '../../store/slice/catalog-slice';
+import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
+import type { AppDispatch } from '../../store/store';
+import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
+import { fetchProfile } from '../../api/profile/profile';
+import { toast, ToastContainer } from 'react-toastify';
 
 const UserContext = createContext<string | null>(null);
 
@@ -24,31 +30,52 @@ export function Header() {
   const [userName, setUserName] = useState('Guest');
 
   useEffect(() => {
-    const updateUser = () => {
-      const name = localStorage.getItem('firstName') ?? 'Guest';
-      setUserName(name);
+    const fetchUser = async () => {
+      const token = getTokenFromCookie();
+      if (!token) {
+        setUserName('Guest');
+        return;
+      }
+
+      try {
+        const customerInfo = await fetchProfile(token);
+        setUserName(customerInfo.firstName || 'Guest');
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setUserName('Guest');
+      }
     };
 
-    updateUser();
-
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'firstName') updateUser();
-    };
-
-    window.addEventListener('storage', handleStorage);
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-    };
+    void fetchUser();
   }, [location.pathname]);
 
   useEffect(() => {
-    const handleGlobalUpdate = () => {
-      setUserName(localStorage.getItem('firstName') ?? 'Guest');
+    const clearAuthCookies = () => {
+      document.cookie = 'refresh_token=; Max-Age=0; path=/';
+      document.cookie = 'access_token=; Max-Age=0; path=/';
     };
 
-    window.addEventListener('auth-update', handleGlobalUpdate);
+    const handleAuthUpdate = () => {
+      const token = getTokenFromCookie();
+      if (!token) {
+        clearAuthCookies();
+        setUserName('Guest');
+        return;
+      }
+
+      void fetchProfile(token)
+        .then((customerInfo) => {
+          setUserName(customerInfo.firstName || 'Guest');
+        })
+        .catch(() => {
+          clearAuthCookies();
+          setUserName('Guest');
+        });
+    };
+
+    window.addEventListener('auth-update', handleAuthUpdate);
     return () => {
-      window.removeEventListener('auth-update', handleGlobalUpdate);
+      window.removeEventListener('auth-update', handleAuthUpdate);
     };
   }, []);
 
@@ -101,13 +128,51 @@ function Logo() {
 }
 
 function SearchPanel() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
+
+  async function handleSearch(): Promise<void> {
+    const value = inputRef.current?.value.trim();
+    if (!value) return;
+
+    try {
+      const raw = await fetchProductsByQuery(value);
+      const parsed = ProductProjectionResponseSchema.parse(raw);
+
+      dispatch(setFilteredProducts(parsed));
+    } catch (error) {
+      console.error('Search failed:', error);
+    }
+  }
+
+  useLayoutEffect(() => {
+    if (isOpen) inputRef.current?.focus();
+  }, [isOpen]);
   return (
     <div className={styles.search}>
-      <div className={styles['menu-search']}>Search in ▾</div>
+      <div
+        className={styles['menu-search']}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          void handleSearch();
+        }}
+      >
+        <span className="material-symbols-outlined">search</span>
+        Search
+      </div>
       <input
+        ref={inputRef}
         type="search"
         className={styles['input-search']}
-        placeholder="Search products… 🔍"
+        placeholder="Search pet food, toys, or brands…"
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            void navigate('/catalog');
+            void handleSearch();
+          }
+        }}
       ></input>
     </div>
   );
@@ -126,6 +191,7 @@ function MenuHeader() {
         <Favorite />
         <Cart />
       </ul>
+      <ToastContainer className={'w-0 h-0'} />
     </nav>
   );
 }
@@ -138,6 +204,12 @@ function Login() {
   const handleAuth = () => {
     if (!isGuest) {
       logoutUser();
+
+      document.cookie = 'refresh_token=; Max-Age=0; path=/';
+      document.cookie = 'access_token=; Max-Age=0; path=/';
+      toast.success('Logged out!', {
+        position: 'top-right',
+      });
       void navigate('/login');
       window.dispatchEvent(new CustomEvent('auth-update'));
     } else {

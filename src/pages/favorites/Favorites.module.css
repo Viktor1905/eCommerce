@@ -1,7 +1,5 @@
 .canvas-page {
   display: flex;
-  height: calc(100svh - 280px);
-  max-height: 100dvh;
   color: var(--color-goldenrod);
   flex-direction: column;
   justify-content: flex-start;
@@ -21,10 +19,4 @@
 
 .favorites-img {
   width: 320px;
-}
-
-@media (max-width: 800px) {
-  .canvas-page {
-  height: calc(100svh - 330px);
-  }
 }

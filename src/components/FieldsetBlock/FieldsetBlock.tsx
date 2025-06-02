@@ -3,11 +3,12 @@ import CountrySelector from '../CountrySelector/CountrySelector';
 import DateInputElement from '../DateInputElement/DateInputElement';
 import InputElement from '../InputElement/InputElement';
 
-interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
+export interface FieldDescriptor<TFieldName extends Path<TFieldValues>, TFieldValues> {
   required?: boolean;
   id: TFieldName;
   title: string;
   type: string;
+  value?: string;
 }
 
 interface FieldsetBlockProps<TFieldValues extends Record<string, unknown>> {
@@ -35,41 +36,48 @@ export default function FieldsetBlock<TFieldValues extends Record<string, unknow
       </legend>
 
       {content.map((property) => {
-        const id = property.id;
+        const { id, type, title, required, value } = property;
+        const error = errors[id]?.message as string | undefined;
+
+        if (type === 'country') {
+          return (
+            <CountrySelector
+              key={id}
+              id={id}
+              register={register(id)}
+              error={error}
+              required={required}
+            />
+          );
+        }
+
         const isDateField = String(id).toLowerCase().includes('date');
 
         return isDateField ? (
           <DateInputElement
-            key={String(id)}
-            title={property.title}
-            error={errors[id]?.message as string | undefined}
+            key={id}
+            title={title}
+            error={error}
             id={id}
-            type={property.type}
+            type={type}
             control={control}
             register={register(id)}
-            required={property.required}
+            required={required}
+            value={value}
           />
         ) : (
           <InputElement
-            key={String(id)}
-            title={property.title}
-            id={String(id)}
-            type={property.type}
+            value={value}
+            key={id}
+            title={title}
+            id={id}
+            type={type}
             register={register(id)}
-            error={errors[id]?.message as string | undefined}
-            required={property.required}
+            error={error}
+            required={required}
           />
         );
       })}
-
-      {title.includes('address') && (
-        <CountrySelector
-          id={`${title.split(' ')[0]}Country`}
-          register={register(`${title.split(' ')[0]}Country` as Path<TFieldValues>)}
-          error={errors[`${title.split(' ')[0]}Country` as Path<TFieldValues>]?.message as string}
-          required={true}
-        />
-      )}
     </fieldset>
   );
 }

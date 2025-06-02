@@ -1,7 +1,7 @@
 .main-wrapper-404 {
   display: flex;
   width: 100%;
-  height: calc(100svh - 280px);
+  height: calc(100dvh - 280px);
   justify-content: center;
   align-items: center;
 }
@@ -37,7 +37,7 @@
 
 @media (max-width: 800px) {
   .main-wrapper-404 {
-    height: calc(100svh - 330px);
+    height: calc(100dvh - 330px);
   }
 
   .back-home-button {
@@ -51,7 +51,7 @@
 
 @media (max-width: 600px) {
   .main-wrapper-404 {
-    height: calc(100svh - 445px);
+    height: calc(100dvh - 445px);
   }
 
   .back-home-button {

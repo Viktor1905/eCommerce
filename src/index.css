@@ -26,12 +26,17 @@
   --font-additional: 'Marmelad', 'sans-serif';
   --font-main-bd: 'Rubik-bold', 'sans-serif';
   color-scheme: light dark;
-  color: #ffffffde;
-  background-color: #242424;
+  color: black;
+  background-color: #ffffffde;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.btn-custom {
+  @apply w-full hover:cursor-pointer m-auto !border-[2px] rounded-lg border-goldenrod !bg-goldenrod text-white
+  hover:!bg-goldenrod/70 hover:!border-goldenrod disabled:!cursor-not-allowed disabled:opacity-50
+  disabled:hover:!bg-goldenrod disabled:hover:text-white focus:!border-olive focus:!outline-0;
 }
 
 @font-face {

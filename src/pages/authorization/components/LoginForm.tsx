@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { LoginInput } from './Login-input.tsx';
+import { LoginInput } from './LoginInput.tsx';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { schema } from './login-scheme.tsx';
+import { schema } from './loginScheme.ts';
 import { authenticateUser } from '../../../api/login/login.ts';
 import { LoginResponse } from '../../../api/login/login.types.ts';
 import { FormEvent } from 'react';

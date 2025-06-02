@@ -8,7 +8,7 @@ import {
   setShippingAddress,
   SignUpData,
   signUpUser,
-} from '../../../api/sign-up/api';
+} from '../../../api/sign-up/sign-up';
 
 export function useRegistrationForm(onSuccess: (firstName: string) => void) {
   const {
@@ -21,6 +21,10 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
   } = useForm<FormFields>({
     mode: 'all',
     resolver: zodResolver(optionalSchema),
+    defaultValues: {
+      billingCountry: '',
+      shippingCountry: '',
+    },
   });
 
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -61,6 +65,7 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
 
   const handleValidSubmit = async (data: FormFields) => {
     const shippingAddress = {
+      id: '',
       firstName: data.firstName,
       lastName: data.lastName,
       streetName: data.shippingStreetName,
@@ -72,6 +77,7 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
     const billingAddress = data.sameAsShipping
       ? shippingAddress
       : {
+          id: '',
           firstName: data.firstName,
           lastName: data.lastName,
           streetName: data.billingStreetName ?? '',
@@ -110,11 +116,6 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
       const token = await getAccessToken();
       const signUpResult = await signUpUser(apiPayload, token);
       console.log('Sign-up successful:', signUpResult);
-      console.log('def: ', data.allDefaultAddress);
-
-      console.log('ship: ', data.shippingDefaultAddress);
-
-      console.log('bill: ', data.billingDefaultAddress);
       const setAddressesResult = await setShippingAddress({
         successUserResponse: signUpResult,
         token: token,
