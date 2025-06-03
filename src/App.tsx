@@ -16,6 +16,7 @@ import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddressesPage from './pages/addresses/AddressesPage.tsx';
+import { ProductDetailsPage } from './pages/product/Product.tsx';
 
 function App() {
   const [token, setToken] = useState<string | null>(null);
@@ -39,7 +40,7 @@ function App() {
           element={<>{!token ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
-        {/* <Route path="/product/:id" element={<ProductDetailsPage />} /> */}
+        <Route path="/product/:id" element={<ProductDetailsPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
