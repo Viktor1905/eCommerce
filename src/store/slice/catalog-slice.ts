@@ -5,6 +5,7 @@ import { requestFilter } from '../../api/catalog/filter/request-filter.ts';
 import { getProducts } from '../../api/catalog/request-products.ts';
 
 export interface CatalogState {
+  searchTerm: string;
   filters: Filters;
   sort?: string;
   products: ProductProjectionResponse | null;
@@ -13,6 +14,7 @@ export interface CatalogState {
   error?: string;
 }
 const initialState: CatalogState = {
+  searchTerm: '',
   filters: { brand: [], discounted: [], for: [], priceRange: [0, 0] },
   sort: undefined,
   products: null,
@@ -32,12 +34,12 @@ export const loadCatalog: AsyncThunk<ProductProjectionResponse, undefined, state
       rejectValue: string;
     }
   >('catalog/load', async (_, thunkAPI) => {
-    const { products, filters, sort } = thunkAPI.getState().catalog;
+    const { products, searchTerm, filters, sort } = thunkAPI.getState().catalog;
     try {
       if (!products) {
         return await getProducts();
       }
-      return await requestFilter(filters, sort);
+      return await requestFilter(filters, searchTerm, sort);
     } catch (error) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(`Failed to load catalog: ${error.message}`);
@@ -52,6 +54,9 @@ const slice = createSlice({
   reducers: {
     setFilters(state, action: PayloadAction<Filters>) {
       state.filters = action.payload;
+    },
+    setSearchTerm(state, action: PayloadAction<string>) {
+      state.searchTerm = action.payload;
     },
     setSort(state, action: PayloadAction<string | undefined>) {
       state.sort = action.payload;
@@ -80,5 +85,5 @@ const slice = createSlice({
   },
 });
 
-export const { setFilters, setSort, setFilteredProducts } = slice.actions;
+export const { setFilters, setSort, setFilteredProducts, setSearchTerm } = slice.actions;
 export default slice.reducer;

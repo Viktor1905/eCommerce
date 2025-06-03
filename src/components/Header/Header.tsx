@@ -6,7 +6,12 @@ import { logoutUser } from '../../api/logout/logout';
 import { fetchProductsByQuery } from '../../api/products/search';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { CatalogState, loadCatalog, setFilteredProducts } from '../../store/slice/catalog-slice';
+import {
+  CatalogState,
+  loadCatalog,
+  setFilteredProducts,
+  setSearchTerm,
+} from '../../store/slice/catalog-slice';
 import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
 import type { AppDispatch, RootState } from '../../store/store';
 
@@ -113,6 +118,7 @@ function SearchPanel() {
   async function handleSearch(): Promise<void> {
     const rawValue = inputRef.current?.value ?? '';
     const value = rawValue.trim();
+    dispatch(setSearchTerm(value));
 
     if (value === '' && products) {
       dispatch(setFilteredProducts(products));
@@ -126,6 +132,7 @@ function SearchPanel() {
       const raw = await fetchProductsByQuery(value);
       const parsed = ProductProjectionResponseSchema.parse(raw);
       dispatch(setFilteredProducts(parsed));
+      console.log(parsed);
     } catch (error) {
       console.error('Search failed:', error);
     }

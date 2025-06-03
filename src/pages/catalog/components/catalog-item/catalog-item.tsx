@@ -9,6 +9,20 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
       return obj.name === 'small-description';
     }
   );
+
+  const enUs = product.description?.['en-US'];
+
+  let firstLocale: string | undefined;
+  if (!enUs && product.description) {
+    const values = Object.values(product.description);
+    if (values.length > 0) firstLocale = values[0];
+  }
+
+  const descriptionText =
+    description && typeof description.value === 'string'
+      ? description.value
+      : (enUs ?? firstLocale ?? 'No description available');
+
   const isDiscount: number | false =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.discounted?.value
       .centAmount ?? false;
@@ -54,13 +68,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
           </div>
         )}
       </div>
-      <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">
-        {description
-          ? typeof description.value !== 'object'
-            ? description.value
-            : 'No description available'
-          : 'No description available'}
-      </p>
+      <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">{descriptionText}</p>
     </div>
   );
 }

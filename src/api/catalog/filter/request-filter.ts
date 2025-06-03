@@ -4,10 +4,17 @@ import { isProductsResponse } from '../check-response.ts';
 import { ProductProjectionResponse } from '../products.types.ts';
 export async function requestFilter(
   filterParams: RequestFilterParams,
+  searchTerm?: string,
   sortParam?: string
 ): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
   const queryParts: string[] = [];
+
+  if (searchTerm && searchTerm.trim() !== '') {
+    const lang = 'en-US';
+    queryParts.push(`text.${lang}=${encodeURIComponent(searchTerm.trim())}`);
+  }
+
   const [min, max] = filterParams.priceRange;
   queryParts.push(
     `filter=variants.price.centAmount:range(${(min * 100).toString()} to ${(max * 100).toString()})`
