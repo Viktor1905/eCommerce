@@ -85,21 +85,25 @@ export function Header() {
 
   return (
     <div className={styles['header-wrapper']}>
-      <span className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}>bookmark</span>
       <UserContext.Provider value={userName}>
-        <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
-        <header className={styles.header}>
-          <div className={styles['header-case']}>
-            <div className={styles['header-inner']}>
-              <div className={styles['home-link-wrapper']}>
-                <Logo />
-                <HomeLink />
+        <div className="flex flex-col w-full relative">
+          <header className={styles.header}>
+            <div className={styles['header-case']}>
+              <div className={styles['header-inner']}>
+                <div className={styles['home-link-wrapper']}>
+                  <Logo />
+                  <HomeLink />
+                </div>
+                <SearchPanel />
               </div>
-              <SearchPanel />
+              <MenuHeader />
             </div>
-            <MenuHeader />
-          </div>
-        </header>
+          </header>
+          <span className={`material-symbols-outlined ${styles['add-menu-bookmark']}`}>
+            bookmark
+          </span>
+          <AddMenu isOpen={isOpen} toggleMenu={toggleMenu} />
+        </div>
       </UserContext.Provider>
     </div>
   );
@@ -313,7 +317,7 @@ function AsideMenuBlock({ isOpen, toggleMenu }: AllMenuProps) {
           <span className={`material-symbols-outlined`}>close</span>
         </div>
         <AsideMenuProfile toggleMenu={toggleMenu} />
-        <AsideMenuOurTeam toggleMenu={toggleMenu} />
+        <AsideMenuItems toggleMenu={toggleMenu} />
       </div>
     </>
   );
@@ -340,20 +344,37 @@ function AsideMenuProfile({ toggleMenu }: AddMenuBlockProps) {
   );
 }
 
-function AsideMenuOurTeam({ toggleMenu }: AddMenuBlockProps) {
+function AsideMenuItems({ toggleMenu }: AddMenuBlockProps) {
   const navigate = useNavigate();
+
+  const handleClick = (linkTo: string) => {
+    toggleMenu();
+    void navigate(`/${linkTo}`);
+  };
+
+  const menuItems = [
+    { label: 'Catalog', path: 'catalog' },
+    { label: 'Profile', path: 'profile' },
+    { label: 'Orders', path: 'orders' },
+    { label: 'Our team', path: 'team' },
+  ];
+
   return (
-    <div
-      onClick={() => {
-        toggleMenu();
-        void navigate('/team');
-      }}
-      className={styles['aside-menu-team']}
-    >
-      <span className={styles['about-team']}>Our Friendly Team</span>
-      <span className={`material-symbols-outlined ${styles['aside-menu-arrow']}`}>
-        arrow_forward_ios
-      </span>
+    <div className="p-4">
+      <div className="flex flex-col gap-2">
+        {menuItems.map(({ label, path }) => (
+          <div
+            key={path}
+            onClick={() => {
+              handleClick(path);
+            }}
+            className="about-team hover:cursor-pointer hover:bg-khaki p-2"
+            aria-label={`Navigate to ${label}`}
+          >
+            {label}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -361,26 +382,13 @@ function AsideMenuOurTeam({ toggleMenu }: AddMenuBlockProps) {
 function AddMenuBlock({ toggleMenu }: AddMenuBlockProps) {
   const navigate = useNavigate();
   return (
-    <div className={styles['add-header-menu']}>
-      <div className={styles['wrapper-add-header-menu']}>
-        <div onClick={toggleMenu} className={styles['add-menu-button-all']}>
-          <span className="material-symbols-outlined">menu</span>
-          All
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div onClick={() => void navigate('/catalog')} className={styles['add-menu-catalog']}>
-            Catalog
-          </div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-pet-food']}>Pet food</div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-accessories']}>Accessories</div>
-        </div>
-        <div className={styles['add-menu-list']}>
-          <div className={styles['add-menu-promotions']}>Promotions</div>
-        </div>
+    <div className={'flex flex-row gap-2 p-6 pt-2 pb-2 text-white'}>
+      <div onClick={toggleMenu} className={styles['add-menu-list']}>
+        <span className="material-symbols-outlined hover:cursor-pointer">menu</span>
+        <div className={styles['add-menu-link']}>Menu</div>
+      </div>
+      <div className={styles['add-menu-link']} onClick={() => void navigate('/catalog')}>
+        Catalog
       </div>
     </div>
   );
