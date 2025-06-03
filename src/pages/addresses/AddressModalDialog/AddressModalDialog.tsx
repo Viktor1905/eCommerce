@@ -72,15 +72,15 @@ export default function AddressModalDialog({
     },
     { id: 'city', title: 'City', type: 'text', required: true },
     {
-      id: 'postalCode',
-      title: 'Postal Code',
-      type: 'text',
-      required: true,
-    },
-    {
       id: 'country',
       title: 'Country',
       type: 'country',
+      required: true,
+    },
+    {
+      id: 'postalCode',
+      title: 'Postal Code',
+      type: 'text',
       required: true,
     },
   ] satisfies {
@@ -220,7 +220,7 @@ export default function AddressModalDialog({
       className="fixed backdrop-blur-[2px] inset-0 backdrop-brightness-[.7] flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md flex flex-col gap-4 items-center text-center">
+      <div className="relative bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md flex flex-col gap-4 items-center text-center overflow-x-hidden max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={closeModal}

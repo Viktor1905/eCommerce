@@ -53,7 +53,12 @@ export function ProfilePage() {
     document.title = 'Profile | Zoo Shop | Pet Supplies';
   }, []);
   return (
-    <section className="w-fit m-auto flex flex-col justify-center items-center rounded-2xl bg-white">
+    <section
+      className={
+        'm-auto relative flex flex-col justify-center items-center ' +
+        'rounded-2xl bg-white min-w-[300px] max-w-[500px]'
+      }
+    >
       <h2 className="text-2xl pt-4 text-center text-jungle font-main-bd">Profile</h2>
       {isUserModalOpen && !isPetModalOpen && !isPasswordModalOpen && customer && (
         <UserModalDialog
@@ -75,7 +80,7 @@ export function ProfilePage() {
       {loading ? (
         <div className="text-jungle p-2 m-2">Loading...</div>
       ) : customer ? (
-        <div className="p-2 m-1 flex flex-col gap-2 text-olive">
+        <div className="w-full p-2 m-1 flex flex-col gap-2 text-olive">
           {/*user info block*/}
           <div className="flex flex-col gap-2 m-2 bg-light-gray pt-2 pb-2 pl-4 pr-4 rounded-3xl">
             <p className="text-lg font-bold flex justify-between">
