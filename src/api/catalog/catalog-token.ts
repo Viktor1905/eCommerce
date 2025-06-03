@@ -3,6 +3,9 @@ import { API_CONFIG } from '../login/login.ts';
 export async function getCatalogToken(): Promise<string> {
   const authString = `${API_CONFIG.clientId}:${API_CONFIG.secretId}`;
   const encodedAuth: string = btoa(authString);
+
+  const scope = `view_published_products:${API_CONFIG.projectKey} view_products:${API_CONFIG.projectKey}`;
+
   try {
     const response: Response = await fetch(
       `https://auth.${API_CONFIG.region}.commercetools.com/oauth/token`,
@@ -12,7 +15,7 @@ export async function getCatalogToken(): Promise<string> {
           Authorization: `Basic ${encodedAuth}`,
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `grant_type=client_credentials&scope=view_published_products:${API_CONFIG.projectKey}`,
+        body: `grant_type=client_credentials&scope=${encodeURIComponent(scope)}`,
       }
     );
     if (!response.ok) {
