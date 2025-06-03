@@ -52,7 +52,7 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
   }, [fetchProductTypes, selected]);
 
   return (
-    <section className="flex flex-col gap-2 p-2 pb-0 pl-6 pr-6 ">
+    <section className="flex flex-col gap-2 p-4 pb-0 pl-6 pr-6 ">
       <div className="flex flew-row gap-2">
         <span className=" text-olive">Categories: </span>
         {/* Category buttons */}

@@ -75,10 +75,17 @@ export function CatalogPage(): ReactElement {
         <div className="col-span-4 max-[900px]:col-span-5 relative">
           <button
             type="button"
-            className="self-end absolute top-0 left-0 fill-jungle cursor-pointer hover:fill-goldenrod min-[900px]:hidden"
+            className="self-end absolute top-0 left-4 fill-jungle cursor-pointer hover:fill-goldenrod min-[900px]:hidden"
             onClick={onBurgerClick}
           >
-            <RenderFilterBtn />
+            <div className="relative group ">
+              <RenderFilterBtn />
+              <div className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                <div className="bg-white text-gray-700 text-xs p-1 rounded shadow w-max">
+                  {'filter'}
+                </div>
+              </div>
+            </div>
           </button>
           <CatalogList />
         </div>
