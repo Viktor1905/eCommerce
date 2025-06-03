@@ -18,8 +18,8 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
     { id: string; name: string; description: string }[]
   >([]);
 
-  const handleClick = (item: { id: string; name: string; description: string }) => {
-    if (selected && selected.id === item.id) {
+  const handleClick = (item?: { id: string; name: string; description: string }) => {
+    if (!item || (selected && selected.id === item.id)) {
       setSelected(null);
       onFilterSubmit({
         ...filters,
@@ -80,7 +80,24 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
       </div>
 
       {/* Breadcrumbs */}
-      <div className="text-sm text-gray-500">Catalog{selected ? `  >  ${selected.name}` : ''}</div>
+      <div className="text-sm text-gray-500 flex flex-row gap-2">
+        <div
+          className="hover:cursor-pointer"
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          Catalog
+        </div>
+        {selected ? (
+          <>
+            <div>{'>'}</div>
+            <div>{selected.name}</div>
+          </>
+        ) : (
+          ''
+        )}
+      </div>
     </section>
   );
 }
