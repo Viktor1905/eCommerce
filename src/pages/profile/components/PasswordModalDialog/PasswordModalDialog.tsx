@@ -95,7 +95,7 @@ export default function PasswordModalDialog({
       <div
         className={
           'relative bg-white rounded-2xl shadow-2xl p-6 w-[90%] max-w-md flex flex-col ' +
-          'gap-4 items-center text-center max-h-[90vh] overflow-y-auto '
+          'gap-4 items-center text-center max-h-[90vh] overflow-y-auto  overflow-x-hidden'
         }
       >
         <button
