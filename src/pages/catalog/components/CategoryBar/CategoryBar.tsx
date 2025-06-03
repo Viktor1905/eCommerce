@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { getProductTypes } from '../../../../api/catalog/request-product-types';
-import { Filters } from '../catalogFilter/catalog-filter';
+import { Filters } from '../catalogFilter/CatalogFilter';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store/store';
 import { setType } from '../../../../store/slice/catalog-slice';
