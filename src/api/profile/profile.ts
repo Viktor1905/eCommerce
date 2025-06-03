@@ -79,7 +79,6 @@ export async function updatePetInfo({
     version: version,
     actions: [actions],
   };
-  console.log(body);
   const response = await fetch(CUSTOMER_ENDPOINT + `/${customerId ?? ''}`, {
     method: 'POST',
     headers: {
@@ -92,7 +91,6 @@ export async function updatePetInfo({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //Sign-up failed: Invalid response structure
   }
 
@@ -159,7 +157,6 @@ export async function updateUserInfo({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later');
   }
 
@@ -259,7 +256,6 @@ export async function setDefaultAddress({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     const rawJSON = ErrorResponseSchema.safeParse(raw);
     throw new Error(rawJSON.data?.message);
   }
@@ -339,11 +335,9 @@ export async function changeAddress({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     const rawJSON = ErrorResponseSchema.safeParse(raw);
     throw new Error(rawJSON.data?.message);
   }
-  console.log(parsed.data);
   return parsed.data;
 }
 
@@ -405,7 +399,6 @@ export async function addAddress({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     const rawJSON = ErrorResponseSchema.safeParse(raw);
     throw new Error(rawJSON.data?.message);
   }
@@ -454,7 +447,6 @@ export async function removeAddress({
   const raw: unknown = await response.json();
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
-    console.log('Raw response:', raw);
     const rawJSON = ErrorResponseSchema.safeParse(raw);
     throw new Error(rawJSON.data?.message);
   }

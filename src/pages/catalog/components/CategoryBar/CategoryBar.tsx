@@ -24,7 +24,6 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
       onFilterSubmit({
         ...filters,
       });
-      console.log('empty');
       dispatch(setType(''));
     } else {
       setSelected(item);
@@ -32,8 +31,6 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
         ...filters,
       });
       dispatch(setType(item.id));
-
-      console.log(item.name);
     }
   };
 
