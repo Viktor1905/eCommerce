@@ -40,7 +40,7 @@ function App() {
           element={<>{!token ? <RegistrationPage /> : <Navigate to="/" />}</>}
         />
         <Route path="catalog" element={<CatalogPage />} />
-        <Route path="/product/:id" element={<ProductDetailsPage />} />
+        <Route path="product/:id" element={<ProductDetailsPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="favorites" element={<FavoritesPage />} />
         <Route path="orders" element={<OrdersPage />} />
