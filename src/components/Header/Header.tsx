@@ -135,7 +135,7 @@ function SearchPanel() {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
-  function handleSearch(): Promise<void> {
+  function handleSearch(): void {
     const rawValue = inputRef.current?.value ?? '';
     const value = rawValue.trim();
     dispatch(setSearchTerm(value));
@@ -155,7 +155,7 @@ function SearchPanel() {
         onClick={() => {
           setIsOpen(!isOpen);
           void navigate('/catalog');
-          void handleSearch();
+          handleSearch();
         }}
       >
         <span className="material-symbols-outlined">search</span>
@@ -168,7 +168,7 @@ function SearchPanel() {
         placeholder="Search pet food, toys, or brands…"
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            void handleSearch();
+            handleSearch();
             void navigate('/catalog');
           }
         }}
@@ -177,7 +177,7 @@ function SearchPanel() {
         className={`material-symbols-outlined ${styles['back-search']}`}
         onClick={() => {
           if (inputRef.current) inputRef.current.value = '';
-          void handleSearch();
+          handleSearch();
         }}
       >
         backspace
