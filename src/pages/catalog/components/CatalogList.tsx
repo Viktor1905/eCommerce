@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { ProductProjection } from '../../../api/catalog/products.types.ts';
-import { CatalogItem } from './catalogItem/catalogItem.tsx';
+import { CatalogItem } from './CatalogItem/CatalogItem.tsx';
 import { ProductsQuantity } from './ProductsQuantity.tsx';
 import { Pagination } from './Pagination.tsx';
 import { useSelector } from 'react-redux';
