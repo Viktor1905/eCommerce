@@ -5,8 +5,8 @@ import {
 } from '../../../../api/catalog/products.types.ts';
 import { ReactElement } from 'react';
 import { UseFormRegister } from 'react-hook-form';
-import { Filters } from './catalog-filter.tsx';
-import { CustomCheckbox } from './components/custom-checkbox.tsx';
+import { Filters } from './CatalogFilter.tsx';
+import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
 export function RenderForWhomFilter({ products, register }: FilterProps): ReactElement {
   const forWhom = new Set<string>();

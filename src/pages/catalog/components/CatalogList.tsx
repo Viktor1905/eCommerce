@@ -1,12 +1,12 @@
 import { ReactElement, useEffect, useState } from 'react';
 import { ProductProjection } from '../../../api/catalog/products.types.ts';
-import { CatalogItem } from './catalog-item/catalog-item.tsx';
-import { ProductsQuantity } from './products-quantity.tsx';
-import { Pagination } from './pagination.tsx';
+import { CatalogItem } from './catalogItem/catalogItem.tsx';
+import { ProductsQuantity } from './ProductsQuantity.tsx';
+import { Pagination } from './Pagination.tsx';
 import { useSelector } from 'react-redux';
 import { CatalogState } from '../../../store/slice/catalog-slice.ts';
 import { RootState } from '../../../store/store.ts';
-import { RenderSortList } from './render-sort-list.tsx';
+import { RenderSortList } from './RenderSortList.tsx';
 
 export function CatalogList(): ReactElement {
   const { products, filteredProducts } = useSelector((s: RootState): CatalogState => s.catalog);

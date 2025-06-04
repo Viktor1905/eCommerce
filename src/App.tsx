@@ -3,7 +3,7 @@ import { Layout } from './components/layout/Layout.tsx';
 import { HomePage } from './pages/home/HomePage.tsx';
 import { LoginPage } from './pages/authorization/Login-page.tsx';
 import RegistrationPage from './pages/register/RegistrationPage.tsx';
-import { CatalogPage } from './pages/catalog/catalog-page.tsx';
+import { CatalogPage } from './pages/catalog/CatalogPage.tsx';
 import { CartPage } from './pages/cart/Cart.tsx';
 import { FavoritesPage } from './pages/favorites/Favorites.tsx';
 import { OrdersPage } from './pages/orders/OrdersPage.tsx';

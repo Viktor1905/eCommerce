@@ -1,6 +1,6 @@
 import { Control, Controller } from 'react-hook-form';
 import Slider from 'rc-slider';
-import { Filters } from './catalog-filter.tsx';
+import { Filters } from './CatalogFilter.tsx';
 import 'rc-slider/assets/index.css';
 
 export function PriceSlider({ control, lowestPrice, highestPrice }: PriceSliderProps) {
