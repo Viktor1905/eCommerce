@@ -114,7 +114,7 @@ export default function AddressModalDialog({
     try {
       const token = getTokenFromCookie();
       if (!token) throw new Error('Something went wrong, please try again later'); // no token
-      const changeAddressResult = await changeAddress({
+      await changeAddress({
         customer: customer,
         token: token,
         address: newAddress,
@@ -122,7 +122,6 @@ export default function AddressModalDialog({
         isShipping: data.isShipping ?? false,
         isBilling: data.isBilling ?? false,
       });
-      console.log('ok: ', changeAddressResult);
       await refreshCustomer();
       toast.success('Address updated!', {
         position: 'top-right',
@@ -131,7 +130,6 @@ export default function AddressModalDialog({
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-      console.log(error);
       setSubmitError(message);
     }
   };
@@ -172,7 +170,6 @@ export default function AddressModalDialog({
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-      console.log(error);
       setSubmitError(message);
     }
   };

@@ -18,13 +18,12 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
     { id: string; name: string; description: string }[]
   >([]);
 
-  const handleClick = (item: { id: string; name: string; description: string }) => {
-    if (selected && selected.id === item.id) {
+  const handleClick = (item?: { id: string; name: string; description: string }) => {
+    if (!item || (selected && selected.id === item.id)) {
       setSelected(null);
       onFilterSubmit({
         ...filters,
       });
-      console.log('empty');
       dispatch(setType(''));
     } else {
       setSelected(item);
@@ -32,8 +31,6 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
         ...filters,
       });
       dispatch(setType(item.id));
-
-      console.log(item.name);
     }
   };
 
@@ -52,7 +49,7 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
   }, [fetchProductTypes, selected]);
 
   return (
-    <section className="flex flex-col gap-2 p-2 pb-0 pl-6 pr-6 ">
+    <section className="flex flex-col gap-2 p-4 pb-0 pl-6 pr-6 ">
       <div className="flex flew-row gap-2">
         <span className=" text-olive">Categories: </span>
         {/* Category buttons */}
@@ -80,7 +77,24 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
       </div>
 
       {/* Breadcrumbs */}
-      <div className="text-sm text-gray-500">Catalog{selected ? `  >  ${selected.name}` : ''}</div>
+      <div className="text-sm text-gray-500 flex flex-row gap-2">
+        <div
+          className="hover:cursor-pointer"
+          onClick={() => {
+            handleClick();
+          }}
+        >
+          Catalog
+        </div>
+        {selected ? (
+          <>
+            <div>{'>'}</div>
+            <div>{selected.name}</div>
+          </>
+        ) : (
+          ''
+        )}
+      </div>
     </section>
   );
 }

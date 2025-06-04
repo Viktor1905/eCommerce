@@ -59,13 +59,12 @@ export default function PasswordModalDialog({
 
       const token = getTokenFromCookie();
       if (!token) throw new Error('Something went wrong, please try again later'); // no token
-      const updatePetResult = await changePassword({
+      await changePassword({
         customer: user,
         token: token,
         newPassword: data.newPassword,
         currentPassword: data.currentPassword,
       });
-      console.log('ok:', updatePetResult);
       await refreshCustomer();
       toast.success('Password changed!', {
         position: 'top-right',
