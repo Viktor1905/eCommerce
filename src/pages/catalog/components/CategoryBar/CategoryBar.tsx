@@ -1,9 +1,9 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react';
 import { getProductTypes } from '../../../../api/catalog/request-product-types';
-import { Filters } from '../catalogFilter/CatalogFilter';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store/store';
 import { setType } from '../../../../store/slice/catalog-slice';
+import { Filters } from '../catalogFilter/CatalogFilter.tsx';
 
 export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactElement {
   const filters = useSelector((state: RootState) => state.catalog.filters);

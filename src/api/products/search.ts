@@ -11,6 +11,7 @@ export async function fetchProductsByQuery(query: string): Promise<unknown> {
       `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search`
     );
 
+    url.searchParams.append('sort', 'score desc');
     url.searchParams.append(`text.${lang}`, query);
     url.searchParams.append('limit', '30');
     const response = await fetch(url.toString(), {
@@ -31,7 +32,6 @@ export async function fetchProductsByQuery(query: string): Promise<unknown> {
     }
 
     const searchResult: unknown = await response.json();
-
     return searchResult;
   } catch (error) {
     if (error instanceof Error) {

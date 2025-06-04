@@ -5,13 +5,18 @@ import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext
 import { logoutUser } from '../../api/logout/logout';
 import { fetchProductsByQuery } from '../../api/products/search';
 
-import { useDispatch } from 'react-redux';
-import { setFilteredProducts } from '../../store/slice/catalog-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  CatalogState,
+  loadCatalog,
+  setFilteredProducts,
+  setSearchTerm,
+} from '../../store/slice/catalog-slice';
 import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
-import type { AppDispatch } from '../../store/store';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { fetchProfile } from '../../api/profile/profile';
 import { toast, ToastContainer } from 'react-toastify';
+import type { AppDispatch, RootState } from '../../store/store';
 
 const UserContext = createContext<string | null>(null);
 
@@ -134,17 +139,26 @@ function Logo() {
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const { products } = useSelector((s: RootState): CatalogState => s.catalog);
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
   async function handleSearch(): Promise<void> {
-    const value = inputRef.current?.value.trim();
-    if (!value) return;
+    const rawValue = inputRef.current?.value ?? '';
+    const value = rawValue.trim();
+    dispatch(setSearchTerm(value));
+
+    if (value === '' && products) {
+      dispatch(setFilteredProducts(products));
+    }
 
     try {
+      if (!products) {
+        await dispatch(loadCatalog());
+      }
+
       const raw = await fetchProductsByQuery(value);
       const parsed = ProductProjectionResponseSchema.parse(raw);
-
       dispatch(setFilteredProducts(parsed));
     } catch (error) {
       console.error('Search failed:', error);
@@ -154,12 +168,14 @@ function SearchPanel() {
   useLayoutEffect(() => {
     if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
+
   return (
     <div className={styles.search}>
       <div
         className={styles['menu-search']}
         onClick={() => {
           setIsOpen(!isOpen);
+          void navigate('/catalog');
           void handleSearch();
         }}
       >
@@ -173,11 +189,20 @@ function SearchPanel() {
         placeholder="Search pet food, toys, or brands…"
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === 'Enter') {
-            void navigate('/catalog');
             void handleSearch();
+            void navigate('/catalog');
           }
         }}
       ></input>
+      <span
+        className={`material-symbols-outlined ${styles['back-search']}`}
+        onClick={() => {
+          if (inputRef.current) inputRef.current.value = '';
+          void handleSearch();
+        }}
+      >
+        backspace
+      </span>
     </div>
   );
 }

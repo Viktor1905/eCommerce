@@ -35,7 +35,7 @@ export function CatalogPage(): ReactElement {
 
   useEffect(() => {
     void dispatch(loadCatalog());
-  }, [filters, sort]);
+  }, [dispatch, filters, sort]);
 
   useEffect(() => {
     formMethods.reset(initialFilterValues);
