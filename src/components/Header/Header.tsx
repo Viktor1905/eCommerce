@@ -382,7 +382,7 @@ function AsideMenuItems({ toggleMenu }: AddMenuBlockProps) {
 function AddMenuBlock({ toggleMenu }: AddMenuBlockProps) {
   const navigate = useNavigate();
   return (
-    <div className={'flex flex-row gap-2 p-6 pt-2 pb-2 text-white'}>
+    <div className={'flex flex-row gap-2 ml-auto mr-auto p-2 text-white w-[90%]'}>
       <div onClick={toggleMenu} className={styles['add-menu-list']}>
         <span className="material-symbols-outlined hover:cursor-pointer">menu</span>
         <div className={styles['add-menu-link']}>Menu</div>
