@@ -57,7 +57,7 @@ export function CatalogPage(): ReactElement {
     <FormProvider {...formMethods}>
       <section
         className={
-          'w-[90%] m-auto grid grid-cols-5 grid-rows-[auto_1fr] gap-y-4 gap-x-1 bg-white rounded  '
+          'w-[90%] ml-auto mr-auto grid grid-cols-5 grid-rows-[auto_1fr] gap-y-4 gap-x-1 bg-white rounded-2xl items-start mb-4'
         }
       >
         <div className="col-span-5">
