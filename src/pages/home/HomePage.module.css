@@ -6,6 +6,8 @@
   flex-direction: column;
   align-items: center;
   background-color: var(--color-light-gray);
+  border-radius: 1rem;
+  padding-bottom: 1rem;
 }
 
 .title-main {
@@ -79,7 +81,7 @@
   background-repeat: no-repeat;
 }
 
-.left-arrow, 
+.left-arrow,
 .right-arrow {
   position: absolute;
   color: #ffffff;
@@ -100,9 +102,7 @@
   color: var(--color-coral);
 }
 
-:is(.small-left-arrow,
-.small-right-arrow, .brand-left-arrow,
-.brand-right-arrow):hover {
+:is(.small-left-arrow, .small-right-arrow, .brand-left-arrow, .brand-right-arrow):hover {
   color: var(--color-olive);
 }
 
@@ -114,7 +114,7 @@
   font-size: 1.5rem;
 }
 
-.list-recommend{
+.list-recommend {
   position: relative;
   display: flex;
   width: 95%;
@@ -123,9 +123,8 @@
   overflow-x: hidden;
 }
 
-.list-recommend:hover :is(.small-left-arrow,
-.small-right-arrow) {
-    opacity: 1;
+.list-recommend:hover :is(.small-left-arrow, .small-right-arrow) {
+  opacity: 1;
 }
 
 .small-left-arrow,
@@ -138,7 +137,9 @@
   background-color: #ffffff;
   top: calc(50% - 1rem);
   left: 0;
-  transition: color 0.3s ease-in, opacity 0.3s ease-in;
+  transition:
+    color 0.3s ease-in,
+    opacity 0.3s ease-in;
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
@@ -165,9 +166,8 @@
   overflow-x: hidden;
 }
 
-.list-brands:hover :is(.brand-left-arrow,
-.brand-right-arrow) {
-    opacity: 1;
+.list-brands:hover :is(.brand-left-arrow, .brand-right-arrow) {
+  opacity: 1;
 }
 
 :is(.img0, .img1, .img2, .img3, .img4, .img5) {
@@ -254,7 +254,6 @@
   font-size: 1.6rem;
 }
 
-
 @media (max-width: 1300px) {
   .title-main,
   .list-recommend,
@@ -308,7 +307,7 @@
 
   .recommend,
   .brands {
-    font-size: clamp(0.5rem, 2.5vw, 1.8rem)
+    font-size: clamp(0.5rem, 2.5vw, 1.8rem);
   }
 }
 
@@ -329,9 +328,9 @@
   }
 
   .list-recommend,
-   .list-brands {
+  .list-brands {
     width: 100%;
-   }
+  }
 
   .small-left-arrow,
   .small-right-arrow,
