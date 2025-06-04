@@ -65,13 +65,12 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
         const token = getTokenFromCookie();
         if (!token) throw new Error('Something went wrong, please try again later'); // no token
 
-        const updatePetResult = await updatePetInfo({
+        await updatePetInfo({
           customer: user,
           token: token,
           petBirthDate: data.petBirthDate,
           petName: data.petName,
         });
-        console.log('ok: ', updatePetResult);
         await refreshCustomer();
         toast.success('Pet updated!', {
           position: 'top-right',
@@ -80,7 +79,6 @@ export default function PetModalDialog({ user, closeModal, refreshCustomer }: Pe
       } catch (error) {
         const message =
           error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-        console.log(error);
         setSubmitError(message);
       }
     } else closeModal();

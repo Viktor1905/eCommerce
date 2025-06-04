@@ -42,7 +42,6 @@ export async function requestFilter(
 
   const queryString = queryParts.join('&');
   const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
-  console.log(url);
   try {
     const response = await fetch(url, {
       method: 'GET',

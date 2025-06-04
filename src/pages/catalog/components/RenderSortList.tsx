@@ -22,27 +22,49 @@ export function RenderSortList() {
   };
 
   return (
-    <div className="absolute top-0 left-10 flex gap-1">
+    <div className="absolute top-0 left-12 flex gap-1">
       <button
         type="button"
         onClick={onSortPrice}
-        className=" cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white text-[15px]"
+        className={
+          'relative group cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white text-[15px] ' +
+          (sort?.includes('price') ? 'bg-jungle text-white' : '')
+        }
       >
         $ <span>{renderArrow('price')}</span>
+        {/* Tooltip wrapper */}
+        <div className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+          <div className="bg-white text-gray-700 text-xs p-1 rounded shadow w-max">
+            {'sort by price'}
+          </div>
+        </div>
       </button>
       <button
         type="button"
         onClick={onSortName}
-        className="cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white text-[15px]"
+        className={
+          'relative group cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white text-[15px] ' +
+          (sort?.includes('name.en') ? 'bg-jungle text-white' : '')
+        }
       >
         A-Z <span>{renderArrow('name.en-Us')}</span>
+        <div className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+          <div className="bg-white text-gray-700 text-xs p-1 rounded shadow w-max">
+            {'sort by name'}
+          </div>
+        </div>
       </button>
       <button
         type="button"
         onClick={onResetSort}
-        className="cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white  text-[15px]"
+        className="relative group cursor-pointer hover:bg-jungle transition-all pl-1 pr-1 rounded hover:text-white  text-[15px]"
       >
         ⤾
+        <div className="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+          <div className="bg-white text-gray-700 text-xs p-1 rounded shadow w-max">
+            {'reset sort'}
+          </div>
+        </div>
       </button>
     </div>
   );

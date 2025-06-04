@@ -103,7 +103,6 @@ export async function setShippingAddress({
   const parsed = CustomerResponseSchema.safeParse(raw);
   if (!parsed.success) {
     console.error('Invalid response structure:', parsed.error);
-    console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //Sign-up failed: Invalid response structure
   }
 
@@ -129,7 +128,8 @@ const TokenResponseSchema = z.object({
   token_type: z.string(),
 });
 
-export async function getCustomerAccessToken(email: string, password: string): Promise<void> {
+export async function getCustomerAccessToken(email: string, password: string): Promise<string> {
+  //might now work with safeParse
   const authUrl = `https://auth.${REGION}.commercetools.com/oauth/${PROJECT_KEY}/customers/token`;
   const basicAuth = btoa(`${CLIENT_ID}:${SECRET_ID}`);
 
@@ -157,12 +157,16 @@ export async function getCustomerAccessToken(email: string, password: string): P
   });
 
   const raw: unknown = await response.json();
-  console.log(raw);
-  //if (!response.ok) {
-  //  throw new Error(raw.message ?? 'Login failed: Invalid credentials or scopes');
-  //}
-  //
-  //return raw.access_token;
+  if (!response.ok) {
+    throw new Error('Login failed: Invalid credentials or scopes');
+  }
+  const parsedToken = TokenResponseSchema.safeParse(raw);
+  if (!parsedToken.success) {
+    throw new Error('Something went wrong, please try again later'); //Token fetch failed: Unknown error response
+  }
+  const token = parsedToken.data.access_token;
+
+  return token;
 }
 
 export async function getAccessToken(): Promise<string> {
@@ -282,7 +286,6 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
   const raw: unknown = await response.json();
   if (!response.ok) {
     const message = (raw as { message?: string }).message ?? response.statusText;
-    console.log(message);
     if (message.indexOf('token'))
       throw new Error(`Sign-up failed: Something went wrong, please try again later`);
     throw new Error(`Sign-up failed: ${message}`);
@@ -291,7 +294,6 @@ export async function signUpUser(data: SignUpData, token: string): Promise<userR
 
   if (!parsed.success) {
     console.error('Invalid response structure:', parsed.error.format());
-    console.log('Raw response:', raw);
     throw new Error('Something went wrong, please try again later'); //'Sign-up failed: Invalid response structure'
   }
 

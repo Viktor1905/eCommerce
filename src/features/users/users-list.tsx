@@ -16,7 +16,6 @@ const usersSchema = z.array(userSchema);
 
 const fetchUsers = async (): Promise<User[]> => {
   const response = await fetch('https://jsonplaceholder.typicode.com/users');
-  console.log(response);
   const json: unknown = await response.json(); // safer: mark as unknown
   const result = usersSchema.parse(json);
   return result;

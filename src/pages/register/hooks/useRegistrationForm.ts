@@ -115,20 +115,17 @@ export function useRegistrationForm(onSuccess: (firstName: string) => void) {
       setSubmitError('');
       const token = await getAccessToken();
       const signUpResult = await signUpUser(apiPayload, token);
-      console.log('Sign-up successful:', signUpResult);
-      const setAddressesResult = await setShippingAddress({
+      await setShippingAddress({
         successUserResponse: signUpResult,
         token: token,
         allDefaultAddress: data.allDefaultAddress ?? false,
         shippingDefaultAddress: data.shippingDefaultAddress ?? false,
         billingDefaultAddress: data.billingDefaultAddress ?? false,
       });
-      console.log('Addresses successful:', setAddressesResult);
       onSuccess(data.firstName);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Something went wrong. Please try again.';
-      console.log(error);
       setSubmitError(message);
     }
   };
