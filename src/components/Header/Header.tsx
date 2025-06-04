@@ -3,20 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
-import { fetchProductsByQuery } from '../../api/products/search';
 
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  CatalogState,
-  loadCatalog,
-  setFilteredProducts,
-  setSearchTerm,
-} from '../../store/slice/catalog-slice';
-import { ProductProjectionResponseSchema } from '../../api/products/types/schemas';
+import { useDispatch } from 'react-redux';
+import { setSearchTerm } from '../../store/slice/catalog-slice';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { fetchProfile } from '../../api/profile/profile';
 import { toast, ToastContainer } from 'react-toastify';
-import type { AppDispatch, RootState } from '../../store/store';
+import type { AppDispatch } from '../../store/store';
 
 const UserContext = createContext<string | null>(null);
 
@@ -139,29 +132,15 @@ function Logo() {
 function SearchPanel() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const { products } = useSelector((s: RootState): CatalogState => s.catalog);
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
 
-  async function handleSearch(): Promise<void> {
+  function handleSearch(): Promise<void> {
     const rawValue = inputRef.current?.value ?? '';
     const value = rawValue.trim();
     dispatch(setSearchTerm(value));
-
-    if (value === '' && products) {
-      dispatch(setFilteredProducts(products));
-    }
-
-    try {
-      if (!products) {
-        await dispatch(loadCatalog());
-      }
-
-      const raw = await fetchProductsByQuery(value);
-      const parsed = ProductProjectionResponseSchema.parse(raw);
-      dispatch(setFilteredProducts(parsed));
-    } catch (error) {
-      console.error('Search failed:', error);
+    if (value === '') {
+      dispatch(setSearchTerm(''));
     }
   }
 
