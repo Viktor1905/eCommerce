@@ -1,7 +1,6 @@
 .footer {
   position: relative;
   display: flex;
-  margin-top: 100px;
   justify-content: center;
   color: var(--color-khaki);
   background-color: var(--color-jungle-green);
@@ -12,7 +11,7 @@
   position: relative;
   display: flex;
   justify-content: space-around;
-  align-items: center; 
+  align-items: center;
   font-size: 0.8rem;
   width: 95%;
   height: 60px;
