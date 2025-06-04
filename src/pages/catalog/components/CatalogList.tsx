@@ -28,7 +28,7 @@ export function CatalogList(): ReactElement {
   }, [itemsLimit, page, pageQuantity, products]);
 
   return (
-    <section className={'bg-white h-full flex flex-col '}>
+    <section className={'bg-white h-full flex flex-col rounded-2xl'}>
       <RenderSortList />
       <ProductsQuantity
         onChangeLimit={setItemsLimit}
