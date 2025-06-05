@@ -275,8 +275,8 @@ export async function changeAddress({
   address: userAddress;
   customer: customerResponse;
   token: string;
-  isBilling: boolean;
-  isShipping: boolean;
+  isBilling?: boolean;
+  isShipping?: boolean;
 }) {
   const parsedCustomer = CustomerResponseSchema.safeParse(customer);
   const version = parsedCustomer.data?.version;
@@ -297,24 +297,26 @@ export async function changeAddress({
   if (isBilling) {
     actions.push({
       action: 'addBillingAddressId',
-      addressKey: address.key,
+      addressId: address.id,
     });
-  } else {
+  }
+  if (isBilling === false) {
     actions.push({
       action: 'removeBillingAddressId',
-      addressKey: address.key,
+      addressId: address.id,
     });
   }
 
   if (isShipping) {
     actions.push({
       action: 'addShippingAddressId',
-      addressKey: address.key,
+      addressId: address.id,
     });
-  } else {
+  }
+  if (isShipping === false) {
     actions.push({
       action: 'removeShippingAddressId',
-      addressKey: address.key,
+      addressId: address.id,
     });
   }
 

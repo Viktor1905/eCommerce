@@ -6,7 +6,7 @@ export function Pagination({
   currentPage,
 }: PaginationProps): ReactElement {
   return (
-    <section className="flex justify-center p-3 gap-1">
+    <section className="flex justify-center rounded-2xl p-3 gap-1">
       {Array.from({ length: pageQuantity }, (_: unknown, index: number): number => index + 1).map(
         (page: number) => (
           <button

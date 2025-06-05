@@ -1,37 +1,37 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { getProductTypes } from '../../../../api/catalog/request-product-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store/store';
-import { setType } from '../../../../store/slice/catalog-slice';
+import { CatalogState, setType } from '../../../../store/slice/catalog-slice';
 import { Filters } from '../catalogFilter/CatalogFilter.tsx';
 
 export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactElement {
   const filters = useSelector((state: RootState) => state.catalog.filters);
 
+  const { type } = useSelector((s: RootState): CatalogState => s.catalog);
+
   const dispatch = useDispatch<AppDispatch>();
-  const [selected, setSelected] = useState<{
-    id: string;
-    name: string;
-    description: string;
-  } | null>(null);
   const [productTypes, setProductTypes] = useState<
     { id: string; name: string; description: string }[]
   >([]);
 
+  const selected = useMemo(() => {
+    return productTypes.find((t) => t.id === type) ?? null;
+  }, [productTypes, type]);
+
   const handleClick = (item?: { id: string; name: string; description: string }) => {
     if (!item || (selected && selected.id === item.id)) {
-      setSelected(null);
       onFilterSubmit({
         ...filters,
       });
       dispatch(setType(''));
     } else {
-      setSelected(item);
       onFilterSubmit({
         ...filters,
       });
       dispatch(setType(item.id));
     }
+    console.log(type);
   };
 
   const fetchProductTypes = useCallback(async () => {

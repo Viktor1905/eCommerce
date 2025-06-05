@@ -99,7 +99,21 @@ export default function AddressModalDialog({
       setIsModalOpen(true);
       return;
     }
+
     if (!address) throw new Error('Something went wrong, please try again later');
+
+    const wasBilling = customer.billingAddressIds.includes(address.id);
+    const wasShipping = customer.shippingAddressIds.includes(address.id);
+    const changes: {
+      isBilling?: boolean;
+      isShipping?: boolean;
+    } = {};
+    if (data.isBilling !== wasBilling) {
+      changes.isBilling = data.isBilling;
+    }
+    if (data.isShipping !== wasShipping) {
+      changes.isShipping = data.isShipping;
+    }
     const newAddress = {
       id: address.id,
       key: new Date().toString(),
@@ -119,8 +133,7 @@ export default function AddressModalDialog({
         token: token,
         address: newAddress,
         addressID: address.id,
-        isShipping: data.isShipping ?? false,
-        isBilling: data.isBilling ?? false,
+        ...changes,
       });
       await refreshCustomer();
       toast.success('Address updated!', {
