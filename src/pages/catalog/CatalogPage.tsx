@@ -15,7 +15,9 @@ export function CatalogPage(): ReactElement {
     document.title = 'Catalog | Zoo Shop | Pet Supplies';
   }, []);
   const dispatch = useDispatch<AppDispatch>();
-  const { filters, sort, products } = useSelector((s: RootState): CatalogState => s.catalog);
+  const { filters, sort, products, searchTerm } = useSelector(
+    (s: RootState): CatalogState => s.catalog
+  );
   const { lowestPrice, highestPrice } = usePrices(products);
   const formMethods = useForm<Filters>({
     defaultValues: {
@@ -35,12 +37,13 @@ export function CatalogPage(): ReactElement {
 
   useEffect(() => {
     void dispatch(loadCatalog());
-  }, [filters, sort]);
+  }, [dispatch, filters, sort, searchTerm]);
 
   useEffect(() => {
     formMethods.reset(initialFilterValues);
     dispatch(setFilters(initialFilterValues));
   }, [lowestPrice, highestPrice]);
+
   const onFilterSubmit = (data: Filters) => {
     dispatch(setFilters(data));
   };
