@@ -8,9 +8,13 @@ export function TeammateCard({
   infoAbout,
   githubName,
   photo,
-}: TeammateCardProps): ReactElement {
+  onClick,
+}: TeammateCardProps & { onClick?: () => void }): ReactElement {
   return (
-    <div className="mt-3 cursor-pointer bg-white  rounded max-w-[700px] hover:shadow-[0px_15px_30px_5px] shadow-goldenrod/40  hover:-translate-y-1  transition-transform duration-300">
+    <div
+      className="mt-3 cursor-pointer bg-white  rounded max-w-[700px] hover:shadow-[0px_15px_30px_5px] shadow-goldenrod/40  hover:-translate-y-1  transition-transform duration-300"
+      onClick={onClick}
+    >
       <h2 className="bg-jungle text-white pl-1 rounded">{name}</h2>
       <div className="pr-2 pl-2 flex flex-col">
         <LabelBlock {...labels} />
@@ -32,11 +36,12 @@ export function TeammateCard({
   );
 }
 
-interface TeammateCardProps {
+export interface TeammateCardProps {
   name: string;
   labels: LabelsProps;
   role: string;
   infoAbout: string;
   githubName: string;
   photo: string;
+  contribution: string[];
 }
