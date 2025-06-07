@@ -23,7 +23,7 @@ export function ModalWindow({
       ref={ref}
       onClick={closeWrapper}
     >
-      <div className="w-[50%] bg-white cursor-default">
+      <div className="w-[50%] min-w-[370px] max-w-[800px] bg-white cursor-default rounded">
         <h2 className="bg-jungle text-white pl-1 rounded">{name}</h2>
         <div className="pr-2 pl-2 flex flex-col">
           <LabelBlock {...labels} />
@@ -40,10 +40,14 @@ export function ModalWindow({
             </a>
             <img className="w-7 h-7 ml-2 rounded-full" src={photo} alt={name} />
           </div>
-          <ul>
-            <h2>Contribution to the project:</h2>
+          <h2>Contribution to the project:</h2>
+          <ul className="p-1 flex flex-col gap-2 pb-3">
             {contribution.map((item, index): ReactElement => {
-              return <li key={index}>{item}</li>;
+              return (
+                <li key={index} className={`before:content-['🐝'] before:mr-2`}>
+                  {item}
+                </li>
+              );
             })}
           </ul>
         </div>
