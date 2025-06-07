@@ -17,7 +17,12 @@ export function TeammateCard({
         <div>{role}</div>
         <p className="text-justify pt-2 pb-2">{infoAbout}</p>
         <div className="flex w-full justify-end items-center">
-          <a className="text-jungle hover:text-goldenrod" href={`https://github.com/${githubName}`}>
+          <a
+            className="text-jungle hover:text-goldenrod"
+            href={`https://github.com/${githubName}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {githubName}
           </a>
           <img className="w-7 h-7 ml-2 rounded-full" src={photo} alt={name} />

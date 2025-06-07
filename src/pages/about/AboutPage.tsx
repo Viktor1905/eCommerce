@@ -11,7 +11,12 @@ export function AboutUsPage() {
     <div className="flex text-goldenrod flex-col justify-center align-items-center max-w-[1440px] p-4">
       <RenderCommonInfo />
       <DetailInfo />
-      <a className="w-full flex justify-center mt-10" href="https://rs.school/">
+      <a
+        className="w-full flex justify-center mt-10"
+        href="https://rs.school/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <RSLogo />
       </a>
     </div>
