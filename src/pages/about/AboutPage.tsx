@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { RenderCommonInfo } from './components/CommonInfo.tsx';
-import { DetailInfo } from '../team/components/DetailInfo.tsx';
+import { DetailInfo } from './components/DetailInfo.tsx';
+import { RSLogo } from './components/RSLogo.tsx';
 
 export function AboutUsPage() {
   useEffect(() => {
@@ -10,6 +11,9 @@ export function AboutUsPage() {
     <div className="flex text-goldenrod flex-col justify-center align-items-center max-w-[1440px] p-4">
       <RenderCommonInfo />
       <DetailInfo />
+      <a className="w-full flex justify-center mt-10" href="https://rs.school/">
+        <RSLogo />
+      </a>
     </div>
   );
 }

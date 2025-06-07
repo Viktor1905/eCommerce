@@ -1,5 +1,5 @@
 import { ReactElement, useState } from 'react';
-import team from '../../about/assets/ourTeam.png';
+import team from '../assets/ourTeam.png';
 
 export function InteractiveSpan({ img, text }: InteractiveSpanProps): ReactElement {
   const [isShown, setIsShown] = useState(false);

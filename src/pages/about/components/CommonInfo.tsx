@@ -4,7 +4,7 @@ import mentor from '../assets/ourTeam2.png';
 import help from '../assets/ourTeam3.png';
 import problems from '../assets/ourTeam4.png';
 import allDone from '../assets/ourTeam5.png';
-import { InteractiveSpan } from '../../team/components/InteractiveSpan.tsx';
+import { InteractiveSpan } from './InteractiveSpan.tsx';
 
 export function RenderCommonInfo(): ReactElement {
   return (
