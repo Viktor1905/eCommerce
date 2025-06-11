@@ -7,7 +7,7 @@
 
 .quantity {
   display: flex;
-  width: clamp(120px, 3vw, 160px);
+  width: clamp(120px, 14vw, 160px);
   height: 40px;
   align-items: center;
   padding-left: 5px;
@@ -17,22 +17,22 @@
 
 .input-quantity {
   display: flex;
-  width: 60px;
+  width: clamp(42px, 3vw, 60px);
   height: 30px;
-  margin-left: 10px;
-  padding-left: 10px;
+  margin-left: 5px;
+  padding-left: 5px;
 }
 
 .add-to-cart-button {
-  width: clamp(120px, 3vw, 160px);
+  width: clamp(120px, 14vw, 160px);
   height: 40px;
   background-color: var(--color-goldenrod);
   cursor: pointer;
   border-radius: 16px;
   border: 2px solid var(--color-goldenrod);
-  transition: transform 0.2s ease-in;
+  transition: color 0.2s ease-in;
 }
 
 .add-to-cart-button:hover {
-  transform: scale(0.97);
+  color: var(--color-light-gray);
 }
