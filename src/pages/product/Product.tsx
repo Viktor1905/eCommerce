@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { fetchProductDetails } from '../../api/products/products';
 import { ProductProjection } from '../../api/products/types/schemas';
 import { ProductImageSlider } from './ProductImageSlider';
+import { AddProductToCart } from './AddProductToCart';
 
 export function ProductDetailsPage() {
   useEffect(() => {
@@ -176,6 +177,7 @@ function ShowPrice({ product }: { product: ProductProjection }) {
           10% off in celebration of your pet&rsquo;s birthday. Use code PETBDAY10 at checkout.
         </div>
       </div>
+      <AddProductToCart />
     </div>
   );
 }

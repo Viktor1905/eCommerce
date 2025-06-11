@@ -193,13 +193,13 @@ function MenuHeader() {
         <Logo />
         <HomeLink />
       </div>
+      <ToastContainer className={'w-0 h-0'} />
       <ul className={styles['menu-list']}>
         <Login />
         <Order />
         <Favorite />
         <Cart />
       </ul>
-      <ToastContainer className={'w-0 h-0'} />
     </nav>
   );
 }
