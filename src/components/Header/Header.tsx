@@ -280,12 +280,20 @@ function Favorite() {
 }
 
 function Cart() {
+  const userName = useContext(UserContext) ?? '';
+  const isGuest = userName === 'Guest';
   const navigate = useNavigate();
+  const handleCartClick = () => {
+    if (isGuest) {
+      toast.success('You need to be logged in to access your cart!', {
+        position: 'top-right',
+      });
+    } else {
+      void navigate('/cart');
+    }
+  };
   return (
-    <li
-      onClick={() => void navigate('/cart')}
-      className={`${styles.list} ${styles['list-counter']}`}
-    >
+    <li onClick={handleCartClick} className={`${styles.list} ${styles['list-counter']}`}>
       <div className={styles['counter-cart']}>0</div>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['cart-icon']}`}>shopping_cart</span>

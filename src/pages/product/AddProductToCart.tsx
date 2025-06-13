@@ -10,6 +10,7 @@ export function AddProductToCart() {
           className={styles['input-quantity']}
           type="number"
           min="1"
+          max="99"
           defaultValue={1}
         ></input>
       </label>

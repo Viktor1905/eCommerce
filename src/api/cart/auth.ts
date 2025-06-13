@@ -3,7 +3,7 @@
 
 // export async function fetchCartDetails(): Promise<void> {
 //   const token = Cookies.get('access_token');
-
+// console.log('fetch')
 //   if (!token) {
 //     console.log('access_token: not found');
 //     return;

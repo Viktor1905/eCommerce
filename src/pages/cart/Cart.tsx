@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCartByCartID } from '../../api/cart-api/get-cart';
 import { getTokenFromCookie } from '../profile/ProfilePage';
@@ -8,12 +8,19 @@ import {
   removeItemFromCart,
   setCartAsLastActive,
 } from '../../api/cart-api/manage-item-in-cart';
+import styles from './Cart.module.css';
+import empty from './components/cartEmptyCorgi.png';
+import { Spinner } from '../../pages/product/Product';
+import { getLastActiveCart } from '../../api/cart-api/get-cart';
+
+const currentActiveCart = await getLastActiveCart();
 
 export function CartPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-
   const [cart, setCart] = useState<cartResponse | null>(null);
+  console.log('currentActiveCart');
+  console.log(currentActiveCart);
 
   const refreshCart = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -21,12 +28,10 @@ export function CartPage() {
       void navigate('/login', { replace: true });
       return;
     }
-
     try {
-      const cartInfo = await getCartByCartID('a431a191-8b33-458e-8a4f-f3a7eebc346b');
-      await setCartAsLastActive('a431a191-8b33-458e-8a4f-f3a7eebc346b');
+      const cartInfo = await getCartByCartID(currentActiveCart.id);
+      await setCartAsLastActive(cartInfo.id);
       setCart(cartInfo);
-      console.log(cartInfo);
     } catch (error) {
       console.error('Error fetching cart:', error);
     } finally {
@@ -37,62 +42,81 @@ export function CartPage() {
   useEffect(() => {
     void refreshCart();
   }, [refreshCart]);
+
   useEffect(() => {
     document.title = 'Cart | Zoo Shop | Pet Supplies';
   }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (!cart || !cart.lineItems || cart.lineItems.length === 0) {
+    return <CartPageEmpty />;
+  }
+  const currentQuantity = cart.lineItems.reduce((sum, element) => {
+    return sum + element.quantity;
+  }, 0);
+
   return (
-    <section
-      className={
-        'm-auto relative flex flex-col justify-center items-center ' +
-        'rounded-2xl bg-white min-w-[300px] max-w-[500px]'
-      }
-    >
-      <h2 className="text-2xl pt-4 text-center text-jungle font-main-bd">Cart</h2>
-      {loading ? (
-        <div className="text-jungle p-2 m-2">Loading...</div>
-      ) : cart ? (
-        <div className="w-full p-2 m-1 flex flex-col gap-2 text-olive">
-          <div>
-            {cart.lineItems?.length === 0 ? (
-              <div>no items in cart</div>
-            ) : (
-              cart.lineItems?.map((cartItem) => {
-                return renderCartItem(cartItem, refreshCart);
-              })
-            )}
-          </div>
-          Total:
-          <div>{cart.totalPrice.centAmount / 100}</div>
+    <div className={styles['wrapper-cart']}>
+      <div className={styles['shopping-cart']}>
+        <h2 className={styles['shopping-cart-title']}>Shopping Cart</h2>
+        {cart.lineItems.map((item) => (
+          <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
+        ))}
+
+        <div className={styles['clear-cart']}>
+          EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
         </div>
-      ) : (
-        <div>Something went wrong</div>
-      )}
-    </section>
+      </div>
+
+      <div className={styles['subtotal-price-cart']}>
+        <BonusCode />
+        <span className={styles['enter-bonus']}>Enter a promo code</span>
+        <div className={styles.subtotal}>
+          Subtotal:
+          <span className={styles.items}>({currentQuantity} items)</span>
+        </div>
+        <div className={styles['total-price']}>
+          {cart.totalPrice.currencyCode} {(cart.totalPrice.centAmount / 100).toFixed(2)}
+        </div>
+        <button className={styles['proceed-to-buy']} type="button">
+          Proceed to Buy
+        </button>
+      </div>
+    </div>
   );
 }
 
-export function renderCartItem(
-  cartItem: cartItemResponse,
-  refreshCart: () => Promise<void>
-): ReactElement {
-  async function handleAddItemClick() {
+function CartItem({
+  cartItem,
+  refreshCart,
+}: {
+  cartItem: cartItemResponse;
+  refreshCart: () => Promise<void>;
+}) {
+  const handleAddItemClick = async (): Promise<void> => {
     await addItemToCart({ productId: cartItem.productId, quantity: 1 });
     await refreshCart();
-  }
+  };
 
-  async function handleRemoveItemClick() {
+  const handleRemoveItemClick = async (): Promise<void> => {
     await removeItemFromCart({ lineItemId: cartItem.id, quantity: 1 });
     await refreshCart();
-  }
+  };
 
   return (
     <div
-      className="flex flex-row justify-between text-olive"
-      key={cartItem.id}
+      className="flex flex-row justify-between text-olive border-t py-4 w-full"
       aria-label="item in cart"
     >
-      <div className="flex flex-row " aria-label="item information">
-        <img className="min-w-16 size-16 bg-amber-600" aria-label="image preview"></img>
+      <div className="flex flex-row items-center" aria-label="item information">
+        <img
+          className="min-w-16 size-16 bg-gray-200 object-cover"
+          src={cartItem.variant.images[0].url}
+          alt={cartItem.name['en-US']}
+        />
         <h3 className="text-olive p-2" aria-label="item name">
           {cartItem.name['en-US']}
         </h3>
@@ -103,18 +127,21 @@ export function renderCartItem(
         className="w-fit p-2 items-center text-center justify-center"
       >
         <div className="flex flex-row gap-2 p-2 justify-between items-center min-w-fit">
-          <div aria-label="item quantity" className="flex flex-row no-wrap items-center w-fit">
+          <div
+            aria-label="item quantity"
+            className="flex flex-row no-wrap items-center p-1 w-fit rounded-2xl border border-[var(--color-goldenrod)]"
+          >
             <button
-              className="bg-gray-200 rounded-full size-8 hover:cursor-pointer"
+              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer"
               onClick={() => {
                 void handleRemoveItemClick();
               }}
             >
               -
             </button>
-            <div className="w-10 bg-blue-100 h-full">{cartItem.quantity}</div>
+            <div className="w-10 text-center">{cartItem.quantity}</div>
             <button
-              className="bg-gray-200 rounded-full size-8  hover:cursor-pointer"
+              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer"
               onClick={() => {
                 void handleAddItemClick();
               }}
@@ -127,23 +154,46 @@ export function renderCartItem(
           {cartItem.price.discounted ? (
             <>
               <span aria-label="price per 1" className="w-fit line-through text-xs">
-                {(cartItem.price.value.centAmount / 100).toString()}
+                {(cartItem.price.value.centAmount / 100).toFixed(2)}
               </span>
               <span aria-label="price per 1 discounted" className="w-fit text-red-700">
-                {(cartItem.price.discounted.value.centAmount / 100).toString()}
+                {(cartItem.price.discounted.value.centAmount / 100).toFixed(2)}
               </span>
             </>
           ) : (
             <span aria-label="price per 1" className="w-fit">
-              {(cartItem.price.value.centAmount / 100).toString()}
+              {(cartItem.price.value.centAmount / 100).toFixed(2)}
             </span>
           )}
         </div>
         <div className="flex flex-row gap-2 p-2 justify-between">
           <div>{'Total: '}</div>
-          <div>{cartItem.totalPrice.centAmount / 100}</div>
+          <div>{(cartItem.totalPrice.centAmount / 100).toFixed(2)}</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CartPageEmpty() {
+  return (
+    <div className={styles['canvas-page']}>
+      <h2 className={styles['cart-title-empty']}>It&apos;s time to start shopping!</h2>
+      <span className={styles['cart-text-empty']}>
+        Fill it with discounts from our popular departments
+      </span>
+      <div className={styles['cart-background']}>
+        <img className={styles['empty-img']} src={empty} alt="empty"></img>
+      </div>
+    </div>
+  );
+}
+
+function BonusCode() {
+  return (
+    <div className={styles['bonus-code-button']}>
+      <input className={styles['bonus-code']} type="text" defaultValue={'PETBDAY10'} />
+      <span className={styles['apply-bonus-code']}>apply</span>
     </div>
   );
 }
