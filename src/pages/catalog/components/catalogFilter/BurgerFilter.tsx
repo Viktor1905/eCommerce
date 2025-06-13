@@ -7,7 +7,6 @@ export function BurgerFilter({
   setShowBurger,
   onFilterSubmit,
   onResetFilters,
-  products,
 }: BurgerProps): ReactElement {
   useEffect(() => {
     if (showBurger) {
@@ -43,7 +42,6 @@ export function BurgerFilter({
           X
         </div>
         <CatalogFilter
-          products={products}
           onFilterSubmit={onFilterSubmit}
           onResetFilters={onResetFilters}
           closeWrapper={closeWrapper}

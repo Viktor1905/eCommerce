@@ -1,11 +1,11 @@
-import { API_CONFIG } from '../login/login.ts';
-import { getCatalogToken } from './catalog-token.ts';
-import { isProductsResponse } from './check-response.ts';
-import { ProductProjectionResponse } from './products.types.ts';
+import { getCatalogToken } from './catalog-token';
+import { API_CONFIG } from '../login/login';
+import { ProductProjection } from './products.types';
+import { isProductsResponse } from './check-response';
 
-export async function getProducts(): Promise<ProductProjectionResponse> {
+export async function getMinCost(): Promise<ProductProjection> {
   const token: string = await getCatalogToken();
-  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/`;
+  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?sort=price asc&limit=1`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -25,15 +25,24 @@ export async function getProducts(): Promise<ProductProjectionResponse> {
           : 'Products request failed'
       );
     }
+
     const productsResponse: unknown = await response.json();
+
     if (!isProductsResponse(productsResponse)) {
-      throw new Error('Invalid products response format');
+      throw new Error('Invalid min cost request format');
     }
-    return productsResponse;
+    return productsResponse.results[0];
   } catch (error) {
     console.error('Failed to fetch products:', error);
     throw new Error(
       `Product request failed: ${error instanceof Error ? error.message : String(error)}`
     );
   }
+}
+export async function defineMinCost(): Promise<number> {
+  const product = await getMinCost();
+  const priceObj = product.masterVariant.prices[0];
+  return priceObj.discounted?.value.centAmount
+    ? priceObj.discounted.value.centAmount / 100
+    : priceObj.value.centAmount / 100;
 }

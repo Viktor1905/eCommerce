@@ -3,6 +3,8 @@ import { Filters } from '../../pages/catalog/components/catalogFilter/CatalogFil
 import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
 import { requestFilter } from '../../api/catalog/filter/request-filter.ts';
 import { getProducts } from '../../api/catalog/request-products.ts';
+import { defineMaxCost } from '../../api/catalog/max-request';
+import { defineMinCost } from '../../api/catalog/min-request';
 
 export interface CatalogState {
   searchTerm: string;
@@ -13,14 +15,18 @@ export interface CatalogState {
   isLoading: boolean;
   error?: string;
   type?: string;
+  maxCost: number;
+  minCost: number;
 }
 const initialState: CatalogState = {
   searchTerm: '',
-  filters: { brand: [], discounted: [], for: [], priceRange: [0, 0] },
+  filters: { brand: [], discounted: [], for: [], priceRange: [0, 100] },
   sort: undefined,
   products: null,
   filteredProducts: null,
   isLoading: false,
+  maxCost: await defineMaxCost(),
+  minCost: await defineMinCost(),
 };
 interface stateReject {
   state: { catalog: CatalogState };
