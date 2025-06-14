@@ -38,7 +38,7 @@ export function AddProductToCart() {
         }}
         onClick={() => {
           if (typeof getTokenFromCookie() !== 'string') {
-            toast.success('✓ Login', {
+            toast.success('✓ You need to be logged in to access your shopping cart!', {
               position: 'top-right',
             });
             return;

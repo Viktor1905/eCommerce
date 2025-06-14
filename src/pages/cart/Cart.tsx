@@ -6,7 +6,7 @@ import { cartItemResponse, cartResponse } from '../../api/cart-api/cart-types';
 import { addItemToCart, removeItemFromCart } from '../../api/cart-api/manage-item-in-cart';
 import styles from './Cart.module.css';
 import empty from './components/cartEmptyCorgi.png';
-import { Spinner } from '../../pages/product/Product';
+import { Spinner } from '../product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 
 export function CartPage() {

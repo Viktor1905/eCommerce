@@ -124,9 +124,14 @@ export const ProductProjectionResponseSchema = z.object({
   facets: z.record(z.unknown()).optional(),
 });
 
+export const ErrorPayloadSchema = z.object({
+  message: z.string(),
+});
+
 export type ProductProjectionResponse = z.infer<typeof ProductProjectionResponseSchema>;
 export type Price = z.infer<typeof PriceSchema>;
 export type Image = z.infer<typeof ImageSchema>;
 export type Attribute = z.infer<typeof AttributeSchema>;
 export type MasterVariant = z.infer<typeof MasterVariantSchema>;
 export type ProductProjection = z.infer<typeof ProductProjectionSchema>;
+export type ErrorPayload = z.infer<typeof ErrorPayloadSchema>;

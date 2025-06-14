@@ -192,7 +192,12 @@ function MenuHeader() {
         <Logo />
         <HomeLink />
       </div>
-      <ToastContainer className={'w-0 h-0'} />
+      <ToastContainer
+        className={'w-0 h-0'}
+        closeOnClick={true}
+        style={{ top: '80px' }}
+        toastStyle={{ opacity: 0.9 }}
+      />
       <ul className={styles['menu-list']}>
         <Login />
         <Order />
