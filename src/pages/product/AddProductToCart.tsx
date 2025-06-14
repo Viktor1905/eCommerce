@@ -10,7 +10,12 @@ export function AddProductToCart() {
   const { id } = useParams<{ id: string }>();
   return (
     <div className={styles['wrapper-add-cart']}>
-      <ToastContainer className={'w-0 h-0'} />
+      <ToastContainer
+        className={'w-0 h-0'}
+        closeOnClick={true}
+        style={{ top: '80px' }}
+        toastStyle={{ opacity: 0.85 }}
+      />
       <label className={styles.quantity} htmlFor="input-quantity">
         Quantity
         <input

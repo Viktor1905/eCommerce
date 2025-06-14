@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCartByCartID } from '../../api/cart-api/get-cart';
 import { getTokenFromCookie } from '../profile/ProfilePage';
 import { cartItemResponse, cartResponse } from '../../api/cart-api/cart-types';
-import {
-  addItemToCart,
-  removeItemFromCart,
-  setCartAsLastActive,
-} from '../../api/cart-api/manage-item-in-cart';
+import { addItemToCart, removeItemFromCart } from '../../api/cart-api/manage-item-in-cart';
 import styles from './Cart.module.css';
 import empty from './components/cartEmptyCorgi.png';
 import { Spinner } from '../../pages/product/Product';
@@ -27,7 +23,6 @@ export function CartPage() {
     const currentActiveCart = await getLastActiveCart();
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
-      await setCartAsLastActive(cartInfo.id);
       setCart(cartInfo);
     } catch (error) {
       console.error('Error fetching cart:', error);
@@ -146,8 +141,7 @@ function CartItem({
               +
             </button>
           </div>
-          <div>{'x'}</div>
-
+          <span className="material-symbols-outlined">shopping_cart_checkout</span>
           {cartItem.price.discounted ? (
             <>
               <span aria-label="price per 1" className="w-fit line-through text-xs">
@@ -162,6 +156,9 @@ function CartItem({
               {(cartItem.price.value.centAmount / 100).toFixed(2)}
             </span>
           )}
+          <span className="text-[clamp(8px,1vw,12px)] mb-5 inline-block">
+            {cartItem.totalPrice.currencyCode}
+          </span>
         </div>
         <div className="flex flex-row gap-2 p-2 justify-between">
           <div>{'Total: '}</div>
