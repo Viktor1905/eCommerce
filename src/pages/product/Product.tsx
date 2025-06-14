@@ -126,7 +126,7 @@ export function ProductDetailsPage() {
   );
 }
 
-function Spinner() {
+export function Spinner() {
   return <div className={styles.spinner} />;
 }
 

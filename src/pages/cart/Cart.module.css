@@ -31,11 +31,11 @@
   display: flex;
   width: 90%;
   max-width: 1480px;
-  height: 80dvh;
+  min-width: 370px;
   margin-top: 20px;
   padding: 40px 0;
   color: var(--color-olive);
-  font-size: clamp(0.5rem, 3vw, 2rem);
+  font-size: clamp(0.5rem, 3vw, 1.5rem);
   justify-content: space-between;
   background-color: var(--color-light-gray);
   border-radius: 16px;
@@ -81,7 +81,7 @@
 .proceed-to-buy,
 .clear-cart {
   display: flex;
-  width: 100%;
+  width: 90%;
   height: 40px;
   margin-top: 40px;
   padding: 0 5px;
@@ -132,8 +132,22 @@
 
 .enter-bonus {
   display: flex;
-  margin-bottom: 200px;
+  margin-bottom: 160px;
   justify-content: center;
   font-size: clamp(0.4rem, 2vw, 1.2rem);
   color: #0000004b;
 }
+
+@media (max-width: 800px) {
+  .wrapper-cart {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 5%;
+  }
+
+  .subtotal-price-cart {
+    position: relative;
+    right: -65%;
+  }
+}
+
