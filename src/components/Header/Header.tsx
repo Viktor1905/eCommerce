@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
-
 import { useDispatch } from 'react-redux';
 import { setSearchTerm } from '../../store/slice/catalog-slice';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';

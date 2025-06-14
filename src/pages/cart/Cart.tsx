@@ -13,14 +13,10 @@ import empty from './components/cartEmptyCorgi.png';
 import { Spinner } from '../../pages/product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 
-const currentActiveCart = await getLastActiveCart();
-
 export function CartPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
-  console.log('currentActiveCart');
-  console.log(currentActiveCart);
 
   const refreshCart = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -28,6 +24,7 @@ export function CartPage() {
       void navigate('/login', { replace: true });
       return;
     }
+    const currentActiveCart = await getLastActiveCart();
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
       await setCartAsLastActive(cartInfo.id);
@@ -108,18 +105,18 @@ function CartItem({
 
   return (
     <div
-      className="flex flex-row justify-between text-olive border-t py-4 w-full"
+      className="flex flex-col justify-between text-olive border-t py-4 w-full"
       aria-label="item in cart"
     >
-      <div className="flex flex-row items-center" aria-label="item information">
+      <h3 className="flex text-olive p-2" aria-label="item name">
+        {cartItem.name['en-US']}
+      </h3>
+      <div className="flex flex-row items-center p-5" aria-label="item information">
         <img
-          className="min-w-16 size-16 bg-gray-200 object-cover"
+          className="min-w-16 size-16 bg-gray-200 object-contain"
           src={cartItem.variant.images[0].url}
           alt={cartItem.name['en-US']}
         />
-        <h3 className="text-olive p-2" aria-label="item name">
-          {cartItem.name['en-US']}
-        </h3>
       </div>
 
       <div
@@ -168,7 +165,9 @@ function CartItem({
         </div>
         <div className="flex flex-row gap-2 p-2 justify-between">
           <div>{'Total: '}</div>
-          <div>{(cartItem.totalPrice.centAmount / 100).toFixed(2)}</div>
+          <div>
+            {cartItem.totalPrice.currencyCode} {(cartItem.totalPrice.centAmount / 100).toFixed(2)}
+          </div>
         </div>
       </div>
     </div>
