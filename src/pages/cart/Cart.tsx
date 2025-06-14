@@ -8,11 +8,13 @@ import styles from './Cart.module.css';
 import empty from './components/cartEmptyCorgi.png';
 import { Spinner } from '../product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
+import { deleteCart } from '../../api/cart-api/delete-cart';
 
 export function CartPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
+  const [activeCart, setActiveCart] = useState<cartResponse | null>(null);
 
   const refreshCart = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -21,6 +23,7 @@ export function CartPage() {
       return;
     }
     const currentActiveCart = await getLastActiveCart();
+    setActiveCart(currentActiveCart);
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
       setCart(cartInfo);
@@ -58,7 +61,16 @@ export function CartPage() {
           <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
         ))}
 
-        <div className={styles['clear-cart']}>
+        <div
+          className={styles['clear-cart']}
+          onClick={
+            void (async (): Promise<void> => {
+              if (activeCart) void (await deleteCart(activeCart.id, activeCart.version));
+              setActiveCart(null);
+              setCart(null);
+            })()
+          }
+        >
           EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
         </div>
       </div>

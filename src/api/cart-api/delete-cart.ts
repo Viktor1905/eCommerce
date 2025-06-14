@@ -1,6 +1,5 @@
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { API_URL } from '../sign-up/sign-up';
-import { CartSchema } from './cart-types';
 
 export const deleteCart = async (cartID: string, version: number) => {
   const token = getTokenFromCookie();
@@ -13,15 +12,7 @@ export const deleteCart = async (cartID: string, version: number) => {
     },
   });
 
-  const raw: unknown = await response.json();
-  if (!response.ok) {
-    throw new Error('Failed to delete cart');
+  if (response.ok) {
+    return true;
   }
-
-  console.log(raw);
-  const cartData = CartSchema.safeParse(raw);
-  if (!cartData.success) {
-    throw new Error('Invalid response format');
-  }
-  return cartData.data;
 };
