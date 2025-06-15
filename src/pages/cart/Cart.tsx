@@ -14,7 +14,6 @@ export function CartPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
-  const [activeCart, setActiveCart] = useState<cartResponse | null>(null);
 
   const refreshCart = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -23,7 +22,6 @@ export function CartPage() {
       return;
     }
     const currentActiveCart = await getLastActiveCart();
-    setActiveCart(currentActiveCart);
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
       setCart(cartInfo);
@@ -54,11 +52,14 @@ export function CartPage() {
   }, 0);
 
   const handleClearCart = async (): Promise<void> => {
-    if (activeCart) {
-      await deleteCart(activeCart.id, activeCart.version);
+    try {
+      const currentActiveCart = await getLastActiveCart();
+      await deleteCart(currentActiveCart.id, currentActiveCart.version);
+    } catch (error) {
+      console.error('Failed to clear cart with an unexpected error:', error);
+    } finally {
+      setCart(null);
     }
-    setActiveCart(null);
-    setCart(null);
   };
 
   return (
@@ -69,7 +70,12 @@ export function CartPage() {
           <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
         ))}
 
-        <div className={styles['clear-cart']} onClick={() => void handleClearCart()}>
+        <div
+          className={styles['clear-cart']}
+          onClick={() => {
+            void handleClearCart();
+          }}
+        >
           EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
         </div>
       </div>

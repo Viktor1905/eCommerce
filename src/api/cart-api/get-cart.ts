@@ -31,7 +31,7 @@ export const getLastActiveCart = async () => {
   const token = getTokenFromCookie();
   if (!token) throw new Error('Invalid or expired token');
 
-  for (let index = 0; index < 3; index += 1) {
+  try {
     const response = await fetch(`${API_URL}/me/active-cart`, {
       method: 'GET',
       headers: {
@@ -47,9 +47,8 @@ export const getLastActiveCart = async () => {
       if (validationResult.success) {
         const errMessage = validationResult.data.message;
         if (errMessage === 'No active cart exists.') {
-          return createCart();
-        } else {
-          continue;
+          const newCart = await createCart();
+          return newCart;
         }
       }
       throw new Error('No active carts');
@@ -61,6 +60,8 @@ export const getLastActiveCart = async () => {
       throw new Error('Invalid response format');
     }
     return cartData.data;
+  } catch (error) {
+    console.error('An error occurred in getLastActiveCart:', error);
+    throw error;
   }
-  throw new Error('Cart is not found');
 };

@@ -1,5 +1,6 @@
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { API_URL } from '../sign-up/sign-up';
+import { createCart } from './create-cart';
 
 export const deleteCart = async (cartID: string, version: number) => {
   const token = getTokenFromCookie();
@@ -12,7 +13,9 @@ export const deleteCart = async (cartID: string, version: number) => {
     },
   });
 
-  if (response.ok) {
-    return true;
+  if (!response.ok) {
+    throw new Error('Failed to delete cart');
+  } else {
+    await createCart();
   }
 };

@@ -16,7 +16,6 @@ export function AddProductToCart() {
   const fetchCart = useCallback(async () => {
     try {
       const cartData = await getLastActiveCart();
-
       const checkCart = cartData.lineItems?.some((idItem) => idItem.productId === id);
       setNoInCart(checkCart ?? true);
     } catch (error) {
@@ -66,7 +65,7 @@ export function AddProductToCart() {
               void addItemToCart({ productId: id, quantity });
               setTimeout(() => {
                 void navigate('/cart');
-              }, 150);
+              }, 350);
             }
           } else {
             toast.success('✓ This product is already in your cart!', {
