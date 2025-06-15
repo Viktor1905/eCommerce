@@ -31,32 +31,36 @@ export const getLastActiveCart = async () => {
   const token = getTokenFromCookie();
   if (!token) throw new Error('Invalid or expired token');
 
-  const response = await fetch(`${API_URL}/me/active-cart`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  });
+  for (let index = 0; index < 3; index += 1) {
+    const response = await fetch(`${API_URL}/me/active-cart`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-  if (!response.ok) {
-    const errorBody: unknown = await response.json();
-    const validationResult = ErrorPayloadSchema.safeParse(errorBody);
+    if (!response.ok) {
+      const errorBody: unknown = await response.json();
+      const validationResult = ErrorPayloadSchema.safeParse(errorBody);
 
-    if (validationResult.success) {
-      const errMessage = validationResult.data.message;
-      if (errMessage === 'No active cart exists.') {
-        return createCart();
+      if (validationResult.success) {
+        const errMessage = validationResult.data.message;
+        if (errMessage === 'No active cart exists.') {
+          return createCart();
+        } else {
+          continue;
+        }
       }
+      throw new Error('No active carts');
     }
-    throw new Error('No active carts');
-  }
+    const raw: unknown = await response.json();
 
-  const raw: unknown = await response.json();
-
-  const cartData = CartSchema.safeParse(raw);
-  if (!cartData.success) {
-    throw new Error('Invalid response format');
+    const cartData = CartSchema.safeParse(raw);
+    if (!cartData.success) {
+      throw new Error('Invalid response format');
+    }
+    return cartData.data;
   }
-  return cartData.data;
+  throw new Error('Cart is not found');
 };

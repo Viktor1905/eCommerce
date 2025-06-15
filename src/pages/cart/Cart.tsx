@@ -53,6 +53,14 @@ export function CartPage() {
     return sum + element.quantity;
   }, 0);
 
+  const handleClearCart = async (): Promise<void> => {
+    if (activeCart) {
+      await deleteCart(activeCart.id, activeCart.version);
+    }
+    setActiveCart(null);
+    setCart(null);
+  };
+
   return (
     <div className={styles['wrapper-cart']}>
       <div className={styles['shopping-cart']}>
@@ -61,16 +69,7 @@ export function CartPage() {
           <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
         ))}
 
-        <div
-          className={styles['clear-cart']}
-          onClick={
-            void (async (): Promise<void> => {
-              if (activeCart) void (await deleteCart(activeCart.id, activeCart.version));
-              setActiveCart(null);
-              setCart(null);
-            })()
-          }
-        >
+        <div className={styles['clear-cart']} onClick={() => void handleClearCart()}>
           EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
         </div>
       </div>
@@ -130,7 +129,7 @@ function CartItem({
         aria-label="price and quantity"
         className="w-fit p-2 items-center text-center justify-center"
       >
-        <div className="flex flex-row gap-2 p-2 justify-between items-center min-w-fit">
+        <div className="flex flex-row gap-[3%] p-2 justify-between items-center min-w-fit">
           <div
             aria-label="item quantity"
             className="flex flex-row no-wrap items-center p-1 w-fit rounded-2xl border border-[var(--color-goldenrod)]"
