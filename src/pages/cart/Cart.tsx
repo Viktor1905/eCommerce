@@ -9,11 +9,14 @@ import empty from './components/cartEmptyCorgi.png';
 import { Spinner } from '../product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { deleteCart } from '../../api/cart-api/delete-cart';
+import { applyDiscount } from '../../api/cart-api/cart-discount';
 
 export function CartPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
+  const [bonusMessage, setBonusMessage] = useState('');
+  const [bonus, setBonus] = useState('');
 
   const refreshCart = useCallback(async () => {
     const token = getTokenFromCookie();
@@ -22,6 +25,7 @@ export function CartPage() {
       return;
     }
     const currentActiveCart = await getLastActiveCart();
+
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
       setCart(cartInfo);
@@ -51,6 +55,20 @@ export function CartPage() {
     return sum + element.quantity;
   }, 0);
 
+  const handleApplyDiscount = async (promoCode: string) => {
+    if (bonusMessage) return;
+    const updatedCart = await applyDiscount(promoCode);
+    setCart(updatedCart);
+    if (updatedCart.discountCodes && updatedCart.discountCodes.length > 0) {
+      setBonusMessage('Your promotional discount is now active.');
+      const savedX = updatedCart.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
+      const saved = (savedX / 100).toFixed(2);
+      setBonus(`You saved ${cart.totalPrice.currencyCode} ${saved} with this promo code`);
+    } else {
+      setBonusMessage('The entered promo code is not valid.');
+    }
+  };
+
   const handleClearCart = async (): Promise<void> => {
     try {
       const currentActiveCart = await getLastActiveCart();
@@ -69,7 +87,6 @@ export function CartPage() {
         {cart.lineItems.map((item) => (
           <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
         ))}
-
         <div
           className={styles['clear-cart']}
           onClick={() => {
@@ -79,10 +96,10 @@ export function CartPage() {
           EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
         </div>
       </div>
-
       <div className={styles['subtotal-price-cart']}>
-        <BonusCode />
-        <span className={styles['enter-bonus']}>Enter a promo code</span>
+        <BonusCode onApply={handleApplyDiscount} />
+        <span className="flex text-center mb-[20px] border border-solid border-black">{bonus}</span>
+        <span className="block text-center text-red-700 mb-[30px]">{bonusMessage}</span>
         <div className={styles.subtotal}>
           Subtotal:
           <span className={styles.items}>({currentQuantity} items)</span>
@@ -110,11 +127,10 @@ function CartItem({
     await refreshCart();
   };
 
-  const handleRemoveItemClick = async (): Promise<void> => {
-    await removeItemFromCart({ lineItemId: cartItem.id, quantity: 1 });
+  const handleRemoveItemClick = async (items?: number): Promise<void> => {
+    await removeItemFromCart({ lineItemId: cartItem.id, quantity: items });
     await refreshCart();
   };
-
   return (
     <div
       className="flex flex-col justify-between text-olive border-t py-4 w-full"
@@ -126,11 +142,10 @@ function CartItem({
       <div className="flex flex-row items-center p-5" aria-label="item information">
         <img
           className="min-w-16 size-16 bg-gray-200 object-contain"
-          src={cartItem.variant.images[0].url}
+          src={cartItem.variant.images?.[0].url}
           alt={cartItem.name['en-US']}
         />
       </div>
-
       <div
         aria-label="price and quantity"
         className="w-fit p-2 items-center text-center justify-center"
@@ -141,7 +156,7 @@ function CartItem({
             className="flex flex-row no-wrap items-center p-1 w-fit rounded-2xl border border-[var(--color-goldenrod)]"
           >
             <button
-              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer"
+              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer hover:bg-black hover:text-white hover:border-white hover:border-opacity-50 duration-300"
               onClick={() => {
                 void handleRemoveItemClick();
               }}
@@ -150,7 +165,7 @@ function CartItem({
             </button>
             <div className="w-10 text-center">{cartItem.quantity}</div>
             <button
-              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer"
+              className="flex justify-center items-center rounded-full size-6 hover:cursor-pointer hover:bg-black hover:text-white hover:border-white hover:border-opacity-50 duration-300"
               onClick={() => {
                 void handleAddItemClick();
               }}
@@ -158,7 +173,14 @@ function CartItem({
               +
             </button>
           </div>
-          <span className="material-symbols-outlined">shopping_cart_checkout</span>
+          <span
+            className="material-symbols-outlined hover:cursor-pointer"
+            onClick={(): void => {
+              void handleRemoveItemClick(cartItem.quantity);
+            }}
+          >
+            delete
+          </span>
           {cartItem.price.discounted ? (
             <>
               <span aria-label="price per 1" className="w-fit line-through text-xs">
@@ -202,11 +224,29 @@ function CartPageEmpty() {
   );
 }
 
-function BonusCode() {
+function BonusCode({ onApply }: { onApply: (promoCode: string) => Promise<void> }) {
+  const [promoCode, setPromoCode] = useState('PETBDAY10');
   return (
-    <div className={styles['bonus-code-button']}>
-      <input className={styles['bonus-code']} type="text" defaultValue={'PETBDAY10'} />
-      <span className={styles['apply-bonus-code']}>apply</span>
-    </div>
+    <>
+      <div className={styles['bonus-code-button']}>
+        <input
+          className={styles['bonus-code']}
+          type="text"
+          defaultValue={'PETBDAY10'}
+          onChange={(event) => {
+            setPromoCode(event.target.value);
+          }}
+        />
+        <div
+          className={styles['apply-bonus-code']}
+          onClick={(): void => {
+            void onApply(promoCode);
+          }}
+        >
+          apply
+        </div>
+      </div>
+      <span className={styles['enter-bonus']}>Enter a promo code</span>
+    </>
   );
 }

@@ -1,53 +1,25 @@
 import { z } from 'zod';
 import { MasterVariantSchema, PriceSchema } from '../products/types/schemas';
 
-const DiscountCodeSchema = z.object({
-  id: z.string(),
-  version: z.number(),
-  code: z.string(),
-  name: z.object({
-    en: z.string(),
-  }),
-  key: z.string(),
-  description: z.object({
-    en: z.string(),
-  }),
-  cartDiscounts: z.array(
-    z.object({
-      typeId: z.string(),
-      id: z.string(),
-    })
-  ),
-  isActive: z.boolean(),
-  maxApplications: z.number(),
-  maxApplicationsPerCustomer: z.number(),
-  cartPredicate: z.string(),
-  references: z.array(
-    z.object({
-      typeId: z.string(),
-      id: z.string(),
-    })
-  ),
-  groups: z.array(z.string()),
-  createdAt: z.string().datetime(),
-  lastModifiedAt: z.string().datetime(),
-  lastModifiedBy: z.object({
-    clientId: z.string(),
-    isPlatformClient: z.boolean(),
-  }),
-  createdBy: z.object({
-    clientId: z.string(),
-    isPlatformClient: z.boolean(),
-  }),
+const MoneySchema = z.object({
+  type: z.string(),
+  currencyCode: z.string(),
+  centAmount: z.number(),
+  fractionDigits: z.number(),
 });
 
+const DiscountOnTotalPriceSchema = z
+  .object({
+    discountedAmount: MoneySchema,
+    includedDiscounts: z.array(z.unknown()),
+  })
+  .optional();
+
 const DiscountCodeInfoSchema = z.object({
-  discountCode: z
-    .object({
-      id: z.string(),
-      obj: DiscountCodeSchema,
-    })
-    .passthrough(),
+  discountCode: z.object({
+    typeId: z.string(),
+    id: z.string(),
+  }),
   state: z.string(),
 });
 
@@ -109,6 +81,7 @@ export const CartSchema = z
     }),
     discountCodes: z.array(DiscountCodeInfoSchema).optional(),
     directDiscounts: z.array(DirectDiscountSchema).optional(),
+    discountOnTotalPrice: DiscountOnTotalPriceSchema,
     taxMode: z.string(),
     taxRoundingMode: z.string(),
     taxCalculationMode: z.string(),
