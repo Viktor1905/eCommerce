@@ -2,7 +2,7 @@ export interface ProductProjectionResponse {
   limit: number;
   offset: number;
   count: number;
-  total?: number;
+  total: number;
   results: ProductProjection[];
 }
 

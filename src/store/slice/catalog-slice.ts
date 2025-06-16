@@ -2,9 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction, AsyncThunk } from '@redux
 import { Filters } from '../../pages/catalog/components/catalogFilter/CatalogFilter.tsx';
 import { ProductProjectionResponse } from '../../api/catalog/products.types.ts';
 import { requestFilter } from '../../api/catalog/filter/request-filter.ts';
-import { getProducts } from '../../api/catalog/request-products.ts';
 import { defineMaxCost } from '../../api/catalog/max-request';
 import { defineMinCost } from '../../api/catalog/min-request';
+import { requestProductsQuantity } from '../../api/catalog/request-products-quantity.ts';
+import { getProducts } from '../../api/catalog/request-products.ts';
 
 export interface CatalogState {
   searchTerm: string;
@@ -17,6 +18,10 @@ export interface CatalogState {
   type?: string;
   maxCost: number;
   minCost: number;
+  page: number;
+  limit: number;
+  productsLength: number;
+  pageQuantity: number;
 }
 const initialState: CatalogState = {
   searchTerm: '',
@@ -25,8 +30,12 @@ const initialState: CatalogState = {
   products: null,
   filteredProducts: null,
   isLoading: false,
-  maxCost: await defineMaxCost(),
-  minCost: await defineMinCost(),
+  maxCost: 0,
+  minCost: 0,
+  page: 1,
+  limit: 6,
+  productsLength: 0,
+  pageQuantity: 1,
 };
 interface stateReject {
   state: { catalog: CatalogState };
@@ -41,12 +50,13 @@ export const loadCatalog: AsyncThunk<ProductProjectionResponse, undefined, state
       rejectValue: string;
     }
   >('catalog/load', async (_, thunkAPI) => {
-    const { products, searchTerm, filters, sort, type } = thunkAPI.getState().catalog;
+    const { products, searchTerm, filters, sort, type, page, limit } = thunkAPI.getState().catalog;
+
     try {
       if (!products) {
-        return await getProducts();
+        return await getProducts(page, limit);
       }
-      return await requestFilter({ filters, sort, type, searchTerm });
+      return await requestFilter({ filters, sort, type, searchTerm, page, limit });
     } catch (error) {
       console.error(error);
       if (error instanceof Error) {
@@ -55,7 +65,19 @@ export const loadCatalog: AsyncThunk<ProductProjectionResponse, undefined, state
       return thunkAPI.rejectWithValue(`Failed to load catalog`);
     }
   });
-
+export const initializeCatalog = createAsyncThunk('catalog/initialize', async (_, thunkAPI) => {
+  try {
+    const [maxCost, minCost, productsLength] = await Promise.all([
+      defineMaxCost(),
+      defineMinCost(),
+      requestProductsQuantity(),
+    ]);
+    return { maxCost, minCost, productsLength };
+  } catch (error) {
+    console.error('Initialization error:', error);
+    return thunkAPI.rejectWithValue('Failed to initialize catalog');
+  }
+});
 const slice = createSlice({
   name: 'catalog',
   initialState,
@@ -75,6 +97,17 @@ const slice = createSlice({
     setFilteredProducts(state, action: PayloadAction<ProductProjectionResponse>) {
       state.filteredProducts = action.payload;
     },
+    setPage(state, action: PayloadAction<number>) {
+      state.page = action.payload;
+    },
+    setCount(state, action: PayloadAction<number>) {
+      state.limit = action.payload;
+      state.pageQuantity = state.productsLength ? Math.ceil(state.productsLength / state.limit) : 1;
+    },
+    setProductsLength(state, action: PayloadAction<number>) {
+      state.productsLength = action.payload;
+      state.pageQuantity = state.productsLength ? Math.ceil(state.productsLength / state.limit) : 1;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,13 +121,31 @@ const slice = createSlice({
         state.products ??= action.payload;
 
         state.filteredProducts = action.payload;
+
+        state.productsLength = action.payload.total;
+        state.pageQuantity = Math.ceil(action.payload.total / state.limit);
       })
       .addCase(loadCatalog.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload ?? action.error.message;
+      })
+      .addCase(initializeCatalog.fulfilled, (state, action) => {
+        state.maxCost = action.payload.maxCost;
+        state.minCost = action.payload.minCost;
+        state.productsLength = action.payload.productsLength;
+        state.pageQuantity = Math.ceil(action.payload.productsLength / state.limit);
       });
   },
 });
 
-export const { setFilters, setSort, setFilteredProducts, setSearchTerm, setType } = slice.actions;
+export const {
+  setFilters,
+  setSort,
+  setFilteredProducts,
+  setSearchTerm,
+  setType,
+  setPage,
+  setCount,
+  setProductsLength,
+} = slice.actions;
 export default slice.reducer;

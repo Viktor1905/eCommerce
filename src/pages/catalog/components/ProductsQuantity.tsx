@@ -1,13 +1,13 @@
 import { ChangeEvent, ReactElement, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../store/store.ts';
+import { setCount, setPage } from '../../../store/slice/catalog-slice.ts';
 
-export function ProductsQuantity({
-  onChangeLimit,
-  setPageQuantity,
-  ProductsLength,
-}: ProductsQuantityProps): ReactElement {
+export function ProductsQuantity({ ProductsLength }: ProductsQuantityProps): ReactElement {
+  const dispatch = useDispatch<AppDispatch>();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChangeLimit(Number(event.target.value));
-    setPageQuantity(Math.ceil(ProductsLength / Number(event.target.value)));
+    dispatch(setCount(Number(event.target.value)));
+    dispatch(setPage(Math.ceil(ProductsLength / Number(event.target.value))));
     setOpen(false);
     setItemsPerPage(event.target.value);
   };
@@ -132,7 +132,5 @@ export function ProductsQuantity({
 }
 
 interface ProductsQuantityProps {
-  onChangeLimit: (limit: number) => void;
-  setPageQuantity: (page: number) => void;
   ProductsLength: number;
 }
