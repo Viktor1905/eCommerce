@@ -141,9 +141,7 @@ function ShowPrice({ product }: { product: ProductProjection }) {
   const [dollarDiscount, centDiscount] = discountPrice;
 
   const currencyCode = product.masterVariant.prices?.[0].value.currencyCode;
-  const safePriceCents = priceCents ?? 0;
-  const safeDiscountPriceCents = discountPriceCents;
-  const discountPercent = ((safePriceCents - safeDiscountPriceCents) / (priceCents ?? 1)) * 100;
+  const discountPercent = ((priceCents ?? 0 - discountPriceCents) / (priceCents ?? 1)) * 100;
 
   return (
     <div className={styles['products-price']}>
