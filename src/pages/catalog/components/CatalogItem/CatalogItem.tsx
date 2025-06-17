@@ -1,12 +1,7 @@
-import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import { ReactElement } from 'react';
 import { Attribute, ProductProjection } from '../../../../api/catalog/products.types.ts';
 import saleIcon from '../assets/sale.svg';
-import { NavigateFunction, useNavigate, useParams } from 'react-router-dom';
-import styles from '../../../product/AddProductToCart.module.css';
-import { getTokenFromCookie } from '../../../profile/ProfilePage.tsx';
-import { toast } from 'react-toastify';
-import { addItemToCart } from '../../../../api/cart-api/manage-item-in-cart.ts';
-import { getLastActiveCart } from '../../../../api/cart-api/get-cart.ts';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {
   const description: Attribute | undefined = product.masterVariant.attributes?.find(
@@ -35,37 +30,15 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   const price: number =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.value.centAmount / 100;
   const navigate: NavigateFunction = useNavigate();
-
-  const addButton = useRef<HTMLButtonElement>(null);
-  const onClick = async (
-    event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>
-  ): Promise<void> => {
-    if (addButton.current && event.target !== addButton.current) {
-      await navigate(`/product/${product.id}`);
-    }
+  const onClick: () => Promise<void> = async (): Promise<void> => {
+    await navigate(`/product/${product.id}`);
   };
-
-  const { id } = useParams<{ id: string }>();
-  const [isNoInCart, setNoInCart] = useState(true);
-  const fetchCart = useCallback(async () => {
-    try {
-      const cartData = await getLastActiveCart();
-
-      const checkCart = cartData.lineItems?.some((idItem) => idItem.productId === id);
-      setNoInCart(checkCart ?? true);
-    } catch (error) {
-      console.error('Cart Error:', error);
-    }
-  }, [id]);
-  useEffect(() => {
-    void fetchCart();
-  }, [fetchCart]);
   return (
     <div
       key={product.id}
-      className=" flex flex-col justify-around rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
-      onClick={(event): void => {
-        void onClick(event);
+      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
+      onClick={(): void => {
+        void onClick();
       }}
     >
       {product.masterVariant.images?.[0] && (
@@ -96,33 +69,6 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         )}
       </div>
       <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">{descriptionText}</p>
-      <button
-        type="button"
-        ref={addButton}
-        className={styles['add-to-cart-button']}
-        style={{
-          cursor: !isNoInCart ? 'pointer' : 'not-allowed',
-        }}
-        onClick={() => {
-          if (typeof getTokenFromCookie() !== 'string') {
-            toast.success('✓ You need to be logged in to access your shopping cart!', {
-              position: 'top-right',
-            });
-            return;
-          }
-          if (isNoInCart) {
-            if (id) {
-              void addItemToCart({ productId: id });
-            }
-          } else {
-            toast.success('✓ This product is already in your cart!', {
-              position: 'top-right',
-            });
-          }
-        }}
-      >
-        Add to Cart
-      </button>
     </div>
   );
 }
