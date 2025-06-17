@@ -24,7 +24,9 @@ function App() {
   const [token, setToken] = useState<string | null>(null);
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
-  void dispatch(initializeCatalog());
+  useEffect(() => {
+    void dispatch(initializeCatalog());
+  }, [dispatch]);
   useEffect(() => {
     const currentToken = getTokenFromCookie();
     if (!currentToken) {

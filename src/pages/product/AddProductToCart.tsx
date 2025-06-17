@@ -6,6 +6,9 @@ import { useCallback, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { getTokenFromCookie } from '../profile/ProfilePage';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
+import { setProductNumber } from '../../store/slice/cart-slice.ts';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store.ts';
 
 export function AddProductToCart() {
   const [quantity, setQuantity] = useState(1);
@@ -30,7 +33,48 @@ export function AddProductToCart() {
       console.error('Cart Error:', error);
     }
   }, [id]);
-
+  const dispatch = useDispatch<AppDispatch>();
+  const addItemClick = async () => {
+    try {
+      if (typeof getTokenFromCookie() !== 'string') {
+        toast.success('✓ You need to be logged in to access your shopping cart!', {
+          position: 'top-right',
+        });
+        return;
+      }
+      if (quantity && quantity > 0 && !isNoInCart) {
+        if (id) {
+          const response = await addItemToCart({ productId: id, quantity });
+          if (response.lineItems) {
+            dispatch(setProductNumber(response.lineItems.length));
+          }
+          setNoInCart(true);
+        }
+      } else {
+        if (quantity && quantity > 0) {
+          toast.success('✓ This product is already in your cart!', {
+            position: 'top-right',
+          });
+          return;
+        }
+      }
+      setNoInCart(!isNoInCart);
+    } catch (error) {
+      console.error('Ошибка при обновлении корзины:', error);
+    }
+  };
+  const removeItemClick = async () => {
+    setNoInCart(!isNoInCart);
+    if (id && lineItemId && totalQuantity) {
+      const response = await removeItemFromCart({
+        lineItemId: lineItemId,
+        quantity: totalQuantity,
+      });
+      if (response.lineItems) {
+        dispatch(setProductNumber(response.lineItems.length));
+      }
+    }
+  };
   useEffect(() => {
     void fetchCart();
   }, [fetchCart]);
@@ -63,27 +107,7 @@ export function AddProductToCart() {
         style={{
           cursor: quantity < 1 ? 'not-allowed' : !isNoInCart ? 'pointer' : 'not-allowed',
         }}
-        onClick={() => {
-          if (typeof getTokenFromCookie() !== 'string') {
-            toast.success('✓ You need to be logged in to access your shopping cart!', {
-              position: 'top-right',
-            });
-            return;
-          }
-          if (quantity && quantity > 0 && !isNoInCart) {
-            if (id) {
-              void addItemToCart({ productId: id, quantity });
-            }
-          } else {
-            if (quantity && quantity > 0) {
-              toast.success('✓ This product is already in your cart!', {
-                position: 'top-right',
-              });
-              return;
-            }
-          }
-          setNoInCart(!isNoInCart);
-        }}
+        onClick={() => void addItemClick()}
       >
         Add to Cart
       </button>
@@ -92,12 +116,7 @@ export function AddProductToCart() {
         style={{
           display: !isNoInCart ? 'none' : 'flex',
         }}
-        onClick={() => {
-          setNoInCart(!isNoInCart);
-          if (id && lineItemId && totalQuantity) {
-            void removeItemFromCart({ lineItemId: lineItemId, quantity: totalQuantity });
-          }
-        }}
+        onClick={() => void removeItemClick()}
       >
         delete
       </span>

@@ -78,6 +78,7 @@ export const updateCart = async (cart: cartResponse, actions: Actions) => {
   if (!cartData.success) {
     throw new Error('Invalid response format');
   }
+  console.log(cartData.data);
   return cartData.data;
 };
 
