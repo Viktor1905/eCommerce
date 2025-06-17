@@ -9,7 +9,7 @@ import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { fetchProfile } from '../../api/profile/profile';
 import { toast, ToastContainer } from 'react-toastify';
 import { AppDispatch, RootState } from '../../store/store';
-import { CartState } from '../../store/slice/cart-slice.ts';
+import { CartState, refreshCart } from '../../store/slice/cart-slice.ts';
 
 const UserContext = createContext<string | null>(null);
 
@@ -287,6 +287,7 @@ function Favorite() {
 function Cart() {
   const userName = useContext(UserContext) ?? '';
   const isGuest = userName === 'Guest';
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const handleCartClick = () => {
     if (isGuest) {
@@ -297,7 +298,9 @@ function Cart() {
       void navigate('/cart');
     }
   };
-
+  useEffect(() => {
+    void dispatch(refreshCart());
+  }, [dispatch]);
   const { productNumber } = useSelector((s: RootState): CartState => s.cart);
   const counter = useRef<HTMLDivElement | null>(null);
   return (
