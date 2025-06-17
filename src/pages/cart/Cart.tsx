@@ -9,9 +9,6 @@ import { Spinner } from '../product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { deleteCart } from '../../api/cart-api/delete-cart';
 import { applyDiscount } from '../../api/cart-api/cart-discount';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store.ts';
-import { setProductNumber } from '../../store/slice/cart-slice.ts';
 
 interface CartItemProps {
   cartItem: cartItemResponse;
@@ -19,8 +16,6 @@ interface CartItemProps {
 }
 
 export function CartPage() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
   const [bonusMessage, setBonusMessage] = useState('');
@@ -30,9 +25,6 @@ export function CartPage() {
     const currentActiveCart = await getLastActiveCart();
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
-      if (cartInfo.lineItems) {
-        dispatch(setProductNumber(cartInfo.lineItems.length));
-      }
       setCart(cartInfo);
     } catch (error) {
       console.error('Error fetching cart:', error);
@@ -89,16 +81,6 @@ export function CartPage() {
 
   const handleCartUpdate = (updatedCart: cartResponse) => {
     setCart(updatedCart);
-    const handleClearCart = async (): Promise<void> => {
-    try {
-      const currentActiveCart = await getLastActiveCart();
-      await deleteCart(currentActiveCart.id, currentActiveCart.version);
-      dispatch(setProductNumber(0));
-    } catch (error) {
-      console.error('Failed to clear cart with an unexpected error:', error);
-    } finally {
-      setCart(null);
-    }
   };
 
   const currentQuantity = cart.lineItems.reduce((sum, element) => {
