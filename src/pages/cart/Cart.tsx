@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getCartByCartID } from '../../api/cart-api/get-cart';
 import { getTokenFromCookie } from '../profile/ProfilePage';
 import { cartItemResponse, cartResponse } from '../../api/cart-api/cart-types';
@@ -11,21 +10,19 @@ import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { deleteCart } from '../../api/cart-api/delete-cart';
 import { applyDiscount } from '../../api/cart-api/cart-discount';
 
+interface CartItemProps {
+  cartItem: cartItemResponse;
+  onCartUpdate: (updatedCart: cartResponse) => void;
+}
+
 export function CartPage() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<cartResponse | null>(null);
   const [bonusMessage, setBonusMessage] = useState('');
   const [bonus, setBonus] = useState('');
 
   const refreshCart = useCallback(async () => {
-    const token = getTokenFromCookie();
-    if (!token) {
-      void navigate('/login', { replace: true });
-      return;
-    }
     const currentActiveCart = await getLastActiveCart();
-
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
       setCart(cartInfo);
@@ -34,7 +31,7 @@ export function CartPage() {
     } finally {
       setLoading(false);
     }
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     void refreshCart();
@@ -44,6 +41,9 @@ export function CartPage() {
     document.title = 'Cart | Zoo Shop | Pet Supplies';
   }, []);
 
+  const token = getTokenFromCookie();
+  if (!token) return <CartPageEmpty />;
+
   if (loading) {
     return <Spinner />;
   }
@@ -51,23 +51,6 @@ export function CartPage() {
   if (!cart || !cart.lineItems || cart.lineItems.length === 0) {
     return <CartPageEmpty />;
   }
-  const currentQuantity = cart.lineItems.reduce((sum, element) => {
-    return sum + element.quantity;
-  }, 0);
-
-  const handleApplyDiscount = async (promoCode: string) => {
-    if (bonusMessage) return;
-    const updatedCart = await applyDiscount(promoCode);
-    setCart(updatedCart);
-    if (updatedCart.discountCodes && updatedCart.discountCodes.length > 0) {
-      setBonusMessage('Your promotional discount is now active.');
-      const savedX = updatedCart.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
-      const saved = (savedX / 100).toFixed(2);
-      setBonus(`You saved ${cart.totalPrice.currencyCode} ${saved} with this promo code`);
-    } else {
-      setBonusMessage('The entered promo code is not valid.');
-    }
-  };
 
   const handleClearCart = async (): Promise<void> => {
     try {
@@ -80,12 +63,35 @@ export function CartPage() {
     }
   };
 
+  const handleApplyDiscount = async (promoCode: string) => {
+    const updatedCart = await applyDiscount(promoCode);
+    setCart(updatedCart);
+    if (updatedCart.discountCodes && updatedCart.discountCodes.length > 0) {
+      setBonusMessage('Your promotional discount is now active.');
+      const savedX = updatedCart.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
+      const saved = (savedX / 100).toFixed(2);
+      const oldPrice = ((cart.totalPrice.centAmount + savedX) / 100).toFixed(2);
+      setBonus(
+        `You saved ${cart.totalPrice.currencyCode} ${saved} with this promo code. OLD PRICE : ${cart.totalPrice.currencyCode} ${oldPrice}`
+      );
+    } else {
+      setBonusMessage('The entered promo code is not valid.');
+    }
+  };
+
+  const handleCartUpdate = (updatedCart: cartResponse) => {
+    setCart(updatedCart);
+  };
+
+  const currentQuantity = cart.lineItems.reduce((sum, element) => {
+    return sum + element.quantity;
+  }, 0);
   return (
     <div className={styles['wrapper-cart']}>
       <div className={styles['shopping-cart']}>
         <h2 className={styles['shopping-cart-title']}>Shopping Cart</h2>
         {cart.lineItems.map((item) => (
-          <CartItem key={item.id} cartItem={item} refreshCart={refreshCart} />
+          <CartItem key={item.id} cartItem={item} onCartUpdate={handleCartUpdate} />
         ))}
         <div
           className={styles['clear-cart']}
@@ -115,21 +121,15 @@ export function CartPage() {
   );
 }
 
-function CartItem({
-  cartItem,
-  refreshCart,
-}: {
-  cartItem: cartItemResponse;
-  refreshCart: () => Promise<void>;
-}) {
+function CartItem({ cartItem, onCartUpdate }: CartItemProps) {
   const handleAddItemClick = async (): Promise<void> => {
-    await addItemToCart({ productId: cartItem.productId, quantity: 1 });
-    await refreshCart();
+    const updatedCart = await addItemToCart({ productId: cartItem.productId, quantity: 1 });
+    onCartUpdate(updatedCart);
   };
 
   const handleRemoveItemClick = async (items?: number): Promise<void> => {
-    await removeItemFromCart({ lineItemId: cartItem.id, quantity: items });
-    await refreshCart();
+    const updatedCart = await removeItemFromCart({ lineItemId: cartItem.id, quantity: items });
+    onCartUpdate(updatedCart);
   };
   return (
     <div
