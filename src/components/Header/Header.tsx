@@ -3,12 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSearchTerm } from '../../store/slice/catalog-slice';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { fetchProfile } from '../../api/profile/profile';
 import { toast, ToastContainer } from 'react-toastify';
-import type { AppDispatch } from '../../store/store';
+import { AppDispatch, RootState } from '../../store/store';
+import { CartState } from '../../store/slice/cart-slice.ts';
 
 const UserContext = createContext<string | null>(null);
 
@@ -296,9 +297,14 @@ function Cart() {
       void navigate('/cart');
     }
   };
+
+  const { productNumber } = useSelector((s: RootState): CartState => s.cart);
+  const counter = useRef<HTMLDivElement | null>(null);
   return (
     <li onClick={handleCartClick} className={`${styles.list} ${styles['list-counter']}`}>
-      <div className={styles['counter-cart']}>0</div>
+      <div className={styles['counter-cart']} ref={counter}>
+        {productNumber}
+      </div>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['cart-icon']}`}>shopping_cart</span>
       </div>
