@@ -1,7 +1,15 @@
-import { ReactElement } from 'react';
+import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { Attribute, ProductProjection } from '../../../../api/catalog/products.types.ts';
 import saleIcon from '../assets/sale.svg';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import styles from '../../../product/AddProductToCart.module.css';
+import { getTokenFromCookie } from '../../../profile/ProfilePage.tsx';
+import { toast } from 'react-toastify';
+import { addItemToCart } from '../../../../api/cart-api/manage-item-in-cart.ts';
+import { getLastActiveCart } from '../../../../api/cart-api/get-cart.ts';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../store/store.ts';
+import { setProductNumber } from '../../../../store/slice/cart-slice.ts';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {
   const description: Attribute | undefined = product.masterVariant.attributes?.find(
@@ -30,15 +38,67 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   const price: number =
     product.masterVariant.prices[product.masterVariant.prices.length - 1]?.value.centAmount / 100;
   const navigate: NavigateFunction = useNavigate();
-  const onClick: () => Promise<void> = async (): Promise<void> => {
-    await navigate(`/product/${product.id}`);
+
+  const addButton = useRef<HTMLButtonElement>(null);
+  const onClick = async (
+    event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>
+  ): Promise<void> => {
+    if (addButton.current && event.target !== addButton.current) {
+      await navigate(`/product/${product.id}`);
+    }
   };
+  const [, setError] = useState<string | null>(null);
+  const id = product.id;
+  const [isNoInCart, setNoInCart] = useState(false);
+  const fetchCart = useCallback(async () => {
+    try {
+      const cartData = await getLastActiveCart();
+      const checkCart = cartData.lineItems?.some((idItem) => idItem.productId === id);
+      setNoInCart(checkCart === true);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
+    }
+  }, [id]);
+  useEffect(() => {
+    void fetchCart();
+  }, [fetchCart]);
+  const dispatch = useDispatch<AppDispatch>();
+  const handleClick = async () => {
+    try {
+      if (typeof getTokenFromCookie() !== 'string') {
+        toast.success('✓ You need to be logged in to access your shopping cart!', {
+          position: 'top-right',
+        });
+        return;
+      }
+      if (!isNoInCart) {
+        if (id) {
+          const response = await addItemToCart({ productId: id });
+          if (response.lineItems) {
+            dispatch(setProductNumber(response.lineItems.length));
+          }
+          setNoInCart(true);
+        }
+      } else {
+        toast.success('✓ This product is already in your cart!', {
+          position: 'top-right',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка при обновлении корзины:', error);
+    }
+  };
+
   return (
     <div
       key={product.id}
-      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
-      onClick={(): void => {
-        void onClick();
+      className=" flex flex-col justify-around rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
+      onClick={(event): void => {
+        void onClick(event);
       }}
     >
       {product.masterVariant.images?.[0] && (
@@ -69,6 +129,18 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         )}
       </div>
       <p className="mt-2 text-gray-600 line-clamp-3 overflow-hidden">{descriptionText}</p>
+      <button
+        type="button"
+        ref={addButton}
+        className={styles['add-to-cart-button']}
+        style={{
+          cursor: !isNoInCart ? 'pointer' : 'not-allowed',
+          opacity: isNoInCart ? '0.7' : '1',
+        }}
+        onClick={() => void handleClick()}
+      >
+        Add to Cart
+      </button>
     </div>
   );
 }

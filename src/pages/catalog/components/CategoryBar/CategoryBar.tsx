@@ -11,6 +11,7 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
   const { type } = useSelector((s: RootState): CatalogState => s.catalog);
 
   const dispatch = useDispatch<AppDispatch>();
+
   const [productTypes, setProductTypes] = useState<
     { id: string; name: string; description: string }[]
   >([]);
@@ -31,7 +32,6 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
       });
       dispatch(setType(item.id));
     }
-    console.log(type);
   };
 
   const fetchProductTypes = useCallback(async () => {

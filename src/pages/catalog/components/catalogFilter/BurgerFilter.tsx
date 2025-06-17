@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useRef } from 'react';
-import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
 import { CatalogFilter, Filters } from './CatalogFilter.tsx';
 
 export function BurgerFilter({
@@ -7,7 +6,6 @@ export function BurgerFilter({
   setShowBurger,
   onFilterSubmit,
   onResetFilters,
-  products,
 }: BurgerProps): ReactElement {
   useEffect(() => {
     if (showBurger) {
@@ -43,7 +41,6 @@ export function BurgerFilter({
           X
         </div>
         <CatalogFilter
-          products={products}
           onFilterSubmit={onFilterSubmit}
           onResetFilters={onResetFilters}
           closeWrapper={closeWrapper}
@@ -58,5 +55,4 @@ interface BurgerProps {
   setShowBurger: (showBurger: boolean) => void;
   onFilterSubmit: (data: Filters) => void;
   onResetFilters: (data: Filters) => void;
-  products: ProductProjectionResponse | null;
 }

@@ -1,22 +1,11 @@
 import { ReactElement } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import { Filters } from './CatalogFilter.tsx';
-import {
-  Attribute,
-  ProductProjection,
-  ProductProjectionResponse,
-} from '../../../../api/catalog/products.types.ts';
 import { CustomCheckbox } from './components/CustomCheckbox.tsx';
 
-export function BrandFilter({ products, register }: BrandProps): ReactElement {
-  const brands = new Set<string>();
-  products?.results.map((item: ProductProjection): void => {
-    item.masterVariant.attributes?.forEach((product: Attribute): void => {
-      if (product.name === 'brand' && typeof product.value === 'string') {
-        brands.add(product.value);
-      }
-    });
-  });
+export function BrandFilter({ register }: BrandProps): ReactElement {
+  const brands = new Set<string>(['Brit', 'Grandorf', 'No name', 'Orijen', 'Purina']);
+
   const brandsSorted: string[] = Array.from(brands).sort(
     (product1: string, product2: string): 1 | -1 => {
       return product1 > product2 ? 1 : -1;
@@ -44,6 +33,5 @@ export function BrandFilter({ products, register }: BrandProps): ReactElement {
 }
 
 interface BrandProps {
-  products: ProductProjectionResponse | null;
   register: UseFormRegister<Filters>;
 }

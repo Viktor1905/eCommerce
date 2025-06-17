@@ -134,7 +134,7 @@
 
 .menu-list {
   display: flex;
-  height: 45px;
+  height: 55px;
   gap: 20px;
   justify-content: space-between;
   align-items: center;
@@ -144,7 +144,7 @@
 .home-link {
   position: relative;
   display: flex;
-  height: 45px;
+  height: 55px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -159,12 +159,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
   color: #000000;
   background-color: var(--color-goldenrod);
   border-radius: 50%;
-  font-size: 0.5rem;
+  font-size: 1rem;
   top: 0;
   right: 0;
   padding: 6px;
