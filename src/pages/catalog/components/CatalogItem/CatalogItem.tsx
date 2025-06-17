@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { Attribute, ProductProjection } from '../../../../api/catalog/products.types.ts';
 import saleIcon from '../assets/sale.svg';
-import { NavigateFunction, useNavigate, useParams } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import styles from '../../../product/AddProductToCart.module.css';
 import { getTokenFromCookie } from '../../../profile/ProfilePage.tsx';
 import { toast } from 'react-toastify';
@@ -45,14 +45,13 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
     }
   };
 
-  const { id } = useParams<{ id: string }>();
-  const [isNoInCart, setNoInCart] = useState(true);
+  const id = product.id;
+  const [isNoInCart, setNoInCart] = useState(false);
   const fetchCart = useCallback(async () => {
     try {
       const cartData = await getLastActiveCart();
-
       const checkCart = cartData.lineItems?.some((idItem) => idItem.productId === id);
-      setNoInCart(checkCart ?? true);
+      setNoInCart(checkCart === true);
     } catch (error) {
       console.error('Cart Error:', error);
     }
@@ -102,6 +101,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         className={styles['add-to-cart-button']}
         style={{
           cursor: !isNoInCart ? 'pointer' : 'not-allowed',
+          opacity: isNoInCart ? '0.7' : '1',
         }}
         onClick={() => {
           if (typeof getTokenFromCookie() !== 'string') {
@@ -110,9 +110,10 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
             });
             return;
           }
-          if (isNoInCart) {
+          if (!isNoInCart) {
             if (id) {
               void addItemToCart({ productId: id });
+              setNoInCart(true);
             }
           } else {
             toast.success('✓ This product is already in your cart!', {
