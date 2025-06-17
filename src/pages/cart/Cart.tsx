@@ -88,6 +88,9 @@ export function CartPage() {
   };
   const handleCartUpdate = (updatedCart: cartResponse) => {
     setCart(updatedCart);
+    if (updatedCart.lineItems) {
+      dispatch(setProductNumber(updatedCart.lineItems.length));
+    }
   };
 
   const currentQuantity = cart.lineItems.reduce((sum, element) => {
