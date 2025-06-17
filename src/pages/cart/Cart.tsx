@@ -10,8 +10,8 @@ import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { deleteCart } from '../../api/cart-api/delete-cart';
 import { applyDiscount } from '../../api/cart-api/cart-discount';
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store/store.ts';
-import { setProductNumber } from '../../store/slice/cart-slice.ts';
+import { AppDispatch } from '../../store/store';
+import { setProductNumber } from '../../store/slice/cart-slice';
 
 interface CartItemProps {
   cartItem: cartItemResponse;
@@ -29,9 +29,6 @@ export function CartPage() {
     const currentActiveCart = await getLastActiveCart();
     try {
       const cartInfo = await getCartByCartID(currentActiveCart.id);
-      if (cartInfo.lineItems) {
-        dispatch(setProductNumber(cartInfo.lineItems.length));
-      }
       setCart(cartInfo);
     } catch (error) {
       console.error('Error fetching cart:', error);
