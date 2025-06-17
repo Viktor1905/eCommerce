@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import logo from './logo.png';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
+
 import { useDispatch } from 'react-redux';
 import { setSearchTerm } from '../../store/slice/catalog-slice';
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
@@ -192,18 +193,13 @@ function MenuHeader() {
         <Logo />
         <HomeLink />
       </div>
-      <ToastContainer
-        className={'w-0 h-0'}
-        closeOnClick={true}
-        style={{ top: '80px' }}
-        toastStyle={{ opacity: 0.9 }}
-      />
       <ul className={styles['menu-list']}>
         <Login />
         <Order />
         <Favorite />
         <Cart />
       </ul>
+      <ToastContainer className={'w-0 h-0'} />
     </nav>
   );
 }
@@ -284,20 +280,12 @@ function Favorite() {
 }
 
 function Cart() {
-  const userName = useContext(UserContext) ?? '';
-  const isGuest = userName === 'Guest';
   const navigate = useNavigate();
-  const handleCartClick = () => {
-    if (isGuest) {
-      toast.success('You need to be logged in to access your cart!', {
-        position: 'top-right',
-      });
-    } else {
-      void navigate('/cart');
-    }
-  };
   return (
-    <li onClick={handleCartClick} className={`${styles.list} ${styles['list-counter']}`}>
+    <li
+      onClick={() => void navigate('/cart')}
+      className={`${styles.list} ${styles['list-counter']}`}
+    >
       <div className={styles['counter-cart']}>0</div>
       <div className={styles['img-list']}>
         <span className={`material-symbols-outlined ${styles['cart-icon']}`}>shopping_cart</span>

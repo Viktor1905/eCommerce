@@ -7,8 +7,6 @@ import {
   ProductProjectionSchema,
 } from './types/schemas';
 
-// import { fetchCartDetails } from '../../api/cart/auth';
-
 export async function checkStatus(response: Response): Promise<void> {
   if (!response.ok) {
     const rawData: unknown = await response.json();
@@ -43,7 +41,6 @@ export async function fetchProductDetails(id: string): Promise<ProductProjection
       throw new Error('API returned unexpected error format');
     }
 
-    // fetchCartDetails();
     return result.data;
   } catch (error) {
     if (error instanceof Error) {
