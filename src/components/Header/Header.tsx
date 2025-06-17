@@ -86,7 +86,7 @@ export function Header() {
       <UserContext.Provider value={userName}>
         <div className="flex flex-col w-full relative">
           <header className={styles.header}>
-            <span className="flex justify-center items-center absolute w-[250px] top-[120px] right-[20px] bg-white text-red-500 shadow-lg rounded-2xl">
+            <span className="flex justify-center items-center absolute w-[250px] top-[130px] right-[20px] bg-white text-red-500 shadow-lg rounded-2xl">
               Promocode: PETBDAY10
             </span>
             <div className={styles['header-case']}>

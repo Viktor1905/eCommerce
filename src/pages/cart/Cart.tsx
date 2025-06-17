@@ -12,6 +12,7 @@ import { applyDiscount } from '../../api/cart-api/cart-discount';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { setProductNumber } from '../../store/slice/cart-slice';
+import { useNavigate } from 'react-router-dom';
 
 interface CartItemProps {
   cartItem: cartItemResponse;
@@ -218,12 +219,21 @@ function CartItem({ cartItem, onCartUpdate }: CartItemProps) {
 }
 
 function CartPageEmpty() {
+  const navigate = useNavigate();
   return (
     <div className={styles['canvas-page']}>
       <h2 className={styles['cart-title-empty']}>It&apos;s time to start shopping!</h2>
       <span className={styles['cart-text-empty']}>
         Fill it with discounts from our popular departments
       </span>
+      <div
+        className="hover:cursor-pointer mb-[20px] text-2xl"
+        onClick={() => {
+          void navigate('/catalog');
+        }}
+      >
+        CATALOG ⬅️
+      </div>
       <div className={styles['cart-background']}>
         <img className={styles['empty-img']} src={empty} alt="empty"></img>
       </div>
