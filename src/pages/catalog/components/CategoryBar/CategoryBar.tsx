@@ -31,7 +31,6 @@ export function CategoryBar({ onFilterSubmit }: CategoryFilterProps): ReactEleme
       });
       dispatch(setType(item.id));
     }
-    console.log(type);
   };
 
   const fetchProductTypes = useCallback(async () => {

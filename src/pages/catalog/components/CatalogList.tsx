@@ -1,64 +1,42 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { ProductProjection } from '../../../api/catalog/products.types.ts';
 import { CatalogItem } from './CatalogItem/CatalogItem.tsx';
 import { ProductsQuantity } from './ProductsQuantity.tsx';
 import { Pagination } from './Pagination.tsx';
-import { useSelector } from 'react-redux';
-import { CatalogState } from '../../../store/slice/catalog-slice.ts';
-import { RootState } from '../../../store/store.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { CatalogState, loadCatalog, setPage } from '../../../store/slice/catalog-slice.ts';
+import { AppDispatch, RootState } from '../../../store/store.ts';
 import { RenderSortList } from './RenderSortList.tsx';
 
 export function CatalogList(): ReactElement {
-  const { products, filteredProducts } = useSelector((s: RootState): CatalogState => s.catalog);
-  const [itemsLimit, setItemsLimit] = useState<number>(6);
-  const [page, setPage] = useState<number>(1);
-  const [pageQuantity, setPageQuantity] = useState<number>(
-    products?.results.length ? Math.ceil(products.results.length / itemsLimit) : 1
+  const { products, filteredProducts, limit, page, pageQuantity, type } = useSelector(
+    (s: RootState): CatalogState => s.catalog
   );
+  const dispatch = useDispatch<AppDispatch>();
   const usedProducts = filteredProducts ?? products;
   useEffect((): void => {
-    if (usedProducts?.results) {
-      setPageQuantity(Math.ceil(usedProducts.results.length / itemsLimit));
-    }
-  }, [usedProducts, itemsLimit]);
-  useEffect((): void => {
     if (page > pageQuantity) {
-      setPage(pageQuantity > 1 ? pageQuantity - 1 : 1);
+      dispatch(setPage(pageQuantity > 1 ? pageQuantity - 1 : 1));
     }
-  }, [itemsLimit, page, pageQuantity, products]);
+    void dispatch(loadCatalog());
+  }, [limit, page, pageQuantity, products, type]);
 
   return (
     <section className={'bg-white h-full flex flex-col rounded-2xl'}>
       <RenderSortList />
-      <ProductsQuantity
-        onChangeLimit={setItemsLimit}
-        setPageQuantity={setPageQuantity}
-        ProductsLength={products?.results.length ?? 1}
-      />
+      <ProductsQuantity ProductsLength={products?.results.length ?? 1} />
       {!products ? (
         <div className="text-red-500">Just a second please</div>
       ) : usedProducts?.results.length === 0 ? (
         <div className="text-gray-500 text-center py-4">No products found</div>
       ) : (
         <div className="flex flex-wrap sm:grid sm:grid-cols-2  lg:grid-cols-3  gap-3 pr-4 pl-4 pb-2 justify-center">
-          {page > 1
-            ? usedProducts?.results
-                .slice(itemsLimit * (page - 1), itemsLimit * page)
-                .map(
-                  (item: ProductProjection): ReactElement => (
-                    <CatalogItem key={item.id} product={item} />
-                  )
-                )
-            : usedProducts?.results
-                .slice(0, itemsLimit)
-                .map(
-                  (item: ProductProjection): ReactElement => (
-                    <CatalogItem key={item.id} product={item} />
-                  )
-                )}
+          {usedProducts?.results.map(
+            (item: ProductProjection): ReactElement => <CatalogItem key={item.id} product={item} />
+          )}
         </div>
       )}
-      <Pagination onChangePage={setPage} pageQuantity={pageQuantity} currentPage={page} />
+      <Pagination pageQuantity={pageQuantity} currentPage={page} />
     </section>
   );
 }

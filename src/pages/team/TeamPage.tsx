@@ -1,10 +1,10 @@
 import styles from './TeamPage.module.css';
 import { useEffect } from 'react';
-import team from './components/ourTeam.png';
-import team2 from './components/ourTeam2.png';
-import team3 from './components/ourTeam3.png';
-import team4 from './components/ourTeam4.png';
-import team5 from './components/ourTeam5.png';
+import team from '../about/assets/ourTeam.png';
+import team2 from '../about/assets/ourTeam2.png';
+import team3 from '../about/assets/ourTeam3.png';
+import team4 from '../about/assets/ourTeam4.png';
+import team5 from '../about/assets/ourTeam5.png';
 
 export function TeamPage() {
   useEffect(() => {

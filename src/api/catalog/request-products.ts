@@ -3,9 +3,9 @@ import { getCatalogToken } from './catalog-token.ts';
 import { isProductsResponse } from './check-response.ts';
 import { ProductProjectionResponse } from './products.types.ts';
 
-export async function getProducts(): Promise<ProductProjectionResponse> {
+export async function getProducts(page: number, limit: number): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
-  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections`;
+  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?limit=${limit.toString()}&offset=${(page * limit - limit).toString()}`;
   try {
     const response = await fetch(url, {
       method: 'GET',
