@@ -27,6 +27,7 @@ export async function getUserTokens(apiConfig: API_CONFIG, data: LoginData): Pro
             `manage_my_profile:${apiConfig.projectKey}`,
             `manage_customers:${apiConfig.projectKey}`,
             `manage_my_shopping_lists:${apiConfig.projectKey}`,
+            `manage_orders:${apiConfig.projectKey}`,
           ].join(' '),
         }).toString(),
       }

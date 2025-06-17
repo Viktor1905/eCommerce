@@ -1,22 +1,21 @@
 import { FormEvent, ReactElement } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { ProductProjectionResponse } from '../../../../api/catalog/products.types.ts';
 import { PriceSlider } from './PriceSlider.tsx';
 import { BrandFilter } from './BrandFilter.tsx';
-import { usePrices } from './hooks/usePrices.ts';
 import { RenderForWhomFilter } from './RenderForWhomFilter.tsx';
 import { GetFilterResetSvg } from './components/FilterResetSvg.tsx';
 import { CustomCheckbox } from './components/CustomCheckbox.tsx';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/store';
+import { CatalogState } from '../../../../store/slice/catalog-slice';
 
 export function CatalogFilter({
-  products,
   onFilterSubmit,
   onResetFilters,
   closeWrapper,
 }: CatalogFilterProps): ReactElement {
-  const { pricesList, lowestPrice, highestPrice } = usePrices(products);
   const { register, handleSubmit, control } = useFormContext<Filters>();
-
+  const { minCost, maxCost } = useSelector((s: RootState): CatalogState => s.catalog);
   const onSubmit: (data: Filters) => void = (data: Filters): void => {
     try {
       onFilterSubmit(data);
@@ -51,11 +50,9 @@ export function CatalogFilter({
           />
         </fieldset>
       </div>
-      {pricesList.length > 0 && <RenderForWhomFilter products={products} register={register} />}
-      {pricesList.length > 0 && <BrandFilter products={products} register={register} />}
-      {pricesList.length > 0 && (
-        <PriceSlider control={control} lowestPrice={lowestPrice} highestPrice={highestPrice} />
-      )}
+      {<RenderForWhomFilter register={register} />}
+      {<BrandFilter register={register} />}
+      {<PriceSlider control={control} lowestPrice={minCost} highestPrice={maxCost} />}
       <button type="submit" className={'text-nowrap btn-custom !w-[50%] !mb-2'}>
         Submit
       </button>
@@ -69,7 +66,6 @@ export interface Filters {
   for: string[];
 }
 interface CatalogFilterProps {
-  products: ProductProjectionResponse | null;
   onFilterSubmit: (data: Filters) => void;
   onResetFilters: (data: Filters) => void;
   closeWrapper?: () => void;

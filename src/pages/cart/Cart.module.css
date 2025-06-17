@@ -26,3 +26,129 @@
   margin-bottom: 40px;
   font-size: clamp(0.5rem, 2vw, 1rem);
 }
+
+.wrapper-cart {
+  display: flex;
+  width: 90%;
+  max-width: 1480px;
+  min-width: 370px;
+  margin-top: 20px;
+  padding: 40px 0;
+  color: var(--color-olive);
+  font-size: clamp(0.5rem, 3vw, 1.5rem);
+  justify-content: space-between;
+  background-color: var(--color-light-gray);
+  border-radius: 16px;
+}
+
+.shopping-cart {
+  display: flex;
+  width: 55%;
+  margin-left: 5%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shopping-cart-title {
+  width: 100%;
+  padding-left: 5%;
+  font-size: clamp(1rem, 6vw, 4rem);
+}
+
+.shopping-cart-subtitle {
+  display: flex;
+  width: 90%;
+  color: #0000004b;
+  padding-right: 5%;
+  justify-content: flex-end;
+  border-bottom: 1px solid #ffffffbc;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+}
+
+.subtotal-price-cart {
+  width: 30%;
+  margin-right: 5%;
+}
+
+.items {
+  padding-left: 5%;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+}
+
+.total-price {
+  font-weight: 600;
+}
+
+.proceed-to-buy,
+.clear-cart {
+  display: flex;
+  width: 90%;
+  height: 40px;
+  margin-top: 40px;
+  padding: 0 5px;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+  color: var(--color-olive);
+  background-color: var(--color-goldenrod);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: color 0.2s ease-in;
+}
+
+.bonus-code-button {
+  display: flex;
+  width: 100%;
+}
+
+.bonus-code,
+.apply-bonus-code {
+  display: flex;
+  width: 50%;
+  height: 40px;
+  font-size: clamp(0.4rem, 2vw, 1.2rem);
+  margin-top: 55px;
+  background-color: var(--color-goldenrod);
+  justify-content: center;
+  align-items: center;
+  transition: color 0.2s ease-in;
+}
+
+.apply-bonus-code {
+  border-bottom-right-radius: 16px;
+  border-top-right-radius: 16px;
+  cursor: pointer;
+}
+
+:is(.apply-bonus-code, .proceed-to-buy, .clear-cart):hover {
+  color: var(--color-light-gray);
+}
+
+.bonus-code {
+  padding-left: 5%;
+  border-bottom-left-radius: 16px;
+  border-top-left-radius: 16px;
+  background-color: #0000000f;
+}
+
+.enter-bonus {
+  display: flex;
+  margin-bottom: 160px;
+  justify-content: center;
+  font-size: clamp(0.4rem, 2vw, 1.2rem);
+  color: #0000004b;
+}
+
+@media (max-width: 800px) {
+  .wrapper-cart {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-left: 5%;
+  }
+
+  .subtotal-price-cart {
+    position: relative;
+    right: -65%;
+  }
+}
+
