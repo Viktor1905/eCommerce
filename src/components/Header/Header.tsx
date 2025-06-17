@@ -85,6 +85,9 @@ export function Header() {
       <UserContext.Provider value={userName}>
         <div className="flex flex-col w-full relative">
           <header className={styles.header}>
+            <span className="flex justify-center items-center absolute w-[250px] top-[120px] right-[20px] bg-white text-red-500 shadow-lg rounded-2xl">
+              Promocode: PETBDAY10
+            </span>
             <div className={styles['header-case']}>
               <div className={styles['header-inner']}>
                 <div className={styles['home-link-wrapper']}>
@@ -292,9 +295,8 @@ function Cart() {
       toast.success('You need to be logged in to access your cart!', {
         position: 'top-right',
       });
-    } else {
-      void navigate('/cart');
     }
+    void navigate('/cart');
   };
   return (
     <li onClick={handleCartClick} className={`${styles.list} ${styles['list-counter']}`}>

@@ -39,7 +39,7 @@ export function ProductDetailsPage() {
   }, [id]);
 
   useEffect(() => {
-    if (product?.masterVariant.images.length) {
+    if (product?.masterVariant.images?.length) {
       setMainImage(product.masterVariant.images[0].url);
     }
   }, [product]);
@@ -71,7 +71,7 @@ export function ProductDetailsPage() {
       <h2 className={styles['products-title']}>{product.name['en-US']}</h2>
       <div className={styles['products-info']}>
         <div className={styles['products-slider']}>
-          {product.masterVariant.images.map((img) => (
+          {product.masterVariant.images?.map((img) => (
             <img
               key={img.url}
               className={styles['products-image']}
@@ -87,7 +87,7 @@ export function ProductDetailsPage() {
           <img
             className={styles['products-image']}
             src={mainImage}
-            alt={product.masterVariant.images[0].label}
+            alt={product.masterVariant.images?.[0].label}
             onClick={() => {
               handleOpenSlider(true);
             }}
@@ -114,9 +114,9 @@ export function ProductDetailsPage() {
         <ShowPrice product={product} />
       </div>
       <h3 className={styles['products-description-title']}>Description</h3>
-      <p className={styles['products-description']}>{product.description['en-US']}</p>
+      <p className={styles['products-description']}>{product.description?.['en-US']}</p>
       <ProductImageSlider
-        images={product.masterVariant.images}
+        images={product.masterVariant.images ?? []}
         names={product.name}
         isOpen={isOpen}
         mainImageUrl={mainImage}
@@ -131,22 +131,24 @@ export function Spinner() {
 }
 
 function ShowPrice({ product }: { product: ProductProjection }) {
-  const priceCents = product.masterVariant.prices[0].value.centAmount;
-  const discountPriceCents = product.masterVariant.prices[0].discounted?.value.centAmount ?? 0;
+  const priceCents = product.masterVariant.prices?.[0].value.centAmount;
+  const discountPriceCents = product.masterVariant.prices?.[0].discounted?.value.centAmount ?? 0;
 
-  const price = formatMoney(priceCents);
+  const price = formatMoney(priceCents ?? 0);
   const [dollar, cent] = price;
 
   const discountPrice = formatMoney(discountPriceCents);
   const [dollarDiscount, centDiscount] = discountPrice;
 
-  const currencyCode = product.masterVariant.prices[0].value.currencyCode;
-  const discountPercent = ((priceCents - discountPriceCents) / priceCents) * 100;
+  const currencyCode = product.masterVariant.prices?.[0].value.currencyCode;
+  const safePriceCents = priceCents ?? 0;
+  const safeDiscountPriceCents = discountPriceCents;
+  const discountPercent = ((safePriceCents - safeDiscountPriceCents) / (priceCents ?? 1)) * 100;
 
   return (
     <div className={styles['products-price']}>
       <div className={styles['main-price']}>
-        {!product.masterVariant.prices[0].discounted ? (
+        {!product.masterVariant.prices?.[0].discounted ? (
           <>
             <span className={styles['current-code']}>{currencyCode}</span>
             <span className={styles['current-dollar']}>{dollar}</span>
@@ -162,7 +164,7 @@ function ShowPrice({ product }: { product: ProductProjection }) {
         )}
       </div>
       <div className={styles['discount-block']}>
-        {!product.masterVariant.prices[0].discounted ? (
+        {!product.masterVariant.prices?.[0].discounted ? (
           <span className={styles['text-best-prise']}>Best Price</span>
         ) : (
           <div className={styles['old-price']}>
