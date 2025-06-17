@@ -1,6 +1,8 @@
 import { TeammateCard, TeammateCardProps } from './TeammateCard.tsx';
 import { ReactElement } from 'react';
 import Viktor from '../assets/Viktor.jpg';
+import Anastasia from '../assets/Anastasia.jpg';
+import Vitaliy from '../assets/Vitaliy.jpg';
 
 export function DetailInfo({ onMemberClick }: DetailInfoProps): ReactElement {
   return (
@@ -66,9 +68,13 @@ const AnastasiiInfo = {
     bugfix: true,
   },
   role: 'Queen of forms 🧚',
-  infoAbout: 'Perfect Teammate',
+  infoAbout:
+    "I'm  Nastya. My favorite Winx fairy is Bloom, I love Ladybug, tasty food (especially fish) and I don't actually like making forms. I like my teammates because they are very fun and ready to hop in to cover for each other. My favorite time on the course was having calls with them and fixing bugs together\n" +
+    'Thanks to RS School for giving such an amazing opportunity to learn so much and work on many different projects\n' +
+    'I hope to find a job soon :) \n' +
+    'If anyone is still reading, here is a video how to prepare for job interview (from RS School!): https://www.youtube.com/watch?v=4Am6o6lsjqE',
   githubName: 'hourabl',
-  photo: Viktor,
+  photo: Anastasia,
   contribution: [
     'Project configuration setup',
     'Registration page - Implemented complete layout and functional logic',
@@ -91,9 +97,12 @@ const VitaliiInfo = {
     bugfix: true,
   },
   role: 'API Master ⚙️',
-  infoAbout: 'Perfect Teammate',
+  infoAbout:
+    'I was born in Minsk and graduated from the Belarusian State University of Informatics and Radioelectronics with a degree in Radio Engineering. Throughout my career, I’ve worked with a variety of advanced electronic systems. For the past 16 years, I’ve been living in Dubai, UAE, continuing my work in the same field.\n' +
+    '\n' +
+    'Driven by a desire to expand my horizons, I decided to explore the world of programming. I began with JavaScript and enrolled in a course at RS School. I’ve successfully completed it, truly enjoyed the experience, and now I’m excited to continue my journey in the IT field.”',
   githubName: 'vitalikozhar',
-  photo: Viktor,
+  photo: Vitaliy,
   contribution: [
     'API Configuration: Set up and optimized API connections',
     'Implemented main page layout',

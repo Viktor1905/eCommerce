@@ -12,7 +12,7 @@ export function TeammateCard({
 }: TeammateCardProps & { onClick?: () => void }): ReactElement {
   return (
     <div
-      className="mt-3 cursor-pointer bg-white  rounded max-w-[700px] hover:shadow-[0px_15px_30px_5px] shadow-goldenrod/40  hover:-translate-y-1  transition-transform duration-300"
+      className="mt-3   cursor-pointer bg-white  rounded max-w-[700px] hover:shadow-[0px_15px_30px_5px] shadow-goldenrod/40  hover:-translate-y-1  transition-transform duration-300"
       onClick={onClick}
     >
       <h2 className="bg-jungle text-white pl-1 rounded">{name}</h2>
@@ -29,7 +29,7 @@ export function TeammateCard({
           >
             {githubName}
           </a>
-          <img className="w-7 h-7 ml-2 rounded-full" src={photo} alt={name} />
+          <img className="w-12 h-12 ml-2 rounded-full" src={photo} alt={name} />
         </div>
       </div>
     </div>

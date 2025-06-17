@@ -38,7 +38,7 @@ export function ModalWindow({
             >
               {githubName}
             </a>
-            <img className="w-7 h-7 ml-2 rounded-full" src={photo} alt={name} />
+            <img className="w-12 h-12 ml-2 rounded-full" src={photo} alt={name} />
           </div>
           <h2>Contribution to the project:</h2>
           <ul className="p-1 flex flex-col gap-2 pb-3">

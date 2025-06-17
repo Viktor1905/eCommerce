@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { CategoryBar } from './components/CategoryBar/CategoryBar.tsx';
 import { CatalogFilter, Filters } from './components/catalogFilter/CatalogFilter.tsx';
 import { CatalogList } from './components/CatalogList.tsx';
@@ -8,17 +8,15 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store.ts';
 import { CatalogState, loadCatalog, setFilters } from '../../store/slice/catalog-slice.ts';
-import { usePrices } from './components/catalogFilter/hooks/usePrices.ts';
 
 export function CatalogPage(): ReactElement {
   useEffect((): void => {
     document.title = 'Catalog | Zoo Shop | Pet Supplies';
   }, []);
   const dispatch = useDispatch<AppDispatch>();
-  const { filters, sort, products, searchTerm } = useSelector(
+  const { filters, sort, searchTerm, minCost, maxCost } = useSelector(
     (s: RootState): CatalogState => s.catalog
   );
-  const { lowestPrice, highestPrice } = usePrices(products);
   const formMethods = useForm<Filters>({
     defaultValues: {
       priceRange: [0, 100],
@@ -28,21 +26,31 @@ export function CatalogPage(): ReactElement {
     },
   });
   const [showBurger, setShowBurger] = useState(false);
-  const initialFilterValues: Filters = {
-    brand: [],
-    discounted: [],
-    for: [],
-    priceRange: [lowestPrice, highestPrice],
-  };
+  const initialFilterValues = useMemo<Filters>(
+    () => ({
+      brand: [],
+      discounted: [],
+      for: [],
+      priceRange: [minCost, maxCost],
+    }),
+    [minCost, maxCost]
+  );
 
+  const prevValues = useRef<string | null>(null);
+
+  useEffect(() => {
+    const serialized = JSON.stringify(initialFilterValues);
+
+    if (prevValues.current === serialized) return;
+
+    prevValues.current = serialized;
+
+    formMethods.reset(initialFilterValues);
+    dispatch(setFilters(initialFilterValues));
+  }, [initialFilterValues, formMethods, dispatch]);
   useEffect(() => {
     void dispatch(loadCatalog());
   }, [dispatch, filters, sort, searchTerm]);
-
-  useEffect(() => {
-    formMethods.reset(initialFilterValues);
-    dispatch(setFilters(initialFilterValues));
-  }, [lowestPrice, highestPrice]);
 
   const onFilterSubmit = (data: Filters) => {
     dispatch(setFilters(data));
@@ -68,11 +76,7 @@ export function CatalogPage(): ReactElement {
         </div>
         <div className="col-span-1 max-[900px]:hidden">
           {!showBurger && (
-            <CatalogFilter
-              products={products}
-              onFilterSubmit={onFilterSubmit}
-              onResetFilters={onResetFilters}
-            />
+            <CatalogFilter onFilterSubmit={onFilterSubmit} onResetFilters={onResetFilters} />
           )}
         </div>
         <div className="col-span-4 max-[900px]:col-span-5 relative">
@@ -97,7 +101,6 @@ export function CatalogPage(): ReactElement {
           setShowBurger={setShowBurger}
           onFilterSubmit={onFilterSubmit}
           onResetFilters={onResetFilters}
-          products={products}
         />
       </section>
     </FormProvider>

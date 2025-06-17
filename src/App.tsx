@@ -16,11 +16,15 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import AddressesPage from './pages/addresses/AddressesPage.tsx';
 import { ProductDetailsPage } from './pages/product/Product.tsx';
+import { initializeCatalog } from './store/slice/catalog-slice.ts';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from './store/store.ts';
 
 function App() {
   const [token, setToken] = useState<string | null>(null);
   const location = useLocation();
-
+  const dispatch = useDispatch<AppDispatch>();
+  void dispatch(initializeCatalog());
   useEffect(() => {
     const currentToken = getTokenFromCookie();
     if (!currentToken) {

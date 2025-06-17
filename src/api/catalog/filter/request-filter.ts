@@ -7,6 +7,8 @@ export async function requestFilter({
   sort,
   type,
   searchTerm,
+  page,
+  limit,
 }: RequestFilterProps): Promise<ProductProjectionResponse> {
   const token: string = await getCatalogToken();
   const queryParts: string[] = [];
@@ -48,8 +50,7 @@ export async function requestFilter({
   }
 
   const queryString = queryParts.join('&');
-  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}`;
-  console.log(url);
+  const url = `https://api.${API_CONFIG.region}.commercetools.com/${API_CONFIG.projectKey}/product-projections/search?${encodeURI(queryString)}&&limit=${limit.toString()}&offset=${(page * limit - limit).toString()}`;
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -83,4 +84,6 @@ interface RequestFilterProps {
   sort?: string;
   type?: string;
   searchTerm?: string;
+  page: number;
+  limit: number;
 }
