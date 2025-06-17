@@ -36,7 +36,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   return (
     <div
       key={product.id}
-      className="rounded-lg p-2 bg-white hover:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
+      className="rounded-lg p-2 bg-white hoverп:shadow-md font-main cursor-pointer hover:border-0  hover:scale-105 max-w-[310px] duration-300 origin-top transition-transform min-h-[400px] "
       onClick={(): void => {
         void onClick();
       }}
