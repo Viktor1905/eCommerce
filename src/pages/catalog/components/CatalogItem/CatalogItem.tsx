@@ -7,6 +7,9 @@ import { getTokenFromCookie } from '../../../profile/ProfilePage.tsx';
 import { toast } from 'react-toastify';
 import { addItemToCart } from '../../../../api/cart-api/manage-item-in-cart.ts';
 import { getLastActiveCart } from '../../../../api/cart-api/get-cart.ts';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../store/store.ts';
+import { setProductNumber } from '../../../../store/slice/cart-slice.ts';
 
 export function CatalogItem({ product }: ProductListProps): ReactElement {
   const description: Attribute | undefined = product.masterVariant.attributes?.find(
@@ -44,7 +47,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
       await navigate(`/product/${product.id}`);
     }
   };
-
+  const [, setError] = useState<string | null>(null);
   const id = product.id;
   const [isNoInCart, setNoInCart] = useState(false);
   const fetchCart = useCallback(async () => {
@@ -53,12 +56,43 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
       const checkCart = cartData.lineItems?.some((idItem) => idItem.productId === id);
       setNoInCart(checkCart === true);
     } catch (error) {
-      console.error('Cart Error:', error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
     }
   }, [id]);
   useEffect(() => {
     void fetchCart();
   }, [fetchCart]);
+  const dispatch = useDispatch<AppDispatch>();
+  const handleClick = async () => {
+    try {
+      if (typeof getTokenFromCookie() !== 'string') {
+        toast.success('✓ You need to be logged in to access your shopping cart!', {
+          position: 'top-right',
+        });
+        return;
+      }
+      if (!isNoInCart) {
+        if (id) {
+          const response = await addItemToCart({ productId: id });
+          if (response.lineItems) {
+            dispatch(setProductNumber(response.lineItems.length));
+          }
+          setNoInCart(true);
+        }
+      } else {
+        toast.success('✓ This product is already in your cart!', {
+          position: 'top-right',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка при обновлении корзины:', error);
+    }
+  };
+
   return (
     <div
       key={product.id}
@@ -103,24 +137,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
           cursor: !isNoInCart ? 'pointer' : 'not-allowed',
           opacity: isNoInCart ? '0.7' : '1',
         }}
-        onClick={() => {
-          if (typeof getTokenFromCookie() !== 'string') {
-            toast.success('✓ You need to be logged in to access your shopping cart!', {
-              position: 'top-right',
-            });
-            return;
-          }
-          if (!isNoInCart) {
-            if (id) {
-              void addItemToCart({ productId: id });
-              setNoInCart(true);
-            }
-          } else {
-            toast.success('✓ This product is already in your cart!', {
-              position: 'top-right',
-            });
-          }
-        }}
+        onClick={() => void handleClick()}
       >
         Add to Cart
       </button>
