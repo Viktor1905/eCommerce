@@ -19,11 +19,23 @@ import { ProductDetailsPage } from './pages/product/Product.tsx';
 import { initializeCatalog } from './store/slice/catalog-slice.ts';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './store/store.ts';
+import { getAnonymousCart } from './api/cart-api/get-cart';
 
 function App() {
   const [token, setToken] = useState<string | null>(null);
   const location = useLocation();
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const anonymousMode = async () => {
+      const token = getTokenFromCookie();
+      if (token) {
+        return;
+      }
+      await getAnonymousCart();
+    };
+    void anonymousMode();
+  }, []);
   useEffect(() => {
     void dispatch(initializeCatalog());
   }, [dispatch]);

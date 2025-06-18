@@ -18,13 +18,13 @@ function AboutUsFooter() {
   const navigate = useNavigate();
   return (
     <div onClick={() => void navigate('/about')} className={styles['about-link']}>
-      ABOUT US
+      About Us
     </div>
   );
 }
 
 function OurShopsFooter() {
-  return <div className={styles['shop-link']}>OUR SHOPS</div>;
+  return <div className={styles['shop-link']}>Our Shops</div>;
 }
 
 function OurTelegramStickersFooter() {

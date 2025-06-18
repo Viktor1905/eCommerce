@@ -42,7 +42,7 @@
   height: 100%;
   background-color: var(--color-jungle);
   cursor: pointer;
-  background-image: url('../../assets/images/products/test/dogCleaner.png');
+  background-image: url('/dogCleaner.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -66,7 +66,7 @@
 }
 
 .aside-up-block {
-  background-image: url('../../assets/images/products/test/dogCar.png');
+  background-image: url('../../assets/images/products/test/dogCar.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -74,7 +74,7 @@
 
 .aside-down-block {
   background-color: var(--color-coral);
-  background-image: url('../../assets/images/products/test/offerHumsters.png');
+  background-image: url('../../assets/images/products/test/offerHumsters.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -182,27 +182,27 @@
 }
 
 .img0 {
-  background-image: url('../../assets/images/products/test/humster.png');
+  background-image: url('../../assets/images/products/test/humster.webp');
 }
 
 .img1 {
-  background-image: url('../../assets/images/products/test/kitten.png');
+  background-image: url('../../assets/images/products/test/kitten.webp');
 }
 
 .img2 {
-  background-image: url('../../assets/images/products/test/dogCar.png');
+  background-image: url('../../assets/images/products/test/dogCar.webp');
 }
 
 .img3 {
-  background-image: url('../../assets/images/products/test/dogCleaner.png');
+  background-image: url('../../assets/images/products/test/dogCleaner.webp');
 }
 
 .img4 {
-  background-image: url('../../assets/images/products/test/dogFootPacket.png');
+  background-image: url('../../assets/images/products/test/dogFootPacket.webp');
 }
 
 .img5 {
-  background-image: url('../../assets/images/products/test/dogToys.png');
+  background-image: url('../../assets/images/products/test/dogToys.webp');
 }
 
 :is(.img6, .img7, .img8, .img9, .img10, .img11, .img12, .img13) {
@@ -218,35 +218,35 @@
 }
 
 .img6 {
-  background-image: url('../../assets/images/products/test2/pedi.png');
+  background-image: url('../../assets/images/products/test2/pedi.webp');
 }
 
 .img7 {
-  background-image: url('../../assets/images/products/test2/royal.png');
+  background-image: url('../../assets/images/products/test2/royal.webp');
 }
 
 .img8 {
-  background-image: url('../../assets/images/products/test2/humster.png');
+  background-image: url('../../assets/images/products/test2/humster.webp');
 }
 
 .img9 {
-  background-image: url('../../assets/images/products/test2/A616FF82-19EA-4848-AFE1-BE659E686786.png');
+  background-image: url('../../assets/images/products/test2/A616FF82-19EA-4848-AFE1-BE659E686786.webp');
 }
 
 .img10 {
-  background-image: url('../../assets/images/products/test2/0594EB9F-90C4-40AB-95DB-BAD542CE0DCC.png');
+  background-image: url('../../assets/images/products/test2/0594EB9F-90C4-40AB-95DB-BAD542CE0DCC.webp');
 }
 
 .img11 {
-  background-image: url('../../assets/images/products/test2/FF07EA7F-476C-480B-8B18-DA328DB887BE.png');
+  background-image: url('../../assets/images/products/test2/FF07EA7F-476C-480B-8B18-DA328DB887BE.webp');
 }
 
 .img12 {
-  background-image: url('../../assets/images/products/test2/06A93360-F7FA-4DB7-A334-24564711DC3C.png');
+  background-image: url('../../assets/images/products/test2/06A93360-F7FA-4DB7-A334-24564711DC3C.webp');
 }
 
 .img13 {
-  background-image: url('../../assets/images/products/test2/F775F33C-2B66-4953-97DC-1B6DD7166948.png');
+  background-image: url('../../assets/images/products/test2/F775F33C-2B66-4953-97DC-1B6DD7166948.webp');
 }
 
 .pets-logo-icon {

@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getCartByCartID } from '../../api/cart-api/get-cart';
 import { getTokenFromCookie } from '../profile/ProfilePage';
 import { cartItemResponse, cartResponse } from '../../api/cart-api/cart-types';
 import { addItemToCart, removeItemFromCart } from '../../api/cart-api/manage-item-in-cart';
 import styles from './Cart.module.css';
-import empty from './components/cartEmptyCorgi.png';
+import empty from './components/cartEmptyCorgi.webp';
 import { Spinner } from '../product/Product';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { deleteCart } from '../../api/cart-api/delete-cart';
@@ -26,10 +25,9 @@ export function CartPage() {
   const [bonus, setBonus] = useState('');
 
   const refreshCart = useCallback(async () => {
-    const currentActiveCart = await getLastActiveCart();
     try {
-      const cartInfo = await getCartByCartID(currentActiveCart.id);
-      setCart(cartInfo);
+      const currentActiveCart = await getLastActiveCart();
+      setCart(currentActiveCart);
     } catch (error) {
       console.error('Error fetching cart:', error);
     } finally {
@@ -45,9 +43,6 @@ export function CartPage() {
     document.title = 'Cart | Zoo Shop | Pet Supplies';
   }, []);
 
-  const token = getTokenFromCookie();
-  if (!token) return <CartPageEmpty />;
-
   if (loading) {
     return <Spinner />;
   }
@@ -57,6 +52,8 @@ export function CartPage() {
   }
 
   const handleApplyDiscount = async (promoCode: string) => {
+    const token = getTokenFromCookie();
+    if (!token) return;
     const updatedCart = await applyDiscount(promoCode);
     setCart(updatedCart);
     if (updatedCart.discountCodes && updatedCart.discountCodes.length > 0) {
