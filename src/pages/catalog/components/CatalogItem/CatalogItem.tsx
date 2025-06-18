@@ -3,7 +3,6 @@ import { Attribute, ProductProjection } from '../../../../api/catalog/products.t
 import saleIcon from '../assets/sale.svg';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import styles from '../../../product/AddProductToCart.module.css';
-import { getTokenFromCookie } from '../../../profile/ProfilePage.tsx';
 import { toast } from 'react-toastify';
 import { addItemToCart } from '../../../../api/cart-api/manage-item-in-cart.ts';
 import { getLastActiveCart } from '../../../../api/cart-api/get-cart.ts';
@@ -69,12 +68,6 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
   const dispatch = useDispatch<AppDispatch>();
   const handleClick = async () => {
     try {
-      if (typeof getTokenFromCookie() !== 'string') {
-        toast.success('✓ You need to be logged in to access your shopping cart!', {
-          position: 'top-right',
-        });
-        return;
-      }
       if (!isNoInCart) {
         if (id) {
           const response = await addItemToCart({ productId: id });

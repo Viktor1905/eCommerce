@@ -1,4 +1,4 @@
-import notFoundImage from './assets/image/pageNotFound.png';
+import notFoundImage from './assets/image/pageNotFound.webp';
 import styles from './Page404.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';

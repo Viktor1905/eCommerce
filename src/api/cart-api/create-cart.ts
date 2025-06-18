@@ -1,9 +1,12 @@
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { API_URL } from '../sign-up/sign-up';
 import { CartSchema } from './cart-types';
+import { getAnonymsTokenFromCookie } from '../../pages/profile/ProfilePage';
 
 export const createCart = async () => {
-  const token = getTokenFromCookie();
+  let token = getTokenFromCookie();
+  token ??= getAnonymsTokenFromCookie();
+
   if (!token) throw new Error('Invalid or expired token');
 
   const response = await fetch(`${API_URL}/me/carts`, {

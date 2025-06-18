@@ -29,8 +29,8 @@ export const AuthTokenResponseSchema = z.object({
   access_token: z.string(),
   expires_in: z.number(),
   scope: z.string(),
-  refresh_token: z.string(),
-  token_type: z.string(),
+  refresh_token: z.string().optional(),
+  token_type: z.string().optional(),
 });
 
 const DiscountedPriceSchema = z.object({

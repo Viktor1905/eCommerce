@@ -28,7 +28,7 @@ export async function applyDiscount(code: string) {
     });
 
     if (!response.ok) {
-      // return throw new Error(`Failed to apply discount`);
+      throw new Error(`Failed to apply discount`);
     }
     const raw: unknown = await response.json();
     const cartData = CartSchema.safeParse(raw);
