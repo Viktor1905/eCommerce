@@ -15,6 +15,12 @@ export function getRefreshTokenFromCookie(): string {
   throw new Error('Something went wrong, please try again later'); // no token
 }
 
+export function getRefreshAnonymsTokenFromCookie(): string {
+  const match = /(?:^|;\s*)anonymous_token=([^;]+)/.exec(document.cookie);
+  if (match) return match[1];
+  throw new Error('Something went wrong, please try again later'); // no token
+}
+
 export const fetchProfile = async (token: string) => {
   const response = await fetch(`${API_URL}/me`, {
     method: 'GET',

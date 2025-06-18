@@ -1,4 +1,5 @@
 import { getTokenFromCookie } from '../../pages/profile/ProfilePage';
+import { getAnonymsTokenFromCookie } from '../../pages/profile/ProfilePage';
 import { API_URL } from '../sign-up/sign-up';
 import { cartResponse, CartSchema } from './cart-types';
 import { getCartByCartID, getLastActiveCart } from './get-cart';
@@ -56,7 +57,8 @@ export const updateCart = async (cart: cartResponse, actions: Actions) => {
     actions: actions,
   };
 
-  const token = getTokenFromCookie();
+  let token = getTokenFromCookie();
+  token ??= getAnonymsTokenFromCookie();
   if (!token) throw new Error('Invalid or expired token');
 
   const response = await fetch(`${API_URL}/me/carts/${cart.id}`, {
@@ -78,7 +80,6 @@ export const updateCart = async (cart: cartResponse, actions: Actions) => {
   if (!cartData.success) {
     throw new Error('Invalid response format');
   }
-  console.log(cartData.data);
   return cartData.data;
 };
 

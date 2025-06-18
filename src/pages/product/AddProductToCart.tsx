@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useCallback, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { getTokenFromCookie } from '../profile/ProfilePage';
+import { getAnonymsTokenFromCookie } from '../profile/ProfilePage';
 import { getLastActiveCart } from '../../api/cart-api/get-cart';
 import { setProductNumber } from '../../store/slice/cart-slice.ts';
 import { useDispatch } from 'react-redux';
@@ -19,7 +20,7 @@ export function AddProductToCart() {
 
   const fetchCart = useCallback(async () => {
     try {
-      if (!getTokenFromCookie()) {
+      if (!getTokenFromCookie() && !getAnonymsTokenFromCookie()) {
         return;
       }
       const cartData = await getLastActiveCart();
@@ -36,12 +37,6 @@ export function AddProductToCart() {
   const dispatch = useDispatch<AppDispatch>();
   const addItemClick = async () => {
     try {
-      if (typeof getTokenFromCookie() !== 'string') {
-        toast.success('✓ You need to be logged in to access your shopping cart!', {
-          position: 'top-right',
-        });
-        return;
-      }
       if (quantity && quantity > 0 && !isNoInCart) {
         if (id) {
           const response = await addItemToCart({ productId: id, quantity });

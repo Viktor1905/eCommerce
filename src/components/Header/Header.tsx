@@ -1,6 +1,6 @@
 import styles from './Header.module.css';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from './logo.png';
+import logo from './logo.webp';
 import { useEffect, useState, useLayoutEffect, useRef, createContext, useContext } from 'react';
 import { logoutUser } from '../../api/logout/logout';
 import { useDispatch, useSelector } from 'react-redux';
@@ -86,7 +86,7 @@ export function Header() {
       <UserContext.Provider value={userName}>
         <div className="flex flex-col w-full relative">
           <header className={styles.header}>
-            <span className="flex justify-center items-center absolute w-[250px] top-[130px] right-[20px] bg-white text-red-500 shadow-lg rounded-2xl">
+            <span className="flex justify-center items-center absolute w-[210px] top-[140px] right-[20px] bg-white text-red-500 shadow-lg rounded-lg font-bold">
               Promocode: PETBDAY10
             </span>
             <div className={styles['header-case']}>
@@ -366,7 +366,6 @@ function AsideMenuProfile({ toggleMenu }: AddMenuBlockProps) {
         manage_accounts
       </span>
       <span className={styles['user-name']}>Hello, {userState}</span>
-      <span className={styles['select-dot']}></span>
     </div>
   );
 }
@@ -411,11 +410,17 @@ function AddMenuBlock({ toggleMenu }: AddMenuBlockProps) {
   return (
     <div className={'flex flex-row gap-2 ml-auto mr-auto p-2 text-white w-[90%]'}>
       <div onClick={toggleMenu} className={styles['add-menu-list']}>
-        <span className="material-symbols-outlined hover:cursor-pointer">menu</span>
-        <div className={styles['add-menu-link']}>Menu</div>
+        <div className={styles['add-menu-link']}>
+          {' '}
+          <span className="material-symbols-outlined text-blue-50 hover:cursor-pointer">menu</span>
+          Menu
+        </div>
       </div>
       <div className={styles['add-menu-link']} onClick={() => void navigate('/catalog')}>
         Catalog
+      </div>
+      <div className={styles['add-menu-link']} onClick={() => void navigate('/team')}>
+        About Us
       </div>
     </div>
   );

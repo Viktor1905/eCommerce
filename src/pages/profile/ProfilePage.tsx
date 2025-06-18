@@ -13,6 +13,11 @@ export function getTokenFromCookie(): string | null {
   return match ? match[1] : null;
 }
 
+export function getAnonymsTokenFromCookie(): string | null {
+  const match = /(?:^|;\s*)anonymous_access_token=([^;]+)/.exec(document.cookie);
+  return match ? match[1] : null;
+}
+
 export function ProfilePage() {
   const navigate = useNavigate();
   const [customer, setCustomer] = useState<customerResponse | null>(null);
