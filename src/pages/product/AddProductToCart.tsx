@@ -37,6 +37,7 @@ export function AddProductToCart() {
     }
   }, [id]);
   const dispatch = useDispatch<AppDispatch>();
+
   const addItemClick = async () => {
     try {
       if (quantity && quantity > 0 && !isNoInCart) {
@@ -60,6 +61,7 @@ export function AddProductToCart() {
       console.error('Ошибка при обновлении корзины:', error);
     }
   };
+
   const removeItemClick = async () => {
     setNoInCart(!isNoInCart);
     if (id && lineItemId && totalQuantity) {
@@ -102,18 +104,31 @@ export function AddProductToCart() {
         type="button"
         className={styles['add-to-cart-button']}
         style={{
-          cursor: quantity < 1 ? 'not-allowed' : !isNoInCart ? 'pointer' : 'not-allowed',
+          cursor: quantity < 1 ? 'not-allowed' : !isNoInCart ? 'pointer' : 'inherit',
+          opacity: quantity < 1 ? '0.6' : !isNoInCart ? '1' : '0.6',
         }}
-        onClick={() => void addItemClick()}
+        onClick={() => {
+          if (!isNoInCart) {
+            toast.success('✓ Product added to cart!', {
+              position: 'top-right',
+            });
+          }
+          void addItemClick();
+        }}
       >
-        Add to Cart
+        {isNoInCart ? 'In Cart' : 'Add to Cart'}
       </button>
       <span
         className="material-symbols-outlined hover:cursor-pointer"
         style={{
           display: !isNoInCart ? 'none' : 'flex',
         }}
-        onClick={() => void removeItemClick()}
+        onClick={() => {
+          toast.success('✓ Removed from cart!', {
+            position: 'top-right',
+          });
+          void removeItemClick();
+        }}
       >
         delete
       </span>
