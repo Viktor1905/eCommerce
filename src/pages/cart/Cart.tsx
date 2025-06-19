@@ -24,6 +24,7 @@ export function CartPage() {
   const [cart, setCart] = useState<cartResponse | null>(null);
   const [bonusMessage, setBonusMessage] = useState('');
   const [bonus, setBonus] = useState('');
+  const [isShowDialog, setShowDialog] = useState(false);
 
   const refreshCart = useCallback(async () => {
     try {
@@ -57,11 +58,12 @@ export function CartPage() {
     if (!token) return;
     const updatedCart = await applyDiscount(promoCode);
     setCart(updatedCart);
+
     if (updatedCart.discountCodes && updatedCart.discountCodes.length > 0) {
       setBonusMessage('Your promotional discount is now active.');
       const savedX = updatedCart.discountOnTotalPrice?.discountedAmount.centAmount ?? 0;
       const saved = (savedX / 100).toFixed(2);
-      const oldPrice = ((cart.totalPrice.centAmount + savedX) / 100).toFixed(2);
+      const oldPrice = (savedX / 10).toFixed(2);
       setBonus(
         `You saved ${cart.totalPrice.currencyCode} ${saved} with this promo code. OLD PRICE : ${cart.totalPrice.currencyCode} ${oldPrice}`
       );
@@ -100,11 +102,31 @@ export function CartPage() {
         ))}
         <div
           className={styles['clear-cart']}
+          style={{ zIndex: isShowDialog ? 1 : 3, opacity: isShowDialog ? 0 : 1 }}
           onClick={() => {
-            void handleClearCart();
+            setShowDialog(!isShowDialog);
           }}
         >
           EMPTY CART<span className="material-symbols-outlined">shopping_cart_off</span>
+        </div>
+        <div className={styles['confirmation-dialog']}>
+          <span
+            className={styles['clear-cart-yes']}
+            onClick={() => {
+              setShowDialog(!isShowDialog);
+              void handleClearCart();
+            }}
+          >
+            Yes, clear cart
+          </span>
+          <span
+            className={styles['clear-cart-no']}
+            onClick={() => {
+              setShowDialog(!isShowDialog);
+            }}
+          >
+            Cancel
+          </span>
         </div>
       </div>
       <div className={styles['subtotal-price-cart']}>

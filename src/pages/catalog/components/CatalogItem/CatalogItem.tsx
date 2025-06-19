@@ -132,7 +132,7 @@ export function CatalogItem({ product }: ProductListProps): ReactElement {
         }}
         onClick={() => void handleClick()}
       >
-        Add to Cart
+        {isNoInCart ? 'In Cart' : 'Add to Cart'}
       </button>
     </div>
   );
