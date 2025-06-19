@@ -128,7 +128,6 @@ export const getAnonymousCart = async () => {
       console.error('Invalid cart format on creation:', cartResult.error.issues);
       throw new Error('Received cart has invalid format');
     }
-    console.log('Anonymous cart created successfully:', cartResult.data.id);
   } catch (error) {
     console.error('Failed during cart creation:', error);
     throw error;

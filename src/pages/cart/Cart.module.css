@@ -94,6 +94,31 @@
   border-radius: 16px;
   cursor: pointer;
   transition: color 0.2s ease-in;
+  gap: 2px;
+}
+
+.confirmation-dialog {
+  display: flex;
+  width: 90%;
+  height: 40px;
+  margin-top: -40px;
+  border-radius: 16px;
+  gap: 2px;
+  z-index: 2;
+}
+
+.clear-cart-yes,
+.clear-cart-no{
+  display: flex;
+  width: 50%;
+  height: 98%;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(0.7rem, 2vw, 1.2rem);
+  background-color: var(--color-goldenrod);
+  border-radius: 16px;
+  cursor: pointer;
+  z-index: 2;
 }
 
 .bonus-code-button {
@@ -120,7 +145,7 @@
   cursor: pointer;
 }
 
-:is(.apply-bonus-code, .proceed-to-buy, .clear-cart):hover {
+:is(.apply-bonus-code, .proceed-to-buy, .clear-cart, .clear-cart-yes, .clear-cart-no):hover {
   color: var(--color-light-gray);
 }
 
