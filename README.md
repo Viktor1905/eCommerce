@@ -65,7 +65,7 @@ Built by **three team members** with roles:
 - **RTK Query** · **TanStack Query** ([docs](https://tanstack.com/query/latest/)) - API handling
 
 ### **HTTP Clients**
-- **Axios** - REST requests
+- **Fetch** - REST requests
 - **Mock Service Worker (MSW)** ([docs](https://mswjs.io/)) - API mocking
 
 ### **UI Components**
